@@ -13,6 +13,16 @@ export const fr: Dictionary = {
     switchLabel: "English",
     switchAria: "Show in English",
   },
+  frequency: {
+    Daily: "Chaque jour",
+    Weekly: "Chaque semaine",
+    Every2Weeks: "Aux 2 semaines",
+    TwiceMonthly: "Deux fois par mois",
+    Monthly: "Chaque mois",
+    Quarterly: "Aux 3 mois",
+    Every6Months: "Aux 6 mois",
+    Annually: "Chaque année",
+  },
   footer: {
     about: "À propos de cet outil",
     privacy:

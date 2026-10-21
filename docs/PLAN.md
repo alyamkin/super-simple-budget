@@ -40,7 +40,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Tests: `translate` (interpolation, plural en/fr, missing var), `hasLocale`, en/fr key parity test (reused by later steps).
 - **Done when** `/` redirects, `/en` and `/fr` prerender (`next build` shows ● static), `/de` 404s.
 
-### [ ] 4. Money and frequency utilities
+### [x] 4. Money and frequency utilities
 `feat(domain): add frequency conversion, money formatting and parsing` · Spec §7.1, §7.6
 - `domain/frequency.ts` (`TIMES_PER_YEAR`, `toMonthly`, `FREQUENCIES`) — ported from old `src/utils/utils.ts`.
 - `lib/format.ts` (cached `Intl.NumberFormat`, `formatMoney`, `formatPercent`), `lib/parse-amount.ts` (ported from old `useInputAmount` as pure functions).

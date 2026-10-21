@@ -12,6 +12,16 @@ export const en = {
     switchLabel: "Français",
     switchAria: "Afficher en français",
   },
+  frequency: {
+    Daily: "Daily",
+    Weekly: "Weekly",
+    Every2Weeks: "Every 2 weeks",
+    TwiceMonthly: "Twice a month",
+    Monthly: "Monthly",
+    Quarterly: "Every 3 months",
+    Every6Months: "Every 6 months",
+    Annually: "Yearly",
+  },
   footer: {
     about: "About this tool",
     privacy:
