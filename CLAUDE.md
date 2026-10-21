@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Freshly bootstrapped with `create-next-app`; `app/page.tsx` and `app/layout.tsx` (including the `metadata` title/description) are still the template defaults. There is no budget logic or data layer yet; Jest test tooling is set up (PLAN step 1).
+Early build-out following `docs/PLAN.md`: Jest tooling (step 1) and design tokens/fonts (step 2) are in; `app/page.tsx` is a token-styled placeholder. There is no budget logic or data layer yet.
 
 ## Specification
 
@@ -31,5 +31,5 @@ Tests use Jest via `next/jest` (`jest.config.ts`, jsdom by default; pure `domain
   - `cacheComponents: true` — Cache Components mode. Dynamic data access (uncached fetches, `cookies()`, `headers()`, etc.) must sit under a `<Suspense>` boundary or be cached with the `"use cache"` directive; otherwise the build errors.
   - `reactCompiler: true` — React Compiler auto-memoizes, so manual `useMemo`/`useCallback`/`memo` is usually unnecessary.
   - `partialPrefetching: true`.
-- **Tailwind CSS v4** is wired through Turbopack's `@tailwindcss/turbopack` CSS loader (in `next.config.ts`), not PostCSS — there is no `postcss.config` or `tailwind.config`. Theme tokens are defined in CSS via `@theme inline` in `app/globals.css` (`--color-background`, `--color-foreground`, Geist font variables), with dark mode driven by `prefers-color-scheme`.
+- **Tailwind CSS v4** is wired through Turbopack's `@tailwindcss/turbopack` CSS loader (in `next.config.ts`), not PostCSS — there is no `postcss.config` or `tailwind.config`. Design tokens (copied from the artifact) live on `:root` in `app/globals.css` and are exposed via `@theme inline` as utilities (`bg-surface`, `text-ink`, `border-line`, `bg-b-home`, `font-display`/`font-body`/`font-mono`, `rounded-card`, `phone:`/`tablet:` breakpoints) — no hard-coded hex in components. Dark mode follows `prefers-color-scheme` unless `<html data-theme="light|dark">` overrides it. Fonts (Bricolage Grotesque, Atkinson Hyperlegible, IBM Plex Mono) come from `next/font/google` in `app/layout.tsx`.
 - Route components use Next's global typed helpers (e.g. `LayoutProps<"/">`, `PageProps<...>`) rather than hand-written prop types.
