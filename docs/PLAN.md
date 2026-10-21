@@ -1,6 +1,6 @@
 # Implementation plan
 
-Small, reviewable steps. Each step = **one commit** (or one PR), leaves the app building and tests green, and points to the spec sections it implements. Work top to bottom; tick the box when merged.
+Small, reviewable steps. Each step = **one commit** (or one PR), leaves the app building and tests green, and points to the spec sections it implements. Work top to bottom; tick the step's box (`[x]`) in the same commit that implements it.
 
 How to use with Claude Code: *"Implement PLAN step N"* — the step lists everything needed; the spec holds the details.
 
@@ -10,11 +10,11 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ## Phase 0 — Foundations
 
-### [ ] 0. Spec
+### [x] 0. Spec
 `docs(spec): add specification and implementation plan`
 - Files: `docs/SPEC.md`, `docs/PLAN.md`, `docs/reference/artifact.html`, `CLAUDE.md` pointer.
 
-### [ ] 1. Test tooling
+### [x] 1. Test tooling
 `chore(test): set up Jest, Testing Library and jest-axe` · Spec §2, §16
 - Add dev deps: `jest`, `jest-environment-jsdom`, `@types/jest`, `ts-node` (for `jest.config.ts`), `@testing-library/react`, `@testing-library/dom`, `@testing-library/user-event`, `@testing-library/jest-dom`, `jest-axe`, `@types/jest-axe`.
 - `jest.config.ts` via `next/jest` (`dir: "./"`, `testEnvironment: "jsdom"`, `coverageProvider: "v8"`, `setupFilesAfterEnv`, `moduleNameMapper` for `@/*`).
