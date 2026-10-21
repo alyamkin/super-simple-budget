@@ -24,7 +24,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Update `CLAUDE.md` commands section.
 - **Done when** `pnpm test` and `pnpm typecheck` pass.
 
-### [ ] 2. Design tokens and fonts
+### [x] 2. Design tokens and fonts
 `feat(ui): add design tokens, fonts and base styles` · Spec §9.1, §9.3
 - `app/globals.css`: artifact tokens (light/dark/`data-theme`), `@theme inline` mapping, base `body` styles, `:focus-visible` outline, reduced-motion rule, breakpoints.
 - Fonts via `next/font/google` (Bricolage Grotesque, Atkinson Hyperlegible, IBM Plex Mono) as CSS variables; remove Geist.
