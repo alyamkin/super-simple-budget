@@ -1,0 +1,69 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import {
+  Atkinson_Hyperlegible,
+  Bricolage_Grotesque,
+  IBM_Plex_Mono,
+} from "next/font/google";
+import { hasLocale, locales, toBcp47 } from "@/i18n/config";
+import { getDictionary } from "@/i18n/get-dictionary";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import "../globals.css";
+
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin", "latin-ext"],
+  weight: ["500", "700"],
+  display: "swap",
+});
+
+const atkinson = Atkinson_Hyperlegible({
+  variable: "--font-atkinson",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin", "latin-ext"],
+  weight: "500",
+  display: "swap",
+});
+
+// `dynamicParams = false` is not allowed with Cache Components; unknown
+// locales 404 through the `hasLocale` guard below instead.
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({
+  params,
+}: LayoutProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!hasLocale(lang)) return {};
+  const { meta } = await getDictionary(lang);
+  return { title: meta.title, description: meta.description };
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<"/[lang]">) {
+  const { lang } = await params;
+  if (!hasLocale(lang)) notFound();
+  const dictionary = await getDictionary(lang);
+
+  return (
+    <html
+      lang={toBcp47(lang)}
+      className={`${bricolage.variable} ${atkinson.variable} ${plexMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">
+        <I18nProvider locale={lang} dictionary={dictionary}>
+          {children}
+        </I18nProvider>
+      </body>
+    </html>
+  );
+}
