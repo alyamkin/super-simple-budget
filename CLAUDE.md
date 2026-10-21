@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Freshly bootstrapped with `create-next-app`; `app/page.tsx` and `app/layout.tsx` (including the `metadata` title/description) are still the template defaults. There is no budget logic, data layer, or test setup yet.
+Freshly bootstrapped with `create-next-app`; `app/page.tsx` and `app/layout.tsx` (including the `metadata` title/description) are still the template defaults. There is no budget logic or data layer yet; Jest test tooling is set up (PLAN step 1).
 
 ## Specification
 
@@ -14,13 +14,15 @@ Build from `docs/SPEC.md` (requirements, architecture, data formats) following `
 
 Package manager is **pnpm** (pinned via `packageManager` in `package.json`).
 
-- `pnpm install` — install deps (`sharp` and `unrs-resolver` build scripts are intentionally ignored in `pnpm-workspace.yaml`)
+- `pnpm install` — install deps (`sharp`, `unrs-resolver` and `@parcel/watcher` build scripts are intentionally ignored in `pnpm-workspace.yaml`)
 - `pnpm dev` — dev server at http://localhost:3000
 - `pnpm build` / `pnpm start` — production build / serve
 - `pnpm lint` — ESLint (flat config, `eslint-config-next` core-web-vitals + typescript)
-- `pnpm exec tsc --noEmit` — type-check (no script defined for it)
+- `pnpm typecheck` — type-check (`tsc --noEmit`)
+- `pnpm test` / `pnpm test:watch` / `pnpm test:coverage` — Jest
+- Single test: `pnpm test lib/cn.test.ts` or `pnpm test -t "test name"`
 
-No test runner is configured.
+Tests use Jest via `next/jest` (`jest.config.ts`, jsdom by default; pure `domain/`/`lib/` tests opt into node with a `@jest-environment node` docblock), React Testing Library + user-event, and `jest-axe`. `jest.setup.ts` registers jest-dom matchers and `toHaveNoViolations`. Test files sit next to the code as `*.test.ts(x)`.
 
 ## Stack and non-default configuration
 
