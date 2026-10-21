@@ -1,0 +1,848 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Super Simple Budget</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one focused question per screen (centre) with a slim progress bar above and a live running tally beside it; tally docks to the bottom on phones */
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --ink:#132a30; --muted:#5a6f75; --line:#d8e2e4;
+  --accent:#0d6b73; --accent-soft:#dcefef; --good:#1d7a46; --good-soft:#e2f3e8;
+  --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#b3261e; --bad-soft:#fbe4e2;
+  --b-home:#1f6f8b; --b-around:#4f9b5d; --b-everyday:#d29a2e; --b-family:#8b5fbf; --b-debt:#c2563a; --b-save:#1d7a46;
+  --good-mid:#8fd1a8;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1a1d;--surface:#15252a;--ink:#e4eef0;--muted:#97abb0;--line:#28403f;
+  --accent:#4fc0c4;--accent-soft:#16383b;--good:#5ccf8a;--good-soft:#173528;--warn:#f0b35a;--warn-soft:#3a2c14;--bad:#ff8a80;--bad-soft:#3f1d1b;--good-mid:#a9e4c3;
+  --b-home:#3a8fb0;--b-save:#3fae6a;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1a1d;--surface:#15252a;--ink:#e4eef0;--muted:#97abb0;--line:#28403f;
+  --accent:#4fc0c4;--accent-soft:#16383b;--good:#5ccf8a;--good-soft:#173528;--warn:#f0b35a;--warn-soft:#3a2c14;--bad:#ff8a80;--bad-soft:#3f1d1b;--good-mid:#a9e4c3;
+  --b-home:#3a8fb0;--b-save:#3fae6a;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 120px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-bottom:16px;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;flex:none;display:block}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:1.3rem}
+.sub{color:var(--muted);font-size:.85rem}
+.headr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.langbtn{border:1px solid var(--line)}
+.example{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.85rem}
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.pill.ex{background:var(--warn-soft);color:var(--warn)}
+.pill.saved{background:var(--good-soft);color:var(--good)}
+button{font:inherit;cursor:pointer;color:inherit}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:9px;font-weight:700}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent);padding-inline:8px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* progress */
+.progress{display:flex;gap:6px;margin:6px 0 26px}
+.progress button{flex:1 1 0;min-width:0;border:0;background:none;padding:0;text-align:left;font-size:.74rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress i{display:block;height:6px;border-radius:3px;background:var(--line);margin-bottom:6px}
+.progress .done i{background:var(--accent);opacity:.55}
+.progress [aria-current="step"]{color:var(--ink);font-weight:700}
+.progress [aria-current="step"] i{background:var(--accent)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
+main{min-width:0}
+.eyebrow{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h2{font-size:2rem;font-weight:700;margin:6px 0 8px}
+.lede{color:var(--muted);max-width:60ch;margin:0 0 22px}
+/* picked rows */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:6px 18px 14px;margin-bottom:16px}
+.panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 0 6px;flex-wrap:wrap}
+.panel-h h3{font-size:1rem}
+.panel-h .tot{font-family:var(--mono);font-size:.95rem}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 0 4px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 124px 148px 40px 40px;gap:8px;align-items:center;padding:10px 0;border-top:1px dashed var(--line)}
+.row .lab{min-width:0;font-size:.95rem}
+.row .lab small{display:block;color:var(--muted);font-size:.78rem;line-height:1.35;margin-top:2px}
+.tipline{grid-column:1/-1;display:flex;gap:8px;align-items:flex-start;font-size:.84rem;background:var(--accent-soft);border-radius:8px;padding:8px 10px}
+.icon{width:32px;height:32px;border-radius:8px;border:1px solid transparent;background:none;display:grid;place-items:center;color:var(--muted)}
+.icon:hover{border-color:var(--line);color:var(--accent)}
+.icon[aria-expanded="true"]{background:var(--accent-soft);color:var(--accent)}
+.money{position:relative}
+.money::before{content:"$";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--mono)}
+.money input,.txt{width:100%;padding:9px 8px 9px 22px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-family:var(--mono);font-size:.95rem;text-align:right;color:var(--ink)}
+.txt{font-family:var(--body);text-align:left;padding-left:10px}
+html[lang^="fr"] .money::before{left:auto;right:10px}
+html[lang^="fr"] .money input{padding-left:8px;padding-right:24px}
+.money input:focus,.txt:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+select{width:100%;padding:9px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:.88rem}
+/* chips */
+.pick h3{font-size:1rem;margin:4px 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px 8px 11px;font-size:.92rem;display:inline-flex;gap:6px;align-items:center}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip b{color:var(--accent);font-weight:700}
+.chip.more{border-style:dashed;color:var(--accent);font-weight:700}
+.search{margin:14px 0 4px;position:relative}
+.search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font:inherit}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.results-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.results-list .where{font-size:.75rem;color:var(--muted)}
+.estimate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--accent-soft);border-radius:var(--r);padding:12px 16px;margin-bottom:16px}
+.switch{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:.92rem;cursor:pointer}
+.switch input{appearance:none;width:40px;height:22px;border-radius:11px;background:var(--line);position:relative;cursor:pointer;margin:0;flex:none}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:left .15s}
+.switch input:checked{background:var(--accent)}
+.switch input:checked::after{left:21px}
+.estimate small{color:var(--muted);font-size:.82rem;flex:1 1 220px}
+.estrow{display:grid;grid-template-columns:minmax(0,1fr) 150px 150px;gap:10px;align-items:center;padding:12px 0}
+.navbar{display:flex;justify-content:space-between;gap:10px;margin-top:26px;flex-wrap:wrap}
+/* tally */
+aside.tally{position:sticky;top:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.tally h3{font-size:1rem;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;font-size:.75rem}
+.seg button{border:0;background:none;padding:4px 9px}
+.seg [aria-pressed="true"]{background:var(--accent);color:var(--surface);font-weight:700}
+.tl{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 0;font-size:.9rem}
+.tl b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.tl.inc{grid-template-columns:minmax(0,1fr) auto;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
+.tl .est{font-size:.7rem;color:var(--muted);margin-left:4px}
+.dot{width:10px;height:10px;border-radius:3px;flex:none;display:inline-block}
+.balance{margin-top:12px;padding:14px;border-radius:9px}
+.balance .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.balance .big{font-family:var(--display);font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums}
+.balance.pos{background:var(--good-soft);color:var(--good)}
+.balance.neg{background:var(--bad-soft);color:var(--bad)}
+.balance.zero{background:var(--accent-soft);color:var(--accent)}
+.stack{height:10px;border-radius:5px;background:var(--line);overflow:hidden;display:flex;margin-top:12px}
+.stack i{display:block;height:100%}
+/* results */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.card .k{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.card .v{font-family:var(--display);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.compare{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.compare-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 18px 4px}
+.compare-h h3{font-size:1.15rem}
+.counts{display:flex;gap:6px;flex-wrap:wrap}
+.compare p.s{color:var(--muted);font-size:.86rem;margin:0;padding:0 18px 12px}
+.rule .bar{grid-column:1/-1;height:6px;background:var(--line);border-radius:3px;position:relative;margin-top:6px}
+.rule .bar i{position:absolute;inset:0 auto 0 0;border-radius:3px}
+.rule .bar em{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.status{display:inline-block;align-self:start;justify-self:end;font-size:.76rem;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.s-green{background:var(--good-soft);color:var(--good)}
+.s-yellow{background:var(--warn-soft);color:var(--warn)}
+.s-red{background:var(--bad-soft);color:var(--bad)}
+.s-none{background:var(--bg);color:var(--muted)}
+.sectitle{font-size:1.15rem;margin:24px 0 10px}
+.split{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.legend{display:grid;gap:7px;font-size:.9rem}
+.legend div{display:grid;grid-template-columns:10px minmax(0,1fr) auto auto;gap:10px;align-items:center}
+.legend .pct{color:var(--muted);font-family:var(--mono);font-size:.8rem;width:3.4em;text-align:right}
+.legend b{font-family:var(--mono);font-weight:500}
+.rule{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 18px;border-top:1px solid var(--line)}
+.rule .nm{font-weight:700;font-size:.93rem}
+.rule .nm span{font-family:var(--mono);font-weight:500;font-size:.82rem;color:var(--muted);margin-left:6px}
+.rule .msg{grid-column:1/-1;color:var(--muted);font-size:.84rem}
+.tips{display:grid;gap:10px}
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem;max-width:72ch;display:grid;gap:6px}
+.foot h2{font-size:.95rem;color:var(--ink);margin:0 0 2px}
+.foot p{margin:0}
+.foot a{color:var(--accent)}
+.notice{margin:0 0 16px}
+.notice-in{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--warn-soft);border:1px solid var(--warn);border-radius:var(--r);padding:12px 14px}
+.notice-dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex:none}
+.notice-t{flex:1 1 260px;min-width:0;display:grid;gap:2px;font-size:.9rem}
+.notice-t span{color:var(--ink);opacity:.85}
+.notice-a{display:flex;gap:6px;flex-wrap:wrap}
+.notice-a .btn{padding:8px 14px}
+.dlg{position:fixed;inset:0;z-index:60;background:rgba(10,20,22,.45);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dlg-card{background:var(--surface);color:var(--ink);border-radius:14px;padding:22px;max-width:440px;width:100%;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.dlg-card h3{font-size:1.25rem;margin-bottom:8px}
+.dlg-card p{color:var(--muted);margin:0 0 18px}
+.dlg-a{display:flex;flex-direction:column;gap:8px}
+.dlg-a .btn{width:100%}
+.tfile{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:6px;font-size:.82rem}
+.tfile div{display:flex;flex-wrap:wrap;gap:4px 14px}
+.linkbtn{border:0;background:none;padding:4px 0;color:var(--accent);font-weight:700;font-size:.85rem;text-decoration:underline;text-underline-offset:3px}
+.filebox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin:22px 0 12px;min-width:0}
+.filebox p.s{color:var(--muted);font-size:.88rem;margin:-4px 0 14px;max-width:62ch}
+.fileacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fileact{display:flex;gap:12px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 14px;color:var(--ink)}
+.fileact:hover{border-color:var(--accent)}
+label.btn,label.fileact{cursor:pointer;display:inline-flex;align-items:center}
+label.fileact{display:flex;align-items:flex-start}
+.fileact svg{flex:none;color:var(--accent);margin-top:1px}
+.fileact b{display:block;font-size:.95rem}
+.fileact small{display:block;color:var(--muted);font-size:.8rem;line-height:1.35;margin-top:2px}
+.flow,.topx{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:12px}
+.flow-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.flow-h h3{font-size:1.1rem}
+.flowbar{position:relative;display:flex;height:34px;margin-top:22px;border-radius:8px;overflow:visible;background:var(--line);margin-bottom:14px}
+.flowbar i{display:block;height:100%}
+.flowbar i:first-child{border-radius:8px 0 0 8px}
+.flowbar i:last-child{border-radius:0 8px 8px 0}
+.flowbar .incline{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--bad)}
+.flowbar .over{position:absolute;top:0;bottom:0;border-radius:0 8px 8px 0;background:repeating-linear-gradient(135deg,var(--bad) 0 6px,var(--bad-soft) 6px 11px)}
+.flowbar .incline span{position:absolute;top:-20px;right:5px;font-size:.72rem;font-style:normal;color:var(--bad);font-weight:700;white-space:nowrap}
+.flowkey{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.flowkey div{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:2px 8px;align-items:center;font-size:.9rem}
+.flowkey b{font-family:var(--display);font-size:1.25rem;grid-column:2/-1}
+.flowkey small{grid-column:2/-1;color:var(--muted);font-size:.78rem;margin-top:-2px}
+.flowkey .short b{color:var(--bad)}
+.topx p.s{color:var(--muted);font-size:.86rem;margin:-6px 0 12px}
+.hb{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin-bottom:12px;min-width:0}
+.flow,.topx,.compare,.split{min-width:0}
+.hb:last-child{margin-bottom:0}
+.hb-l{display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+.hb-l span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb-l b{font-family:var(--mono);font-weight:500;white-space:nowrap}
+.hb-t{height:10px;background:var(--bg);border-radius:5px;overflow:hidden}
+.hb-t i{display:block;height:100%;border-radius:5px}
+.hb small{color:var(--muted);font-size:.76rem}
+.tip{padding:13px 16px;border-left:4px solid var(--accent);background:var(--surface);border-radius:0 var(--r) var(--r) 0}
+.tip h4{margin:0 0 4px;font-size:.98rem}
+.tip p{margin:0;color:var(--muted);font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;z-index:50}
+.mobilebar{display:none}
+/* Tablet portrait and below: one column, tally docks to the bottom */
+@media (max-width:860px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  aside.tally{display:none}
+  .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));justify-content:space-between;gap:12px;align-items:center}
+  .mobilebar .mm{display:flex;gap:16px;font-size:.74rem;color:var(--muted)}
+  .mobilebar .mm b{display:block;font-family:var(--mono);font-size:.95rem;color:var(--ink);font-weight:500}
+  .mobilebar .btn{min-height:44px;min-width:56px}
+  /* progress: bars only, but each step is a full-size tap target */
+  .progress{gap:4px;margin:0 0 18px}
+  .progress button{font-size:0;color:transparent;padding-block:16px;margin-block:-12px}
+  /* 16px fields stop iOS zooming in on focus */
+  .money input,.txt,select,.search input{font-size:16px}
+  .btn{min-height:44px}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .split svg{max-width:200px;margin:0 auto}
+  h2{font-size:1.6rem}
+}
+/* Phones */
+@media (max-width:600px){
+  .row{grid-template-columns:minmax(0,.8fr) minmax(0,1.25fr) 40px 40px;gap:6px}
+  .row .lab{grid-column:1/3;grid-row:1}
+  .row>:nth-child(4){grid-column:3;grid-row:1;align-self:start}
+  .row>:nth-child(5){grid-column:4;grid-row:1;align-self:start}
+  .row>.money{grid-column:1;grid-row:2}
+  .row>select{grid-column:2/-1;grid-row:2}
+  .estrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .estrow>label{grid-column:1/-1}
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .card{padding:10px 12px}
+  .card .k{font-size:.64rem;letter-spacing:.04em}
+  .card .v{font-size:1.05rem}
+  h2{font-size:1.45rem}
+  header.top .sub{display:none}
+  .headr{display:contents}
+  .brand{order:1;flex:1 1 0;min-width:0}
+  .brand h1{font-size:1.15rem}
+  .langbtn{order:2;min-height:40px;padding-inline:12px}
+  .example{order:3;flex-basis:100%}
+  .panel{padding-inline:14px}
+  .navbar .btn{flex:1 1 auto}
+  .yt,.compare-h h3{font-size:1.05rem}
+  .flowkey{gap:6px}
+  .flowkey div{font-size:.8rem;gap:2px 6px}
+  .flowkey b{font-size:1rem}
+  .flow,.topx{padding:14px}
+  .fileacts{grid-template-columns:minmax(0,1fr)}
+  .filebox{padding:14px}
+}
+/* Touch screens: larger tap targets */
+@media (pointer:coarse){
+  .icon{width:40px;height:40px}
+  .chip{min-height:42px;padding-inline:14px}
+  .seg button{padding:8px 12px}
+  .progress button{padding-block:12px;margin-block:-12px}
+  .switch input{width:46px;height:26px;border-radius:13px}
+  .switch input::after{width:20px;height:20px}
+  .switch input:checked::after{left:23px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#0d6b73"/><path d="M244 280 L244 140 A140 140 0 1 0 384 280 Z" fill="#fff"/><path d="M270 254 L270 114 A140 140 0 0 1 410 254 Z" fill="#a9e4c3"/></svg>
+      <div><h1 id="appName">Super Simple Budget</h1><div class="sub" id="appSub">Tap what you pay for, skip the rest</div></div>
+    </div>
+    <div class="headr"><div class="example" id="dataState"></div><button class="btn ghost langbtn" id="langBtn" lang="fr">Français</button></div>
+  </header>
+  <div class="notice" id="notice" role="status" hidden></div>
+  <nav class="progress" id="progress" aria-label="Progress"></nav>
+  <div class="grid">
+    <main id="main"></main>
+    <aside class="tally" id="tally" aria-label="Running total"></aside>
+  </div>
+  <footer class="foot" id="foot"></footer>
+</div>
+<div class="mobilebar" id="mobilebar"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="dlg" id="dlg" hidden></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+
+<script>
+const D={"income": [{"id": "myNetIncome", "l": "My net salary", "p": "Every2Weeks", "h": "What actually lands in your account after taxes and other deductions.", "t": ""}, {"id": "spouseNetIncome", "l": "Partner's net salary", "p": "Every2Weeks", "h": "", "t": ""}, {"id": "employmentInsurance", "l": "EI benefits", "p": "Every2Weeks", "h": "Temporary payments while you're between jobs or retraining.", "t": ""}, {"id": "rentalIncome", "l": "Rent from a property I own", "p": "Monthly", "h": "Money tenants pay you for space in a property you own.", "t": ""}, {"id": "federalPension", "l": "Government pensions (OAS, CPP, GIS)", "p": "Monthly", "h": "Government retirement payments such as OAS, CPP or the GIS.", "t": ""}, {"id": "employerPension", "l": "Workplace pension", "p": "Monthly", "h": "Retirement payments from a workplace pension plan.", "t": ""}, {"id": "personalRetirement", "l": "Withdrawals from my retirement savings", "p": "Monthly", "h": "Money you draw from your own retirement savings, like an RRSP or RRIF.", "t": ""}, {"id": "studentLoanIncome", "l": "Student funding", "p": "Monthly", "h": "Money for school from RESP withdrawals, scholarships, grants or student loans.", "t": ""}, {"id": "childSupportIncome", "l": "Child support I receive", "p": "Monthly", "h": "Payments you receive from a former partner to help cover your children's costs.", "t": ""}, {"id": "childBenefits", "l": "Canada Child Benefit and other child benefits", "p": "Monthly", "h": "Tax-free monthly government payments that help families with children under 18.", "t": ""}, {"id": "disabilityBenefit", "l": "Disability benefits", "p": "Monthly", "h": "Payments for people who paid into the CPP and can't work regularly because of a disability.", "t": ""}, {"id": "socialAssistance", "l": "Social assistance", "p": "Monthly", "h": "Financial support for people with low income who need help covering basic costs.", "t": ""}, {"id": "selfEmploymentIncome", "c": null, "l": "Self-employment income", "p": "Monthly", "h": "What you earn from your own business or contract work, after business costs and the tax you set aside.", "t": "", "ft": null}, {"id": "gigIncome", "c": null, "l": "Side or gig income", "p": "Monthly", "h": "Earnings from rideshare, delivery, freelance or other side work.", "t": "", "ft": null}, {"id": "spousalSupportIncome", "c": null, "l": "Spousal support received", "p": "Monthly", "h": "Payments you receive from a former spouse or partner for your own support.", "t": "", "ft": null}, {"id": "investmentIncome", "c": null, "l": "Investment income", "p": "Quarterly", "h": "Interest, dividends or other regular income from your investments.", "t": "", "ft": null}], "savings": [{"id": "emergencyFund", "l": "Emergency fund", "p": "Monthly", "h": "A cushion for surprise costs. A good target is 3 to 6 months of living expenses.", "t": "Set up a small automatic transfer, then raise it bit by bit.", "ft": "CASH"}, {"id": "retirement", "l": "Retirement savings", "p": "Monthly", "h": "", "t": "", "ft": "RRSP"}, {"id": "education", "l": "Children's education", "p": "Monthly", "h": "", "t": "Government grants can add to what you put into an RESP.", "ft": "RESP"}, {"id": "homePurchase", "l": "Down payment for a home", "p": "Monthly", "h": "", "t": "First-time buyers may be able to put RRSP savings toward a home.", "ft": "CASH"}, {"id": "homeRenovation", "l": "Home improvements", "p": "Monthly", "h": "", "t": "", "ft": "CASH"}, {"id": "carPurchase", "l": "Next car", "p": "Monthly", "h": "", "t": "Look past the monthly payment and add up what the car will cost you overall.", "ft": "CASH"}, {"id": "incomeTax", "l": "Tax owing at filing time", "p": "Annually", "h": "", "t": "If you usually owe tax when you file, set money aside for it through the year.", "ft": "CASH"}, {"id": "tfsa", "c": null, "l": "TFSA", "p": "Monthly", "h": "Tax-Free Savings Account. What it earns, and what you take out, isn't taxed.", "t": "Unused TFSA room carries forward to later years.", "ft": "TFSA"}, {"id": "fhsa", "c": null, "l": "First home (FHSA)", "p": "Monthly", "h": "First Home Savings Account. Contributions lower your taxable income, and qualifying withdrawals to buy a first home aren't taxed.", "t": "", "ft": "FHSA"}], "expenses": [{"id": "creditCard", "c": "debt", "l": "Credit card balance", "p": "Monthly", "h": "What you pay toward a balance you carry from month to month. Don't count purchases you've already listed elsewhere.", "t": ""}, {"id": "lineOfCredit", "c": "debt", "l": "Line of credit balance", "p": "Monthly", "h": "What you pay toward the balance on your line of credit. Avoid counting the same spending twice.", "t": ""}, {"id": "personalLoan", "c": "debt", "l": "Personal loan or store financing", "p": "Monthly", "h": "Regular payments on a personal loan, including store financing and buy now, pay later plans. Avoid counting the same spending twice.", "t": ""}, {"id": "studentLoan", "c": "debt", "l": "Student loan payments", "p": "Monthly", "h": "Regular payments on student loans or a student line of credit.", "t": ""}, {"id": "overdraft", "c": "debt", "l": "Overdraft", "p": "Monthly", "h": "Payments to bring your account back above zero, plus overdraft fees and interest.", "t": "", "ft": null}, {"id": "paydayLoan", "c": "debt", "l": "Payday loans", "p": "Monthly", "h": "Payments on short-term, high-cost loans.", "t": "Payday loans are one of the most expensive ways to borrow. A non-profit credit counsellor can help you find other options.", "ft": null}, {"id": "craDebt", "c": "debt", "l": "Money owed to the CRA", "p": "Monthly", "h": "Payments on income tax or benefit overpayments you owe the Canada Revenue Agency.", "t": "", "ft": null}, {"id": "rent", "c": "housing", "l": "Rent", "p": "Monthly", "h": "", "t": ""}, {"id": "mortgage", "c": "housing", "l": "Mortgage", "p": "Monthly", "h": "", "t": ""}, {"id": "heloc", "c": "housing", "l": "Home equity line of credit", "p": "Monthly", "h": "What you pay toward the balance on a line of credit secured by your home. Avoid counting the same spending twice.", "t": ""}, {"id": "propertyTax", "c": "housing", "l": "Property tax", "p": "Monthly", "h": "", "t": ""}, {"id": "condoFee", "c": "housing", "l": "Condo fees", "p": "Monthly", "h": "", "t": ""}, {"id": "tenantInsurance", "c": "housing", "l": "Renter's insurance", "p": "Monthly", "h": "", "t": "Compare quotes from a few insurers before you renew."}, {"id": "homeInsurance", "c": "housing", "l": "Home insurance", "p": "Monthly", "h": "", "t": ""}, {"id": "furniture", "c": "housing", "l": "Furniture and appliances", "p": "Annually", "h": "", "t": ""}, {"id": "outdoorEquipment", "c": "housing", "l": "Yard and snow care", "p": "Annually", "h": "Upkeep outside your home, like snow clearing, lawn care or gardening.", "t": ""}, {"id": "homeSecurity", "c": "housing", "l": "Alarm monitoring", "p": "Monthly", "h": "", "t": ""}, {"id": "electricity", "c": "housing", "l": "Electricity", "p": "Monthly", "h": "", "t": ""}, {"id": "waterSewage", "c": "housing", "l": "Water bill", "p": "Monthly", "h": "", "t": ""}, {"id": "heating", "c": "housing", "l": "Heating and equipment rental", "p": "Monthly", "h": "Your heating bill, plus rental fees for equipment like a furnace or water heater.", "t": ""}, {"id": "homeMaintenance", "c": "housing", "l": "Home repairs and maintenance", "p": "Annually", "h": "Fixing and looking after your home, like plumbing, painting or replacing a water heater.", "t": "", "ft": null}, {"id": "telephone", "c": "communications", "l": "Phone plans", "p": "Monthly", "h": "", "t": ""}, {"id": "cable", "c": "communications", "l": "TV service", "p": "Monthly", "h": "", "t": ""}, {"id": "internet", "c": "communications", "l": "Internet", "p": "Monthly", "h": "", "t": ""}, {"id": "combined", "c": "communications", "l": "Bundled services", "p": "Monthly", "h": "Bundles from one provider that cover phone, internet, TV or other services for one price.", "t": ""}, {"id": "subscriptions", "c": "communications", "l": "Streaming and online subscriptions", "p": "Monthly", "h": "Streaming services and other online subscriptions.", "t": ""}, {"id": "groceries", "c": "food", "l": "Groceries", "p": "Weekly", "h": "Your grocery bill, including any meal kit deliveries.", "t": "Plan your meals, and shop after eating so you're less tempted by extras."}, {"id": "restaurants", "c": "food", "l": "Eating out and takeout", "p": "Weekly", "h": "Meals out and takeout, plus small buys like coffee, tea and snacks.", "t": "A daily coffee or tea can add up to more than $900 a year."}, {"id": "life", "c": "insurance", "l": "Life insurance", "p": "Monthly", "h": "", "t": ""}, {"id": "medical", "c": "insurance", "l": "Health and dental insurance", "p": "Monthly", "h": "", "t": ""}, {"id": "disability", "c": "insurance", "l": "Disability and accident insurance", "p": "Monthly", "h": "", "t": ""}, {"id": "carPayments", "c": "transportation", "l": "Car payments", "p": "Monthly", "h": "", "t": ""}, {"id": "carInsurance", "c": "transportation", "l": "Car insurance", "p": "Monthly", "h": "", "t": "Compare quotes from a few insurers before you renew."}, {"id": "gas", "c": "transportation", "l": "Fuel or charging", "p": "Weekly", "h": "", "t": ""}, {"id": "maintenance", "c": "transportation", "l": "Car upkeep", "p": "Monthly", "h": "Routine care like seasonal tune-ups, tire swaps and oil changes.", "t": ""}, {"id": "carRegistration", "c": "transportation", "l": "Licence plates and registration", "p": "Annually", "h": "", "t": ""}, {"id": "parking", "c": "transportation", "l": "Parking", "p": "Monthly", "h": "", "t": ""}, {"id": "transitPass", "c": "transportation", "l": "Transit", "p": "Monthly", "h": "", "t": ""}, {"id": "rideServices", "c": "transportation", "l": "Taxis and ride-hailing", "p": "Monthly", "h": "Taxis, ride-hailing and similar services.", "t": ""}, {"id": "tolls", "c": "transportation", "l": "Tolls", "p": "Monthly", "h": "Highway and bridge tolls.", "t": "", "ft": null}, {"id": "carShare", "c": "transportation", "l": "Car sharing and rentals", "p": "Monthly", "h": "Car-share memberships, trips and short-term rentals.", "t": "", "ft": null}, {"id": "bike", "c": "transportation", "l": "Bike and scooter costs", "p": "Annually", "h": "Buying, repairing or renting a bike or e-scooter, including bike share.", "t": "", "ft": null}, {"id": "daycare", "c": "childcare", "l": "Daycare and childcare", "p": "Monthly", "h": "", "t": ""}, {"id": "babysitting", "c": "childcare", "l": "Babysitters", "p": "Monthly", "h": "", "t": ""}, {"id": "childSupport", "c": "childcare", "l": "Child support I pay", "p": "Monthly", "h": "Payments you make to help cover your children's costs after a separation or divorce.", "t": ""}, {"id": "childrensAllowance", "c": "childcare", "l": "Pocket money for kids", "p": "Monthly", "h": "Spending money you give your children for small purchases or saving.", "t": ""}, {"id": "summerCamps", "c": "childcare", "l": "Summer and holiday camps", "p": "Annually", "h": "Day camps and overnight camps during school breaks.", "t": "Ask about early-bird rates and sibling discounts.", "ft": null}, {"id": "schoolLunches", "c": "childcare", "l": "School lunches and snacks", "p": "Monthly", "h": "Lunch programs, cafeteria money and snacks for school.", "t": "", "ft": null}, {"id": "tuition", "c": "education", "l": "Tuition", "p": "Annually", "h": "", "t": ""}, {"id": "schoolSupplies", "c": "education", "l": "Books and school supplies", "p": "Annually", "h": "", "t": ""}, {"id": "schoolTrips", "c": "education", "l": "School outings", "p": "Annually", "h": "", "t": ""}, {"id": "travel", "c": "recreation", "l": "Trips and vacations", "p": "Annually", "h": "Flights, places to stay and other costs of being away on a trip.", "t": "Have a trip in mind? Start setting money aside for it now."}, {"id": "memberships", "c": "recreation", "l": "Gym and club fees", "p": "Annually", "h": "Fees for a gym, pool, sports centre or similar facility.", "t": "Walking, running and home workouts cost nothing."}, {"id": "childrenToys", "c": "recreation", "l": "Kids’ toys and activities", "p": "Monthly", "h": "", "t": "Many cities run free activities for kids and families."}, {"id": "tickets", "c": "recreation", "l": "Concerts, shows and games", "p": "Monthly", "h": "Concerts, shows, sports games and other events.", "t": ""}, {"id": "sportsGear", "c": "recreation", "l": "Sports and hobby gear", "p": "Monthly", "h": "Equipment and costs for activities like skiing, camping, hockey or tennis.", "t": ""}, {"id": "entertainmentEquipment", "c": "recreation", "l": "Electronics", "p": "Monthly", "h": "Computers, TVs, sound systems, game consoles and similar electronics.", "t": "Buying used or refurbished can save you a lot."}, {"id": "alcohol", "c": "recreation", "l": "Alcohol", "p": "Monthly", "h": "", "t": ""}, {"id": "smoking", "c": "recreation", "l": "Tobacco and vaping", "p": "Monthly", "h": "Cigarettes, vaping products and related supplies.", "t": ""}, {"id": "hairdresser", "c": "personalCare", "l": "Haircuts", "p": "Monthly", "h": "", "t": ""}, {"id": "cosmetics", "c": "personalCare", "l": "Makeup and skin care", "p": "Monthly", "h": "", "t": ""}, {"id": "spa", "c": "personalCare", "l": "Spa and beauty treatments", "p": "Monthly", "h": "", "t": ""}, {"id": "clothes", "c": "clothing", "l": "Clothing", "p": "Monthly", "h": "", "t": ""}, {"id": "childrenClothes", "c": "clothing", "l": "Kids’ clothing", "p": "Monthly", "h": "", "t": ""}, {"id": "accessories", "c": "clothing", "l": "Shoes, bags and accessories", "p": "Monthly", "h": "", "t": ""}, {"id": "doctor", "c": "medical", "l": "Medical costs", "p": "Annually", "h": "", "t": ""}, {"id": "dentist", "c": "medical", "l": "Dental care", "p": "Annually", "h": "", "t": ""}, {"id": "specialists", "c": "medical", "l": "Therapists and specialists", "p": "Annually", "h": "Practitioners such as physiotherapists, chiropractors, psychologists or optometrists.", "t": ""}, {"id": "prescriptions", "c": "medical", "l": "Prescriptions", "p": "Monthly", "h": "Medicines you pay for that a plan doesn't cover.", "t": "", "ft": null}, {"id": "eyewear", "c": "medical", "l": "Glasses and contact lenses", "p": "Annually", "h": "Frames, lenses and contacts not covered by a plan.", "t": "", "ft": null}, {"id": "petFood", "c": "pets", "l": "Pet food and supplies", "p": "Monthly", "h": "", "t": ""}, {"id": "veterinarian", "c": "pets", "l": "Vet bills", "p": "Annually", "h": "", "t": "Pet insurance may help with large vet bills."}, {"id": "bankFees", "c": "fees", "l": "Bank fees", "p": "Monthly", "h": "Monthly account fees, transaction charges, brokerage fees and similar costs.", "t": "Many banks and credit unions offer low-fee or free accounts."}, {"id": "creditCardFees", "c": "fees", "l": "Card fees", "p": "Annually", "h": "Annual fees, balance protection and other recurring charges on your card.", "t": "Check that your card's features are worth what you pay for it."}, {"id": "professionalDues", "c": "fees", "l": "Union and professional dues", "p": "Annually", "h": "Work-related membership fees, like union dues or professional association fees.", "t": ""}, {"id": "taxPrep", "c": "fees", "l": "Tax preparation", "p": "Annually", "h": "Fees to have your tax return prepared.", "t": "Free tax clinics can help if your income is modest and your taxes are simple.", "ft": null}, {"id": "legalFees", "c": "fees", "l": "Legal and professional fees", "p": "Annually", "h": "Lawyers, notaries, accountants and similar services.", "t": "", "ft": null}, {"id": "gifts", "c": "giftsDonations", "l": "Gifts", "p": "Annually", "h": "Presents for holidays, birthdays, weddings and other occasions.", "t": "Try a gift exchange or a homemade gift."}, {"id": "donations", "c": "giftsDonations", "l": "Charitable giving", "p": "Annually", "h": "Money you give to charities and other causes.", "t": ""}], "cats": [{"id": "debt", "l": "Debt payments"}, {"id": "housing", "l": "Home"}, {"id": "communications", "l": "Phone, internet and TV"}, {"id": "food", "l": "Food and dining"}, {"id": "insurance", "l": "Personal insurance"}, {"id": "transportation", "l": "Getting around"}, {"id": "childcare", "l": "Children"}, {"id": "education", "l": "School and learning"}, {"id": "recreation", "l": "Leisure and fun"}, {"id": "personalCare", "l": "Self-care"}, {"id": "clothing", "l": "Clothes and accessories"}, {"id": "medical", "l": "Health care"}, {"id": "pets", "l": "Pet care"}, {"id": "fees", "l": "Banking and other fees"}, {"id": "giftsDonations", "l": "Giving"}], "rules": [{"c": "income", "lv": "red", "m": "", "min": 0, "max": 0}, {"c": "savings", "lv": "green", "m": "", "min": 0.049999, "max": 9999}, {"c": "savings", "lv": "yellow", "m": "", "min": 0, "max": 0.049999}, {"c": "savings", "lv": "red", "m": "", "min": 0, "max": 0}, {"c": "debt", "lv": "green", "m": "", "min": 0, "max": 0.15}, {"c": "debt", "lv": "yellow", "m": "", "min": 0.15, "max": 0.3}, {"c": "debt", "lv": "red", "m": "", "min": 0.3, "max": 9999}, {"c": "housing", "lv": "green", "m": "", "min": 0, "max": 0.35}, {"c": "housing", "lv": "yellow", "m": "", "min": 0.35, "max": 0.43}, {"c": "housing", "lv": "red", "m": "", "min": 0.43, "max": 9999}, {"c": "communications", "lv": "green", "m": "", "min": 0, "max": 0.05}, {"c": "communications", "lv": "yellow", "m": "", "min": 0.05, "max": 0.15}, {"c": "communications", "lv": "red", "m": "", "min": 0.15, "max": 9999}, {"c": "food", "lv": "green", "m": "", "min": 0, "max": 0.2}, {"c": "food", "lv": "yellow", "m": "", "min": 0.2, "max": 0.3}, {"c": "food", "lv": "red", "m": "", "min": 0, "max": 0}, {"c": "food", "lv": "red", "m": "", "min": 0.3, "max": 9999}, {"c": "insurance", "lv": "green", "m": "", "min": 0, "max": 0.03}, {"c": "insurance", "lv": "yellow", "m": "", "min": 0.03, "max": 0.09}, {"c": "insurance", "lv": "red", "m": "", "min": 0, "max": 0}, {"c": "insurance", "lv": "red", "m": "", "min": 0.09, "max": 9999}, {"c": "transportation", "lv": "green", "m": "", "min": 0, "max": 0.2}, {"c": "transportation", "lv": "yellow", "m": "", "min": 0.2, "max": 0.3}, {"c": "transportation", "lv": "red", "m": "", "min": 0.3, "max": 9999}, {"c": "childcare", "lv": "green", "m": "", "min": 0, "max": 0.14}, {"c": "childcare", "lv": "yellow", "m": "", "min": 0.14, "max": 0.25}, {"c": "childcare", "lv": "red", "m": "", "min": 0.25, "max": 9999}, {"c": "education", "lv": "green", "m": "", "min": 0, "max": 0.08}, {"c": "education", "lv": "yellow", "m": "", "min": 0.08, "max": 0.17}, {"c": "education", "lv": "red", "m": "", "min": 0.17, "max": 9999}, {"c": "recreation", "lv": "green", "m": "", "min": 0, "max": 0.15}, {"c": "recreation", "lv": "yellow", "m": "", "min": 0.15, "max": 0.3}, {"c": "recreation", "lv": "red", "m": "", "min": 0.3, "max": 9999}, {"c": "personalCare", "lv": "green", "m": "", "min": 0, "max": 0.02}, {"c": "personalCare", "lv": "yellow", "m": "", "min": 0.02, "max": 0.1}, {"c": "personalCare", "lv": "red", "m": "", "min": 0.1, "max": 9999}, {"c": "clothing", "lv": "green", "m": "", "min": 0, "max": 0.05}, {"c": "clothing", "lv": "yellow", "m": "", "min": 0.05, "max": 0.2}, {"c": "clothing", "lv": "red", "m": "", "min": 0, "max": 0}, {"c": "clothing", "lv": "red", "m": "", "min": 0.2, "max": 9999}, {"c": "medical", "lv": "green", "m": "", "min": 0, "max": 0.05}, {"c": "medical", "lv": "yellow", "m": "", "min": 0.05, "max": 0.2}, {"c": "medical", "lv": "red", "m": "", "min": 0.2, "max": 9999}, {"c": "pets", "lv": "green", "m": "", "min": 0, "max": 0.02}, {"c": "pets", "lv": "yellow", "m": "", "min": 0.02, "max": 0.1}, {"c": "pets", "lv": "red", "m": "", "min": 0.1, "max": 9999}, {"c": "fees", "lv": "green", "m": "", "min": 0, "max": 0.02}, {"c": "fees", "lv": "yellow", "m": "", "min": 0.02, "max": 0.1}, {"c": "fees", "lv": "red", "m": "", "min": 0.1, "max": 9999}, {"c": "giftsDonations", "lv": "green", "m": "", "min": 0, "max": 0.05}, {"c": "giftsDonations", "lv": "yellow", "m": "", "min": 0.05, "max": 0.2}, {"c": "giftsDonations", "lv": "red", "m": "", "min": 0.2, "max": 9999}]};
+const FR={"ft": {"RRSP": "REER", "RESP": "REEE", "TFSA": "CELI", "FHSA": "CELIAPP"}, "cats": {"debt": "Paiements de dettes", "housing": "Logement", "communications": "Téléphone, Internet et télé", "food": "Alimentation", "insurance": "Assurances personnelles", "transportation": "Déplacements", "childcare": "Enfants", "education": "Études et formation", "recreation": "Loisirs", "personalCare": "Soins personnels", "clothing": "Vêtements et accessoires", "medical": "Santé", "pets": "Animaux de compagnie", "fees": "Frais bancaires et autres frais", "giftsDonations": "Dons et cadeaux", "savings": "Épargne"}, "items": {"myNetIncome": {"l": "Mon salaire net", "h": "Ce qui arrive réellement dans votre compte après les impôts et les autres retenues.", "t": ""}, "spouseNetIncome": {"l": "Salaire net de mon ou ma partenaire", "h": "", "t": ""}, "employmentInsurance": {"l": "Prestations d’assurance-emploi", "h": "Prestations temporaires versées pendant que vous êtes entre deux emplois ou en formation.", "t": ""}, "rentalIncome": {"l": "Loyers perçus d’une propriété", "h": "Ce que des locataires vous paient pour un espace dans une propriété qui vous appartient.", "t": ""}, "federalPension": {"l": "Pensions gouvernementales (SV, RPC, SRG)", "h": "Prestations de retraite du gouvernement, comme la Sécurité de la vieillesse (SV), le Régime de pensions du Canada (RPC) ou le Supplément de revenu garanti (SRG).", "t": ""}, "employerPension": {"l": "Régime de retraite au travail", "h": "Prestations versées par le régime de retraite d’un employeur.", "t": ""}, "personalRetirement": {"l": "Retraits de mon épargne-retraite", "h": "Ce que vous retirez de votre propre épargne-retraite, comme un REER ou un FERR.", "t": ""}, "studentLoanIncome": {"l": "Aide financière aux études", "h": "Argent pour les études provenant de retraits d’un REEE, de bourses, de subventions ou de prêts étudiants.", "t": ""}, "childSupportIncome": {"l": "Pension alimentaire pour enfants reçue", "h": "Montants qu’un ancien conjoint ou une ancienne conjointe vous verse pour aider à couvrir les dépenses de vos enfants.", "t": ""}, "childBenefits": {"l": "Allocation canadienne pour enfants et autres allocations", "h": "Versements mensuels non imposables du gouvernement qui aident les familles ayant des enfants de moins de 18 ans.", "t": ""}, "disabilityBenefit": {"l": "Prestations d’invalidité", "h": "Prestations pour les personnes qui ont cotisé au RPC et qui ne peuvent pas travailler régulièrement en raison d’une invalidité.", "t": ""}, "socialAssistance": {"l": "Aide sociale", "h": "Soutien financier pour les personnes à faible revenu qui ont besoin d’aide pour couvrir leurs besoins essentiels.", "t": ""}, "selfEmploymentIncome": {"l": "Revenu de travail autonome", "h": "Ce que vous gagnez grâce à votre entreprise ou à vos contrats, après les dépenses d’entreprise et l’impôt que vous mettez de côté.", "t": ""}, "gigIncome": {"l": "Revenu d’appoint ou à la pige", "h": "Gains tirés du transport de passagers, de la livraison, du travail à la pige ou d’un autre travail d’appoint.", "t": ""}, "spousalSupportIncome": {"l": "Pension alimentaire pour conjoint reçue", "h": "Montants qu’un ancien conjoint ou une ancienne conjointe vous verse pour votre propre soutien.", "t": ""}, "investmentIncome": {"l": "Revenu de placements", "h": "Intérêts, dividendes ou autres revenus réguliers tirés de vos placements.", "t": ""}, "emergencyFund": {"l": "Fonds d’urgence", "h": "Un coussin pour les dépenses imprévues. Visez de 3 à 6 mois de frais de subsistance.", "t": "Mettez en place un petit virement automatique, puis augmentez-le peu à peu."}, "retirement": {"l": "Épargne-retraite", "h": "", "t": ""}, "education": {"l": "Études des enfants", "h": "", "t": "Des subventions gouvernementales peuvent s’ajouter à ce que vous versez dans un REEE."}, "homePurchase": {"l": "Mise de fonds pour une maison", "h": "", "t": "Si vous achetez une première maison, vous pourriez utiliser votre épargne REER pour cet achat."}, "homeRenovation": {"l": "Améliorations à la maison", "h": "", "t": ""}, "carPurchase": {"l": "Prochaine voiture", "h": "", "t": "Regardez au-delà du paiement mensuel et calculez ce que la voiture vous coûtera au total."}, "incomeTax": {"l": "Impôt à payer lors de la déclaration", "h": "", "t": "Si vous devez habituellement de l’impôt au moment de produire votre déclaration, mettez de l’argent de côté tout au long de l’année."}, "tfsa": {"l": "CELI", "h": "Compte d’épargne libre d’impôt. Les revenus qu’il génère et les retraits ne sont pas imposés.", "t": "Les droits de cotisation inutilisés à votre CELI sont reportés aux années suivantes."}, "fhsa": {"l": "Première maison (CELIAPP)", "h": "Compte d’épargne libre d’impôt pour l’achat d’une première propriété. Les cotisations réduisent votre revenu imposable, et les retraits admissibles pour acheter une première maison ne sont pas imposés.", "t": ""}, "creditCard": {"l": "Solde de carte de crédit", "h": "Ce que vous payez sur le solde que vous reportez d’un mois à l’autre. Ne comptez pas les achats déjà inscrits ailleurs.", "t": ""}, "lineOfCredit": {"l": "Solde de marge de crédit", "h": "Ce que vous payez sur le solde de votre marge de crédit. Évitez de compter deux fois les mêmes dépenses.", "t": ""}, "personalLoan": {"l": "Prêt personnel ou financement en magasin", "h": "Paiements réguliers sur un prêt personnel, y compris le financement en magasin et les plans « achetez maintenant, payez plus tard ». Évitez de compter deux fois les mêmes dépenses.", "t": ""}, "studentLoan": {"l": "Paiements de prêt étudiant", "h": "Paiements réguliers sur des prêts étudiants ou une marge de crédit étudiante.", "t": ""}, "overdraft": {"l": "Découvert", "h": "Paiements pour ramener votre compte au-dessus de zéro, plus les frais et les intérêts de découvert.", "t": ""}, "paydayLoan": {"l": "Prêts sur salaire", "h": "Paiements sur des prêts à court terme et à coût élevé.", "t": "Les prêts sur salaire sont l’une des façons les plus coûteuses d’emprunter. Un conseiller en crédit d’un organisme sans but lucratif peut vous aider à trouver d’autres solutions."}, "craDebt": {"l": "Sommes dues à l’ARC", "h": "Paiements sur l’impôt ou les trop-payés de prestations que vous devez à l’Agence du revenu du Canada.", "t": ""}, "rent": {"l": "Loyer", "h": "", "t": ""}, "mortgage": {"l": "Hypothèque", "h": "", "t": ""}, "heloc": {"l": "Marge de crédit hypothécaire", "h": "Ce que vous payez sur le solde d’une marge de crédit garantie par votre maison. Évitez de compter deux fois les mêmes dépenses.", "t": ""}, "propertyTax": {"l": "Taxes foncières", "h": "", "t": ""}, "condoFee": {"l": "Frais de copropriété", "h": "", "t": ""}, "tenantInsurance": {"l": "Assurance locataire", "h": "", "t": "Comparez les soumissions de quelques assureurs avant de renouveler."}, "homeInsurance": {"l": "Assurance habitation", "h": "", "t": ""}, "furniture": {"l": "Meubles et électroménagers", "h": "", "t": ""}, "outdoorEquipment": {"l": "Entretien du terrain et déneigement", "h": "Entretien à l’extérieur de la maison, comme le déneigement, l’entretien de la pelouse ou le jardinage.", "t": ""}, "homeSecurity": {"l": "Télésurveillance", "h": "", "t": ""}, "electricity": {"l": "Électricité", "h": "", "t": ""}, "waterSewage": {"l": "Facture d’eau", "h": "", "t": ""}, "heating": {"l": "Chauffage et location d’équipement", "h": "Votre facture de chauffage, plus la location d’équipement comme une fournaise ou un chauffe-eau.", "t": ""}, "homeMaintenance": {"l": "Réparations et entretien de la maison", "h": "Réparer et entretenir votre maison, par exemple la plomberie, la peinture ou le remplacement d’un chauffe-eau.", "t": ""}, "telephone": {"l": "Forfaits de téléphone", "h": "", "t": ""}, "cable": {"l": "Service de télé", "h": "", "t": ""}, "internet": {"l": "Internet", "h": "", "t": ""}, "combined": {"l": "Services groupés", "h": "Offres d’un même fournisseur qui regroupent le téléphone, Internet, la télé ou d’autres services pour un seul prix.", "t": ""}, "subscriptions": {"l": "Diffusion en continu et abonnements en ligne", "h": "Services de diffusion en continu et autres abonnements en ligne.", "t": ""}, "groceries": {"l": "Épicerie", "h": "Votre facture d’épicerie, y compris les livraisons de prêts-à-cuisiner.", "t": "Planifiez vos repas et faites l’épicerie après avoir mangé : vous aurez moins envie d’extras."}, "restaurants": {"l": "Restaurants et commandes à emporter", "h": "Repas au restaurant et mets à emporter, plus les petits achats comme le café, le thé et les collations.", "t": "Un café ou un thé par jour peut coûter plus de 900 $ par année."}, "life": {"l": "Assurance vie", "h": "", "t": ""}, "medical": {"l": "Assurance maladie et dentaire", "h": "", "t": ""}, "disability": {"l": "Assurance invalidité ou accident", "h": "", "t": ""}, "carPayments": {"l": "Paiements de voiture", "h": "", "t": ""}, "carInsurance": {"l": "Assurance auto", "h": "", "t": "Comparez les soumissions de quelques assureurs avant de renouveler."}, "gas": {"l": "Essence ou recharge", "h": "", "t": ""}, "maintenance": {"l": "Entretien de la voiture", "h": "Entretien courant comme les mises au point saisonnières, le changement des pneus et la vidange d’huile.", "t": ""}, "carRegistration": {"l": "Plaques et immatriculation", "h": "", "t": ""}, "parking": {"l": "Stationnement", "h": "", "t": ""}, "transitPass": {"l": "Transport en commun", "h": "", "t": ""}, "rideServices": {"l": "Taxis et transport par application", "h": "Taxis, services de transport par application et services semblables.", "t": ""}, "tolls": {"l": "Péages", "h": "Péages d’autoroutes et de ponts.", "t": ""}, "carShare": {"l": "Autopartage et location", "h": "Abonnements d’autopartage, trajets et locations de courte durée.", "t": ""}, "bike": {"l": "Vélo et trottinette", "h": "Achat, réparation ou location d’un vélo ou d’une trottinette électrique, y compris le vélopartage.", "t": ""}, "daycare": {"l": "Garderie et services de garde", "h": "", "t": ""}, "babysitting": {"l": "Gardiennage", "h": "", "t": ""}, "childSupport": {"l": "Pension alimentaire pour enfants versée", "h": "Montants que vous versez pour aider à couvrir les dépenses de vos enfants après une séparation ou un divorce.", "t": ""}, "childrensAllowance": {"l": "Argent de poche des enfants", "h": "Argent que vous donnez à vos enfants pour leurs petits achats ou pour épargner.", "t": ""}, "summerCamps": {"l": "Camps d’été et de congés", "h": "Camps de jour et camps de vacances pendant les congés scolaires.", "t": "Informez-vous sur les tarifs hâtifs et les rabais pour les frères et sœurs."}, "schoolLunches": {"l": "Dîners et collations à l’école", "h": "Programmes de repas, argent pour la cafétéria et collations pour l’école.", "t": ""}, "tuition": {"l": "Droits de scolarité", "h": "", "t": ""}, "schoolSupplies": {"l": "Manuels et fournitures scolaires", "h": "", "t": ""}, "schoolTrips": {"l": "Sorties scolaires", "h": "", "t": ""}, "travel": {"l": "Voyages et vacances", "h": "Vols, hébergement et autres frais liés à un séjour à l’extérieur.", "t": "Vous prévoyez un voyage? Commencez dès maintenant à mettre de l’argent de côté."}, "memberships": {"l": "Gym et clubs", "h": "Frais pour un centre de conditionnement physique, une piscine, un centre sportif ou un lieu semblable.", "t": "La marche, la course et l’entraînement à la maison ne coûtent rien."}, "childrenToys": {"l": "Jouets et activités des enfants", "h": "", "t": "Beaucoup de villes offrent des activités gratuites pour les enfants et les familles."}, "tickets": {"l": "Concerts, spectacles et matchs", "h": "Concerts, spectacles, matchs sportifs et autres événements.", "t": ""}, "sportsGear": {"l": "Équipement de sport et de loisirs", "h": "Équipement et frais pour des activités comme le ski, le camping, le hockey ou le tennis.", "t": ""}, "entertainmentEquipment": {"l": "Appareils électroniques", "h": "Ordinateurs, téléviseurs, chaînes audio, consoles de jeux et autres appareils électroniques semblables.", "t": "Acheter des appareils usagés ou remis à neuf peut vous faire économiser beaucoup."}, "alcohol": {"l": "Alcool", "h": "", "t": ""}, "smoking": {"l": "Produits du tabac et de vapotage", "h": "Cigarettes, produits de vapotage et fournitures connexes.", "t": ""}, "hairdresser": {"l": "Coupes de cheveux", "h": "", "t": ""}, "cosmetics": {"l": "Maquillage et soins de la peau", "h": "", "t": ""}, "spa": {"l": "Spa et soins de beauté", "h": "", "t": ""}, "clothes": {"l": "Vêtements", "h": "", "t": ""}, "childrenClothes": {"l": "Vêtements des enfants", "h": "", "t": ""}, "accessories": {"l": "Chaussures, sacs et accessoires", "h": "", "t": ""}, "doctor": {"l": "Frais médicaux", "h": "", "t": ""}, "dentist": {"l": "Soins dentaires", "h": "", "t": ""}, "specialists": {"l": "Thérapeutes et spécialistes", "h": "Professionnels comme les physiothérapeutes, les chiropraticiens, les psychologues ou les optométristes.", "t": ""}, "prescriptions": {"l": "Médicaments d’ordonnance", "h": "Médicaments que vous payez et qu’aucun régime ne couvre.", "t": ""}, "eyewear": {"l": "Lunettes et lentilles cornéennes", "h": "Montures, verres et lentilles qu’aucun régime ne couvre.", "t": ""}, "petFood": {"l": "Nourriture et fournitures pour animaux", "h": "", "t": ""}, "veterinarian": {"l": "Frais de vétérinaire", "h": "", "t": "Une assurance pour animaux peut aider à payer les grosses factures de vétérinaire."}, "bankFees": {"l": "Frais bancaires", "h": "Frais mensuels de compte, frais de transaction, frais de courtage et autres frais semblables.", "t": "Beaucoup de banques et de coopératives de crédit offrent des comptes à frais modiques ou sans frais."}, "creditCardFees": {"l": "Frais de carte", "h": "Frais annuels, assurance solde et autres frais récurrents liés à votre carte.", "t": "Vérifiez que les avantages de votre carte valent ce qu’elle vous coûte."}, "professionalDues": {"l": "Cotisations syndicales et professionnelles", "h": "Cotisations liées au travail, comme les cotisations syndicales ou celles d’un ordre ou d’une association professionnelle.", "t": ""}, "taxPrep": {"l": "Préparation de la déclaration de revenus", "h": "Frais pour faire préparer votre déclaration de revenus.", "t": "Des comptoirs d’impôts gratuits peuvent vous aider si votre revenu est modeste et que votre situation fiscale est simple."}, "legalFees": {"l": "Frais juridiques et professionnels", "h": "Avocats, notaires, comptables et services semblables.", "t": ""}, "gifts": {"l": "Cadeaux", "h": "Cadeaux pour les fêtes, les anniversaires, les mariages et d’autres occasions.", "t": "Essayez un échange de cadeaux ou un cadeau fait maison."}, "donations": {"l": "Dons de bienfaisance", "h": "Argent que vous donnez à des organismes de bienfaisance et à d’autres causes.", "t": ""}}};
+const NB=" ";
+const ITEM={};
+D.income.forEach(x=>ITEM[x.id]={...x,g:"income"});
+D.savings.forEach(x=>ITEM[x.id]={...x,g:"savings",c:"savings"});
+D.expenses.forEach(x=>ITEM[x.id]={...x,g:"expense"});
+const CAT_EN=Object.fromEntries(D.cats.map(c=>[c.id,c.l]));CAT_EN.savings="Savings";
+const FREQ_M={Daily:365/12,Weekly:52/12,Every2Weeks:26/12,TwiceMonthly:2,Monthly:1,Quarterly:1/3,Every6Months:1/6,Annually:1/12};
+
+/* ---------- language ---------- */
+const T={
+ en:{
+  app:"Super Simple Budget",sub:"Tap what you pay for, skip the rest",langBtn:"Français",langAria:"Afficher en français",
+  progress:"Progress",running:"Running total",
+  freq:{Daily:"Daily",Weekly:"Weekly",Every2Weeks:"Every 2 weeks",TwiceMonthly:"Twice a month",Monthly:"Monthly",Quarterly:"Every 3 months",Every6Months:"Every 6 months",Annually:"Yearly"},
+  b:{
+   income:["Income","What money comes in?","Tap each source you receive, then enter the amount the way it arrives. We'll convert everything to monthly."],
+   savings:["Savings","What do you want to set aside?","Pay yourself first. Deciding what to save before you plan spending makes it far more likely to happen. Canadians usually save 5% or more of their income."],
+   home:["Home and bills","What do you pay for at home?","Rent or mortgage, utilities, phone and internet, insurance and bank fees."],
+   around:["Getting around","How do you get around?","Car costs, transit and rides."],
+   everyday:["Everyday living","What do you spend on day to day?","Food, health, clothes and personal care."],
+   family:["Family, fun and giving","What else do you spend on?","Kids, school, hobbies, travel, pets and gifts."],
+   debt:["Debt payments","Which debts are you paying off?","Enter only the regular payments toward balances you carry from month to month. Purchases you put on a card already belong in their own category, so don't count them twice."]
+  },
+  results:"Results",example:"Example budget",startOwn:"Start my own",saved:"Saved in this browser",yourBudget:"Your budget",clear:"Clear",loadExample:"Load example",
+  stepOf:(n,t,name)=>`Step ${n} of ${t} · ${name}`,
+  roughToggle:"Give a rough total instead",roughHint:"Short on time? One ballpark number is enough to start. You can itemize later.",
+  roughQ:name=>`About how much on ${name.toLowerCase()}?`,roughAria:"Rough total",roughFreqAria:"Rough total frequency",
+  nothingYet:"Nothing added yet",
+  count:{income:n=>`${n} ${n===1?"source":"sources"} of income`,savings:n=>`${n} savings ${n===1?"goal":"goals"}`,debt:n=>`${n} ${n===1?"debt":"debts"}`,other:n=>`You pay for ${n} ${n===1?"thing":"things"} here`},
+  emptyHint:"Tap the items below that apply to you. Skip anything you don't pay for.",
+  anythingElse:"Anything else?",tapWhat:"Tap what applies",
+  searchPh:"Search all items, e.g. gym, daycare, parking",searchAria:"Search all items",
+  noMatch:"No match. Use “Something else” to add your own.",
+  showMore:n=>`Show ${n} more`,showFewer:"Show fewer",somethingElse:"+ Something else",
+  back:"← Back",next:name=>`Next: ${name} →`,seePlan:"See my plan →",
+  nameItem:"Name this item",itemName:"Item name",yourItem:"Your item",
+  amountAria:l=>`${l} amount`,freqAria:l=>`${l} frequency`,tipFor:l=>`Tip for ${l}`,remove:l=>`Remove ${l}`,
+  yourPlan:"Your plan",monthly:"Monthly",yearly:"Yearly",showAmounts:"Show amounts",
+  income:"Income",planned:"Planned",leftOver:"Left over",shortfall:"Shortfall",left:"Left",short:"Short",rough:"rough",
+  perMo:"/mo",perYr:"/yr",ofIncome:p=>`${p} of income`,
+  lv:{green:"On track",yellow:"A bit off",red:"Needs attention"},
+  nothingPlanned:"Nothing planned yet",whereMoney:"Where your money goes",
+  whereIncome:"Where your income goes",savingsL:"Savings",spending:"Spending",
+  biggest:"Your biggest expenses",nOfM:(n,m)=>`${n} of ${m} ${m===1?"item":"items"}`,
+  topShare:(n,p)=>`These ${n} make up ${p} of your spending. They're usually the best place to look for savings.`,
+  largest:"Your largest costs, from highest to lowest.",roughTotal:name=>`${name} (rough total)`,
+  addIncomePlan:"Add your income to see your plan",haveLeft:x=>`You have ${x} left each month`,areShort:x=>`You're ${x} short each month`,
+  lede:(i,s,v,p)=>`Of the ${i} that comes in each month, you plan to spend ${s} and save ${v}, which is ${p} of your income.`,
+  outside:n=>n===1?"1 category is outside the usual range for Canadians.":`${n} categories are outside the usual range for Canadians.`,
+  allIn:"Every category you itemized is within the usual range for Canadians.",needIncome:"Your plan needs income to compare against.",
+  howCompares:"How your plan compares",compareExpl:"Each category as a share of your income, compared with the usual range for Canadians. The black mark shows where the usual range ends.",
+  itemizeOne:"Itemize at least one bucket to compare it with the usual range.",addIncomeCompare:"Add your income to compare your plan with the usual range.",
+  notCompared:l=>`Not compared because you gave a rough total: ${l}.`,
+  nextSteps:"Next steps",edit:"← Edit",copy:"Copy summary",
+  tAddIncome:["Add your income","Go back to the first step so we can compare your plan with what comes in."],
+  tGap:x=>`Close a gap of ${x} a month`,tStartWith:n=>`Start with ${n.toLowerCase()}, which is above the usual range.`,tStartLargest:"Start with your largest bucket and look for one change you can make this month.",
+  tSurplus:x=>`Give your ${x} surplus a job`,tSurplusBody:"Move it to savings or extra debt payments on payday, before it gets spent.",
+  tEmergency:["Start an emergency fund","Aim for 3 to 6 months of expenses. A small automatic transfer is a good start."],
+  tItemize:"Itemize your rough totals when you can",tItemizeBody:l=>`You estimated ${l}. Breaking it down shows where to save and lets us check it against the usual range.`,
+  joinAnd:" and ",listName:n=>n.toLowerCase(),catItem:(c,i)=>`${c}: ${i}`,
+  addedTo:n=>`Added to ${n}`,blank:"Started a blank budget",exLoaded:"Example loaded",copied:"Summary copied",noCopy:"Copy isn't available here.",
+  copyHead:"My budget plan (monthly)",roughSuffix:" (rough)",
+  fileTitle:"Keep your budget",fileExpl:"Your budget is kept in this browser only. Nothing is sent anywhere. Save it to a file to keep it safe or to move it to another device.",
+  saveBackup:"Save budget",saveBackupSub:".json file you can open again later",openBackup:"Open budget",openBackupSub:"Continue from a saved .json file",
+  exportCsv:"Export to spreadsheet",exportCsvSub:".csv file for Excel or Numbers, for viewing only",
+  lastBackup:r=>`Last saved to a file: ${r}`,noBackup:"Not saved to a file yet",today:"today",yesterday:"yesterday",daysAgo:n=>`${n} days ago`,
+  ftAbout:"About this tool",
+  ftPrivacy:"Your budget never leaves your device. There's no account and nothing is sent to a server.",
+  ftAdvice:"This tool gives general information, not financial advice.",
+  ftCredit:"Spending ranges are adapted from the",ftCreditLink:"Budget Planner by the Financial Consumer Agency of Canada",
+  ftNotAff:"Super Simple Budget is an independent project. It isn't affiliated with or endorsed by the Financial Consumer Agency of Canada or the Government of Canada.",
+  unsavedTitle:"Changes not saved to a file",unsavedBody:"Your budget is kept in this browser, but your latest changes aren't saved to a file yet.",later:"Later",
+  dlgReplace:"Replace your current budget?",dlgClear:"Clear your budget?",
+  dlgBody:"Changes you made since you last saved your budget will be lost. Save your budget first to keep them.",dlgDone:"Budget saved. You can continue safely.",
+  saveFirst:"Save budget first",continueAnyway:"Continue without saving",cancel:"Cancel",
+  actOpen:"Choose a file to open",actClear:"Clear my budget",actExample:"Load the example",
+  backupSaved:"Budget saved",csvSaved:"Spreadsheet saved",declined:"Download cancelled",dlUnavailable:"Downloads aren't available here.",
+  opened:"Budget opened",badFile:"This file isn't a Super Simple Budget file.",
+  fileBase:"my-budget",csvHead:["Section","Item","Amount","Frequency","Monthly","Yearly"],
+  totalIncome:"Total income",totalPlanned:"Total planned",dec:".",sep:","
+ },
+ fr:{
+  app:"Budget super simple",sub:"Choisissez ce que vous payez, ignorez le reste",langBtn:"English",langAria:"Show in English",
+  progress:"Progression",running:"Total courant",
+  freq:{Daily:"Chaque jour",Weekly:"Chaque semaine",Every2Weeks:"Aux 2 semaines",TwiceMonthly:"Deux fois par mois",Monthly:"Chaque mois",Quarterly:"Aux 3 mois",Every6Months:"Aux 6 mois",Annually:"Chaque année"},
+  b:{
+   income:["Revenu","Quel argent recevez-vous?","Sélectionnez chaque source de revenu que vous recevez, puis inscrivez le montant selon la fréquence à laquelle il arrive. Nous convertirons tout en montants mensuels."],
+   savings:["Épargne","Combien voulez-vous mettre de côté?","Payez-vous en premier. Si vous décidez combien épargner avant de planifier vos dépenses, vous aurez beaucoup plus de chances d’y arriver. Au Canada, les gens épargnent habituellement 5"+NB+"% ou plus de leur revenu."],
+   home:["Maison et factures","Que payez-vous pour la maison?","Loyer ou hypothèque, services publics, téléphone et Internet, assurances et frais bancaires."],
+   around:["Déplacements","Comment vous déplacez-vous?","Frais de voiture, transport en commun et trajets."],
+   everyday:["Vie quotidienne","Que dépensez-vous au quotidien?","Alimentation, santé, vêtements et soins personnels."],
+   family:["Famille, loisirs et dons","Quelles sont vos autres dépenses?","Enfants, études, loisirs, voyages, animaux et cadeaux."],
+   debt:["Paiements de dettes","Quelles dettes remboursez-vous?","Inscrivez seulement les paiements réguliers sur les soldes que vous reportez d’un mois à l’autre. Les achats portés à votre carte font déjà partie de leur propre catégorie"+NB+": ne les comptez pas deux fois."]
+  },
+  results:"Résultats",example:"Budget d’exemple",startOwn:"Créer le mien",saved:"Enregistré dans ce navigateur",yourBudget:"Votre budget",clear:"Effacer",loadExample:"Charger l’exemple",
+  stepOf:(n,t,name)=>`Étape ${n} de ${t} · ${name}`,
+  roughToggle:"Donner plutôt un total approximatif",roughHint:"Vous manquez de temps? Un montant approximatif suffit pour commencer. Vous pourrez détailler plus tard.",
+  roughQ:()=>"Environ combien au total?",roughAria:"Total approximatif",roughFreqAria:"Fréquence du total approximatif",
+  nothingYet:"Rien n’a encore été ajouté",
+  count:{income:n=>`${n} ${n===1?"source":"sources"} de revenu`,savings:n=>`${n} ${n===1?"objectif":"objectifs"} d’épargne`,debt:n=>`${n} ${n===1?"dette":"dettes"}`,other:n=>`${n} ${n===1?"dépense ajoutée":"dépenses ajoutées"}`},
+  emptyHint:"Sélectionnez les éléments ci-dessous qui s’appliquent à vous. Ignorez ce que vous ne payez pas.",
+  anythingElse:"Autre chose?",tapWhat:"Sélectionnez ce qui s’applique",
+  searchPh:"Chercher parmi tous les éléments (p."+NB+"ex. gym, garderie, stationnement)",searchAria:"Chercher parmi tous les éléments",
+  noMatch:"Aucun résultat. Utilisez «"+NB+"Autre chose"+NB+"» pour ajouter votre propre élément.",
+  showMore:n=>`Afficher ${n} de plus`,showFewer:"Afficher moins",somethingElse:"+ Autre chose",
+  back:"← Retour",next:name=>`Suivant${NB}: ${name} →`,seePlan:"Voir mon plan →",
+  nameItem:"Nommez cet élément",itemName:"Nom de l’élément",yourItem:"Votre élément",
+  amountAria:l=>`Montant${NB}: ${l}`,freqAria:l=>`Fréquence${NB}: ${l}`,tipFor:l=>`Conseil${NB}: ${l}`,remove:l=>`Retirer${NB}: ${l}`,
+  yourPlan:"Votre plan",monthly:"Mensuel",yearly:"Annuel",showAmounts:"Afficher les montants",
+  income:"Revenu",planned:"Prévu",leftOver:"Reste",shortfall:"Manque",left:"Reste",short:"Manque",rough:"approx.",
+  perMo:"/mois",perYr:"/an",ofIncome:p=>`${p} du revenu`,
+  lv:{green:"Sur la bonne voie",yellow:"À surveiller",red:"À revoir"},
+  nothingPlanned:"Rien n’est encore prévu",whereMoney:"Où va votre argent",
+  whereIncome:"Où va votre revenu",savingsL:"Épargne",spending:"Dépenses",
+  biggest:"Vos plus grosses dépenses",nOfM:(n,m)=>`${n} ${n===1?"élément":"éléments"} sur ${m}`,
+  topShare:(n,p)=>`Ces ${n} postes représentent ${p} de vos dépenses. C’est habituellement là qu’il est le plus facile d’économiser.`,
+  largest:"Vos dépenses les plus importantes, de la plus élevée à la plus basse.",roughTotal:name=>`${name} (total approximatif)`,
+  addIncomePlan:"Ajoutez votre revenu pour voir votre plan",haveLeft:x=>`Il vous reste ${x} chaque mois`,areShort:x=>`Il vous manque ${x} chaque mois`,
+  lede:(i,s,v,p)=>`Sur les ${i} que vous recevez chaque mois, vous prévoyez de dépenser ${s} et d’épargner ${v}, soit ${p} de votre revenu.`,
+  outside:n=>n===1?"1 catégorie est hors de la fourchette habituelle au Canada.":`${n} catégories sont hors de la fourchette habituelle au Canada.`,
+  allIn:"Toutes les catégories détaillées se situent dans la fourchette habituelle au Canada.",needIncome:"Votre plan a besoin d’un revenu pour établir une comparaison.",
+  howCompares:"Comparaison de votre plan",compareExpl:"Chaque catégorie en pourcentage de votre revenu, comparée à la fourchette habituelle au Canada. Le trait noir indique la limite de cette fourchette.",
+  itemizeOne:"Détaillez au moins une étape pour la comparer à la fourchette habituelle.",addIncomeCompare:"Ajoutez votre revenu pour comparer votre plan à la fourchette habituelle.",
+  notCompared:l=>`Aucune comparaison n’est possible pour les étapes où vous avez donné un total approximatif${NB}: ${l}.`,
+  nextSteps:"Prochaines étapes",edit:"← Modifier",copy:"Copier le résumé",
+  tAddIncome:["Ajoutez votre revenu","Revenez à la première étape pour que nous puissions comparer votre plan à ce que vous recevez."],
+  tGap:x=>`Comblez un manque de ${x} par mois`,tStartWith:n=>`Commencez par la catégorie «${NB}${n}${NB}», qui dépasse la fourchette habituelle.`,tStartLargest:"Commencez par votre poste de dépenses le plus important et cherchez un changement possible dès ce mois-ci.",
+  tSurplus:x=>`Donnez un rôle à votre surplus de ${x}`,tSurplusBody:"Le jour de la paie, transférez-le vers votre épargne ou vers des remboursements de dettes supplémentaires, avant qu’il soit dépensé.",
+  tEmergency:["Créez un fonds d’urgence","Visez de 3 à 6 mois de dépenses. Un petit virement automatique est un bon début."],
+  tItemize:"Détaillez vos totaux approximatifs dès que possible",tItemizeBody:l=>`Vous avez fait une estimation pour ${l}. En détaillant ces montants, vous verrez où économiser et nous pourrons les comparer à la fourchette habituelle.`,
+  joinAnd:" et ",listName:n=>`«${NB}${n}${NB}»`,catItem:(c,i)=>`${c}${NB}: ${i}`,
+  addedTo:n=>`Ajouté à l’étape «${NB}${n}${NB}»`,blank:"Nouveau budget vierge",exLoaded:"Exemple chargé",copied:"Résumé copié",noCopy:"La copie n’est pas disponible ici.",
+  copyHead:"Mon plan budgétaire (mensuel)",roughSuffix:" (approx.)",
+  fileTitle:"Conserver votre budget",fileExpl:"Votre budget est conservé dans ce navigateur seulement. Rien n’est envoyé ailleurs. Enregistrez-le dans un fichier pour le protéger ou le transférer sur un autre appareil.",
+  saveBackup:"Enregistrer le budget",saveBackupSub:"Fichier .json que vous pourrez rouvrir plus tard",openBackup:"Ouvrir un budget",openBackupSub:"Reprendre à partir d’un fichier .json enregistré",
+  exportCsv:"Exporter vers un tableur",exportCsvSub:"Fichier .csv pour Excel ou Numbers, en consultation seulement",
+  lastBackup:r=>`Dernier enregistrement dans un fichier${NB}: ${r}`,noBackup:"Pas encore enregistré dans un fichier",today:"aujourd’hui",yesterday:"hier",daysAgo:n=>`il y a ${n} jours`,
+  ftAbout:"À propos de cet outil",
+  ftPrivacy:"Votre budget ne quitte jamais votre appareil. Aucun compte n’est requis et rien n’est envoyé à un serveur.",
+  ftAdvice:"Cet outil fournit de l’information générale et non des conseils financiers.",
+  ftCredit:"Les fourchettes de dépenses sont adaptées du",ftCreditLink:"Planificateur budgétaire de l’Agence de la consommation en matière financière du Canada",
+  ftNotAff:"Budget super simple est un projet indépendant. Il n’est ni affilié à l’Agence de la consommation en matière financière du Canada ni au gouvernement du Canada, et n’est pas approuvé par ceux-ci.",
+  unsavedTitle:"Modifications non enregistrées dans un fichier",unsavedBody:"Votre budget est conservé dans ce navigateur, mais vos dernières modifications ne sont pas encore enregistrées dans un fichier.",later:"Plus tard",
+  dlgReplace:"Remplacer votre budget actuel?",dlgClear:"Effacer votre budget?",
+  dlgBody:"Les modifications faites depuis le dernier enregistrement de votre budget seront perdues. Enregistrez d’abord votre budget pour les conserver.",dlgDone:"Budget enregistré. Vous pouvez continuer sans risque.",
+  saveFirst:"Enregistrer d’abord le budget",continueAnyway:"Continuer sans enregistrer",cancel:"Annuler",
+  actOpen:"Choisir un fichier à ouvrir",actClear:"Effacer mon budget",actExample:"Charger l’exemple",
+  backupSaved:"Budget enregistré",csvSaved:"Fichier CSV enregistré",declined:"Téléchargement annulé",dlUnavailable:"Les téléchargements ne sont pas disponibles ici.",
+  opened:"Budget ouvert",badFile:"Ce fichier n’est pas un fichier de Budget super simple.",
+  fileBase:"mon-budget",csvHead:["Section","Élément","Montant","Fréquence","Mensuel","Annuel"],
+  totalIncome:"Revenu total",totalPlanned:"Total prévu",dec:",",sep:";"
+ }
+};
+const KEY="bp-pickplan-v3";
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY));return v&&v.picked?v:null}catch(e){return null}}
+let S=load();
+const guessLang=()=>{try{return /^fr/i.test(navigator.language||"")?"fr":"en"}catch(e){return "en"}};
+const L=()=>T[S.lang]||T.en;
+const isFr=()=>S.lang==="fr";
+const loc=()=>isFr()?"fr-CA":"en-CA";
+const tl=(x,f)=>{if(!x)return"";if(isFr()&&FR.items[x.id]&&FR.items[x.id][f]!==undefined)return FR.items[x.id][f];return x[f]||""};
+const catName=c=>isFr()?(FR.cats[c]||c):(CAT_EN[c]||c);
+const ftName=f=>isFr()?(FR.ft[f]||f):f;
+const bT=k=>L().b[k][0];
+/* Rule text is written by this app from the thresholds, in its own words */
+function ruleText(c,r){
+  const fr=isFr(),edge=pct(greenEdge(c)*100),zeroRed=r.max===0&&r.lv==="red";
+  if(c==="savings"){
+    if(r.p===0)return fr?`Vous ne mettez rien de côté pour l’instant. La cible habituelle est d’au moins ${edge} du revenu.`:`You're not setting anything aside yet. The usual target is at least ${edge} of income.`;
+    return r.lv==="green"
+      ?(fr?`Vous atteignez la cible habituelle d’au moins ${edge} du revenu.`:`You meet the usual target of at least ${edge} of income.`)
+      :(fr?`Un peu sous la cible habituelle d’au moins ${edge} du revenu.`:`A little under the usual target of at least ${edge} of income.`);
+  }
+  if(zeroRed)return fr?`Vous n’avez rien prévu ici. La plupart des ménages y consacrent un montant, jusqu’à environ ${edge} du revenu.`:`You haven't planned anything here. Most households spend something, up to about ${edge} of income.`;
+  if(r.lv==="green")return fr?`Dans la fourchette habituelle, soit jusqu’à ${edge} du revenu.`:`Within the usual range of up to ${edge} of income.`;
+  if(r.lv==="yellow")return fr?`Un peu au-dessus de la fourchette habituelle, qui va jusqu’à ${edge} du revenu.`:`A bit above the usual range of up to ${edge} of income.`;
+  return fr?`Nettement au-dessus de la fourchette habituelle, qui va jusqu’à ${edge} du revenu.`:`Well above the usual range of up to ${edge} of income.`;
+}
+
+const BUCKETS={
+  income:{pop:["myNetIncome","spouseNetIncome","selfEmploymentIncome","gigIncome","childBenefits","employmentInsurance","federalPension"],ids:D.income.map(x=>x.id)},
+  savings:{cats:[],savings:true,ids:D.savings.map(x=>x.id),pop:["emergencyFund","tfsa","retirement","fhsa","education","homePurchase","incomeTax"],est:false,color:"--b-save"},
+  home:{cats:["housing","communications","insurance","fees"],pop:["rent","mortgage","electricity","heating","internet","telephone","tenantInsurance","homeInsurance","subscriptions","bankFees"],est:true,color:"--b-home"},
+  around:{cats:["transportation"],pop:["carPayments","carInsurance","gas","transitPass","maintenance","parking","rideServices"],est:true,color:"--b-around"},
+  everyday:{cats:["food","medical","clothing","personalCare"],pop:["groceries","restaurants","prescriptions","clothes","hairdresser","dentist"],est:true,color:"--b-everyday"},
+  family:{cats:["childcare","education","recreation","pets","giftsDonations"],pop:["daycare","tuition","travel","memberships","tickets","petFood","gifts","donations"],est:true,color:"--b-family"},
+  debt:{cats:["debt"],pop:["creditCard","lineOfCredit","studentLoan","personalLoan"],est:false,color:"--b-debt"}
+};
+Object.entries(BUCKETS).forEach(([k,b])=>{if(!b.ids)b.ids=D.expenses.filter(x=>b.cats.includes(x.c)).map(x=>x.id)});
+const BUCKET_OF={};Object.entries(BUCKETS).forEach(([k,b])=>b.ids.forEach(id=>BUCKET_OF[id]=k));
+const STEPS=["income","savings","home","around","everyday","family","debt","results"];
+const OUT=["savings","home","around","everyday","family","debt"];
+
+const EXAMPLE={view:"month",picked:{
+  income:["myNetIncome","spouseNetIncome"],
+  home:["rent","tenantInsurance","electricity","internet","telephone","subscriptions","bankFees","taxPrep"],
+  around:["carPayments","carInsurance","gas","transitPass","carRegistration"],
+  everyday:["groceries","restaurants","clothes","hairdresser","dentist"],
+  family:["travel","gifts","memberships"],
+  savings:["emergencyFund","retirement","homePurchase"],
+  debt:["creditCard","studentLoan"]},
+ v:{myNetIncome:{a:2150,f:"Every2Weeks"},spouseNetIncome:{a:1850,f:"Every2Weeks"},
+  rent:{a:2350,f:"Monthly"},tenantInsurance:{a:28,f:"Monthly"},electricity:{a:95,f:"Monthly"},internet:{a:70,f:"Monthly"},telephone:{a:110,f:"Monthly"},subscriptions:{a:35,f:"Monthly"},bankFees:{a:17,f:"Monthly"},
+  carPayments:{a:430,f:"Monthly"},carInsurance:{a:175,f:"Monthly"},gas:{a:60,f:"Weekly"},transitPass:{a:156,f:"Monthly"},carRegistration:{a:120,f:"Annually"},taxPrep:{a:150,f:"Annually"},
+  groceries:{a:210,f:"Weekly"},restaurants:{a:70,f:"Weekly"},clothes:{a:150,f:"Monthly"},hairdresser:{a:60,f:"Monthly"},dentist:{a:400,f:"Annually"},
+  travel:{a:3000,f:"Annually"},gifts:{a:1200,f:"Annually"},memberships:{a:900,f:"Annually"},
+  creditCard:{a:300,f:"Monthly"},studentLoan:{a:240,f:"Monthly"},emergencyFund:{a:150,f:"Monthly"},retirement:{a:250,f:"Monthly"},homePurchase:{a:200,f:"Monthly"}},
+ est:{family:{on:true,a:450,f:"Monthly"}},custom:{},more:{}};
+
+if(!S)S={step:0,isExample:true,lang:guessLang(),...structuredClone(EXAMPLE)};
+if(!S.lang)S.lang=guessLang();
+let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(!S.isExample)renderState(true)},400)}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=(n,d=0)=>{const s=Math.abs(n).toLocaleString(loc(),{minimumFractionDigits:d,maximumFractionDigits:d});return (n<0?"−":"")+(isFr()?s+NB+"$":"$"+s)};
+const pct=(v,d=0)=>v.toLocaleString(loc(),{minimumFractionDigits:d,maximumFractionDigits:d})+(isFr()?NB+"%":"%");
+const mult=()=>S.view==="year"?12:1, per=()=>S.view==="year"?L().perYr:L().perMo;
+const mo=e=>e&&e.a?(+e.a)*(FREQ_M[e.f]||1):0;
+const label=id=>ITEM[id]?tl(ITEM[id],"l"):((Object.values(S.custom).flat().find(c=>c.id===id)||{}).l||L().yourItem);
+const picked=b=>[...(S.picked[b]||[]),...(S.custom[b]||[]).map(c=>c.id)];
+const estOn=b=>BUCKETS[b].est&&S.est[b]&&S.est[b].on;
+const freqOpts=sel=>Object.keys(FREQ_M).map(k=>`<option value="${k}" ${sel===k?"selected":""}>${L().freq[k]}</option>`).join("");
+
+function totals(){
+  const inc=picked("income").reduce((s,id)=>s+mo(S.v[id]),0);
+  const b={},cat={};
+  OUT.forEach(k=>{
+    if(estOn(k)){b[k]=mo(S.est[k]);return}
+    b[k]=0;picked(k).forEach(id=>{const v=mo(S.v[id]);b[k]+=v;
+      const c=ITEM[id]?ITEM[id].c:(k==="savings"?"savings":k==="debt"?"debt":null);if(c)cat[c]=(cat[c]||0)+v;});
+  });
+  const sav=b.savings,debt=b.debt;
+  const out=OUT.reduce((s,k)=>s+b[k],0);
+  return {inc,b,cat,debt,sav,out,bal:inc-out};
+}
+
+/* ---------- rendering ---------- */
+const ICON_TIP=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>`;
+const ICON_X=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+const ICON_S=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>`;
+
+function renderFooter(){
+  const Lx=L(),url=isFr()?"https://itools-ioutils.fcac-acfc.gc.ca/BP-PB/planificateur-budgetaire":"https://itools-ioutils.fcac-acfc.gc.ca/BP-PB/budget-planner";
+  $("#foot").innerHTML=`<h2>${Lx.ftAbout}</h2><p>${Lx.ftPrivacy} ${Lx.ftAdvice}</p><p>${Lx.ftCredit} <a href="${url}" target="_blank" rel="noopener">${Lx.ftCreditLink}</a>.</p><p>${Lx.ftNotAff}</p>`;
+}
+function renderChrome(){
+  document.documentElement.lang=isFr()?"fr-CA":"en-CA";
+  document.title=L().app;
+  $("#appName").textContent=L().app;$("#appSub").textContent=L().sub;
+  const lb=$("#langBtn");lb.textContent=L().langBtn;lb.setAttribute("aria-label",L().langAria);lb.setAttribute("lang",isFr()?"en":"fr");
+  $("#progress").setAttribute("aria-label",L().progress);$("#tally").setAttribute("aria-label",L().running);
+}
+function renderProgress(){
+  $("#progress").innerHTML=STEPS.map((s,i)=>{const n=s==="results"?L().results:bT(s);return `<button data-go="${i}" class="${i<S.step?"done":""}" ${i===S.step?'aria-current="step"':""} aria-label="${esc(n)}"><i></i>${esc(n)}</button>`}).join("");
+}
+function renderState(saved){
+  $("#dataState").innerHTML=S.isExample
+   ?`<span class="pill ex">${L().example}</span><button class="btn" data-act="fresh">${L().startOwn}</button><label class="btn ghost" for="fileIn" role="button" tabindex="0">${L().openBackup}</label>`
+   :`<span class="pill saved">${saved?L().saved:L().yourBudget}</span><button class="btn ghost" data-act="fresh">${L().clear}</button><button class="btn ghost" data-act="example">${L().loadExample}</button><label class="btn ghost" for="fileIn" role="button" tabindex="0">${L().openBackup}</label>`;
+}
+function row(id,b){
+  const x=ITEM[id], e=S.v[id]||{a:"",f:(x&&x.p)||"Monthly"};
+  const nm=label(id),help=tl(x,"h"),tip=tl(x,"t");
+  const lab=!x?`<div class="lab"><input class="txt" id="l-${id}" data-lab="${id}" data-b="${b}" value="${nm===L().yourItem?"":esc(nm)}" placeholder="${L().nameItem}" aria-label="${L().itemName}"></div>`
+    :`<div class="lab"><label for="a-${id}">${esc(nm)}</label>${x.ft&&x.ft!=="CASH"?` <span class="tag">${ftName(x.ft)}</span>`:""}${help?`<small>${esc(help)}</small>`:""}</div>`;
+  const shown=e.a===""||e.a==null?"":(isFr()?String(e.a).replace(".",","):e.a);
+  return `<div class="row">${lab}
+   <div class="money"><input id="a-${id}" inputmode="decimal" data-id="${id}" data-k="a" value="${shown}" placeholder="0" aria-label="${esc(L().amountAria(nm))}"></div>
+   <select id="f-${id}" data-id="${id}" data-k="f" aria-label="${esc(L().freqAria(nm))}">${freqOpts(e.f)}</select>
+   ${tip?`<button class="icon" data-tip="${id}" aria-expanded="false" aria-label="${esc(L().tipFor(nm))}">${ICON_TIP}</button>`:"<span></span>"}
+   <button class="icon" data-unpick="${id}" data-b="${b}" aria-label="${esc(L().remove(nm))}">${ICON_X}</button>
+   ${tip?`<div class="tipline" id="t-${id}" hidden>${ICON_TIP}<span>${esc(tip)}</span></div>`:""}</div>`;
+}
+function chips(b){
+  const bk=BUCKETS[b],sel=new Set(S.picked[b]||[]);
+  const avail=bk.ids.filter(id=>!sel.has(id));
+  const pop=bk.pop.filter(id=>avail.includes(id));
+  const show=S.more[b]?avail:pop;
+  const hidden=avail.length-show.length;
+  return `<div class="chips">${show.map(id=>`<button class="chip" data-pick="${id}" data-b="${b}"><b>+</b>${esc(label(id))}</button>`).join("")}
+   ${hidden>0?`<button class="chip more" data-more="${b}">${L().showMore(hidden)}</button>`:S.more[b]&&pop.length<avail.length?`<button class="chip more" data-more="${b}">${L().showFewer}</button>`:""}
+   <button class="chip more" data-custom="${b}">${L().somethingElse}</button></div>`;
+}
+function renderMain(){
+  const step=STEPS[S.step];
+  if(step==="results"){$("#main").innerHTML=results();return}
+  const [bt,bq,bl]=L().b[step],t=totals(),list=picked(step),eo=estOn(step);
+  const total=step==="income"?t.inc:t.b[step];
+  let h=`<span class="eyebrow">${L().stepOf(S.step+1,STEPS.length,bt)}</span><h2>${bq}</h2><p class="lede">${bl}</p>`;
+  if(BUCKETS[step].est){h+=`<div class="estimate"><label class="switch"><input type="checkbox" id="est-${step}" data-est="${step}" ${eo?"checked":""}>${L().roughToggle}</label><small>${L().roughHint}</small></div>`}
+  if(eo){
+    const e=S.est[step]||{a:"",f:"Monthly"};
+    h+=`<div class="panel"><div class="estrow"><label for="ea-${step}"><b>${L().roughQ(bt)}</b></label><div class="money"><input id="ea-${step}" inputmode="decimal" data-esta="${step}" value="${e.a?(isFr()?String(e.a).replace(".",","):e.a):""}" placeholder="0" aria-label="${L().roughAria}"></div><select data-estf="${step}" aria-label="${L().roughFreqAria}">${freqOpts(e.f)}</select></div></div>`;
+  } else {
+    const cnt=L().count[step]||L().count.other;
+    h+=`<div class="panel"><div class="panel-h"><h3>${!list.length?L().nothingYet:cnt(list.length)}</h3><span class="tot"><span data-steptot>${fmt(total*mult())}${per()}</span>${step==="savings"?` <span data-savpct></span>`:""}</span></div>
+      ${list.length?list.map(id=>row(id,step)).join(""):`<div class="empty">${L().emptyHint}</div>`}</div>
+      <div class="pick"><h3>${list.length?L().anythingElse:L().tapWhat}</h3>${chips(step)}
+      <div class="search">${ICON_S}<input id="q" type="search" placeholder="${esc(L().searchPh)}" aria-label="${L().searchAria}" value="${esc(S.q||"")}"></div><div id="qres" class="results-list"></div></div>`;
+  }
+  const nxt=STEPS[S.step+1];
+  h+=`<div class="navbar">${S.step>0?`<button class="btn" data-go="${S.step-1}">${L().back}</button>`:"<span></span>"}<button class="btn primary" data-go="${S.step+1}">${S.step===STEPS.length-2?L().seePlan:L().next(nxt==="results"?L().results:bT(nxt))}</button></div>`;
+  $("#main").innerHTML=h;
+  if(S.q)renderSearch();
+}
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+function renderSearch(){
+  const el=$("#qres");if(!el)return;const q=norm((S.q||"").trim());
+  if(!q){el.innerHTML="";return}
+  const step=STEPS[S.step];
+  const hits=Object.values(ITEM).filter(x=>norm(tl(x,"l")+" "+tl(x,"h")).includes(q)).filter(x=>!(S.picked[BUCKET_OF[x.id]]||[]).includes(x.id)).slice(0,10);
+  el.innerHTML=hits.length?hits.map(x=>{const b=BUCKET_OF[x.id];return `<button class="chip" data-pick="${x.id}" data-b="${b}"><b>+</b>${esc(tl(x,"l"))}${b!==step?` <span class="where">· ${bT(b)}</span>`:""}</button>`}).join(""):`<span class="sub">${L().noMatch}</span>`;
+}
+
+function renderTally(){
+  const t=totals(),m=mult(),cl=t.bal>0.5?"pos":t.bal<-0.5?"neg":"zero";
+  const parts=OUT.map(k=>[k,t.b[k]]);
+  const base=Math.max(t.inc,t.out)||1;
+  $("#tally").innerHTML=`<h3>${L().yourPlan} <span class="seg" role="group" aria-label="${L().showAmounts}"><button data-view="month" aria-pressed="${S.view==="month"}">${L().monthly}</button><button data-view="year" aria-pressed="${S.view==="year"}">${L().yearly}</button></span></h3>
+   <div class="tl inc"><span>${L().income}</span><b>${fmt(t.inc*m)}</b></div>
+   ${parts.map(([k,v])=>`<div class="tl"><span class="dot" style="background:var(${BUCKETS[k].color})"></span><span>${bT(k)}${estOn(k)?`<span class="est">${L().rough}</span>`:""}</span><b>${fmt(v*m)}</b></div>`).join("")}
+   <div class="stack" aria-hidden="true">${parts.filter(p=>p[1]>0).map(([k,v])=>`<i style="width:${v/base*100}%;background:var(${BUCKETS[k].color})"></i>`).join("")}</div>
+   <div class="balance ${cl}"><div class="lbl">${t.bal>=0?L().leftOver:L().shortfall}</div><div class="big">${fmt(t.bal*m)}</div></div>
+   <div class="tfile"><span class="sub">${backupAge()}</span><div><button class="linkbtn" data-act="backup">${L().saveBackup}</button><button class="linkbtn" data-act="csv">${L().exportCsv}</button></div></div>`;
+  $("#mobilebar").innerHTML=`<div class="mm"><span>${L().income}<b>${fmt(t.inc*m)}</b></span><span>${L().planned}<b>${fmt(t.out*m)}</b></span><span>${t.bal>=0?L().left:L().short}<b style="color:var(${t.bal>=0?"--good":"--bad"})">${fmt(t.bal*m)}</b></span></div><button class="btn" data-view="${S.view==="month"?"year":"month"}">${per()}</button>`;
+  const st=document.querySelector("[data-steptot]");const step=STEPS[S.step];
+  if(st&&step!=="results")st.textContent=fmt((step==="income"?t.inc:t.b[step])*m)+per();
+  const sp=document.querySelector("[data-savpct]");
+  if(sp){const r=t.inc?rule("savings",t.sav,t.inc):null;sp.innerHTML=r?`<span class="status s-${r.lv}">${L().ofIncome(pct(t.sav/t.inc*100,1))}</span>`:""}
+}
+
+/* ---------- results ---------- */
+function rule(cat,amt,inc){
+  const rs=D.rules.filter(r=>r.c===cat);if(!rs.length||!inc)return null;const p=amt/inc;
+  if(p===0){const z=rs.find(r=>r.max===0&&r.lv==="red");return z?{...z,p}:null}
+  const r=rs.find(r=>r.max>0&&p>r.min&&p<=r.max);return r?{...r,p}:null;
+}
+const greenEdge=c=>{const g=D.rules.find(r=>r.c===c&&r.lv==="green");return g?(g.max>=9999?g.min:g.max):0};
+function donut(parts,total){
+  const R=80,r=52,cx=105,cy=105;let a0=-Math.PI/2,p="";
+  if(!total)return `<svg viewBox="0 0 210 210" role="img" aria-label="${L().nothingPlanned}"><circle cx="105" cy="105" r="66" fill="none" stroke="var(--line)" stroke-width="28"/></svg>`;
+  parts.forEach(([l,v,c])=>{const a1=a0+v/total*Math.PI*2-0.0001,lg=a1-a0>Math.PI?1:0,pt=(a,rd)=>[cx+rd*Math.cos(a),cy+rd*Math.sin(a)];
+    const [x0,y0]=pt(a0,R),[x1,y1]=pt(a1,R),[x2,y2]=pt(a1,r),[x3,y3]=pt(a0,r);
+    p+=`<path d="M${x0} ${y0}A${R} ${R} 0 ${lg} 1 ${x1} ${y1}L${x2} ${y2}A${r} ${r} 0 ${lg} 0 ${x3} ${y3}Z" fill="var(${c})" stroke="var(--surface)" stroke-width="2"><title>${esc(l)}</title></path>`;a0=a1+0.0001});
+  return `<svg viewBox="0 0 210 210" role="img" aria-label="${L().whereMoney}">${p}<text x="105" y="100" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--body)">${L().planned}${per()}</text><text x="105" y="124" text-anchor="middle" font-size="19" font-weight="700" fill="var(--ink)" font-family="var(--display)">${fmt(total*mult())}</text></svg>`;
+}
+function flowBar(t){
+  const m=mult(),inc=t.inc,spend=t.out-t.sav,base=Math.max(inc,t.out)||1,w=v=>Math.max(v/base*100,0);
+  if(!inc&&!t.out)return "";
+  const segs=[[L().savingsL,t.sav,"--b-save"],[L().spending,spend,"--accent"]];
+  if(t.bal>0)segs.push([L().leftOver,t.bal,"--good-mid"]);
+  return `<section class="flow" aria-label="${L().whereIncome}"><div class="flow-h"><h3>${L().whereIncome}</h3><span class="sub">${L().income} ${fmt(inc*m)}${per()}</span></div>
+   <div class="flowbar">${segs.filter(s=>s[1]>0).map(([l,v,c])=>`<i style="width:${w(v)}%;background:var(${c})" title="${esc(l)}: ${fmt(v*m)}"></i>`).join("")}${t.bal<0&&inc?`<b class="over" style="left:${w(inc)}%;width:${w(-t.bal)}%"></b><em class="incline" style="left:${w(inc)}%"><span>${L().income}</span></em>`:""}</div>
+   <div class="flowkey">${segs.map(([l,v,c])=>`<div><span class="dot" style="background:var(${c})"></span><span>${l}</span><b>${fmt(v*m)}</b><small>${inc?pct(v/inc*100):""}</small></div>`).join("")}${t.bal<0?`<div class="short"><span class="dot" style="background:var(--bad)"></span><span>${L().shortfall}</span><b>${fmt(-t.bal*m)}</b><small>${inc?pct(-t.bal/inc*100):""}</small></div>`:""}</div></section>`;
+}
+function topExpenses(t){
+  const m=mult(),inc=t.inc,list=[];
+  OUT.filter(k=>k!=="savings").forEach(k=>{
+    if(estOn(k)){const v=mo(S.est[k]);if(v>0)list.push({l:L().roughTotal(bT(k)),v,c:BUCKETS[k].color});return}
+    picked(k).forEach(id=>{const v=mo(S.v[id]);if(v>0)list.push({l:label(id),v,c:BUCKETS[k].color})});
+  });
+  if(!list.length)return "";
+  list.sort((a,b)=>b.v-a.v);const top=list.slice(0,5),max=top[0].v,spend=list.reduce((s,x)=>s+x.v,0),share=top.reduce((s,x)=>s+x.v,0)/spend*100;
+  return `<section class="topx"><div class="flow-h"><h3>${L().biggest}</h3><span class="sub">${L().nOfM(top.length,list.length)}</span></div>
+   <p class="s">${top.length<list.length?L().topShare(top.length,pct(share)):L().largest}</p>
+   ${top.map(x=>`<div class="hb"><div class="hb-l"><span>${esc(x.l)}</span><b>${fmt(x.v*m)}${per()}</b></div><div class="hb-t"><i style="width:${x.v/max*100}%;background:var(${x.c})"></i></div>${inc?`<small>${L().ofIncome(pct(x.v/inc*100,1))}</small>`:""}</div>`).join("")}</section>`;
+}
+function results(){
+  const t=totals(),m=mult(),inc=t.inc,Lx=L();
+  const pc=v=>inc?v/inc*100:0;
+  const parts=[[bT("home"),t.b.home,"--b-home"],[bT("around"),t.b.around,"--b-around"],[bT("everyday"),t.b.everyday,"--b-everyday"],[bT("family"),t.b.family,"--b-family"],[bT("debt"),t.debt,"--b-debt"],[bT("savings"),t.sav,"--b-save"]].filter(x=>x[1]>0);
+  const planned=parts.reduce((s,x)=>s+x[1],0);
+  const checks=[];
+  Object.entries(BUCKETS).forEach(([k,b])=>{if(!b.cats||estOn(k))return;
+    [...b.cats,...(b.savings?["savings"]:[])].forEach(c=>{const v=t.cat[c]||0;const r=rule(c,v,inc);if(r&&(v>0||r.lv==="red"))checks.push({c,l:catName(c),v,r})})});
+  const ord={red:0,yellow:1,green:2};checks.sort((a,b)=>ord[a.r.lv]-ord[b.r.lv]||b.v-a.v);
+  const flagged=checks.filter(x=>x.r.lv!=="green");
+  const rough=Object.keys(BUCKETS).filter(estOn);
+
+  return `<span class="eyebrow">${Lx.yourPlan}</span><h2>${!inc?Lx.addIncomePlan:t.bal>=0?Lx.haveLeft(fmt(t.bal)):Lx.areShort(fmt(-t.bal))}</h2>
+  <p class="lede">${inc?`${Lx.lede(fmt(inc),fmt(t.out-t.sav),fmt(t.sav),pct(pc(t.sav)))}${flagged.length?" "+Lx.outside(flagged.length):checks.length?" "+Lx.allIn:""}`:Lx.needIncome}</p>
+  ${flowBar(t)}
+  ${topExpenses(t)}
+  <div class="split">${donut(parts,planned)}<div class="legend">${parts.map(([l,v,c])=>`<div><span class="dot" style="background:var(${c})"></span><span>${l}</span><span class="pct">${pct(v/planned*100)}</span><b>${fmt(v*m)}</b></div>`).join("")}</div></div>
+  <section class="compare"><div class="compare-h"><h3>${Lx.howCompares}</h3>${checks.length?`<div class="counts">${["red","yellow","green"].map(l=>{const n=checks.filter(x=>x.r.lv===l).length;return n?`<span class="status s-${l}">${n} ${Lx.lv[l].toLowerCase()}</span>`:""}).join("")}</div>`:""}</div>
+   <p class="s">${Lx.compareExpl}</p>
+   ${checks.length?checks.map(x=>{const gm=greenEdge(x.c),sc=Math.max(.3,x.r.p*1.15,gm*2);return `<div class="rule"><span class="nm">${esc(x.l)}<span>${pct(x.r.p*100,1)} · ${fmt(x.v*m)}</span></span><span class="status s-${x.r.lv}">${Lx.lv[x.r.lv]}</span><span class="msg">${esc(ruleText(x.c,x.r))}</span><div class="bar" aria-hidden="true"><i style="width:${Math.min(x.r.p/sc,1)*100}%;background:var(--${x.r.lv==="green"?"good":x.r.lv==="yellow"?"warn":"bad"})"></i><em style="left:${gm/sc*100}%"></em></div></div>`}).join(""):`<div class="rule"><span class="msg">${inc?Lx.itemizeOne:Lx.addIncomeCompare}</span></div>`}
+   ${rough.length?`<div class="rule"><span class="msg">${Lx.notCompared(rough.map(k=>bT(k)).join(", "))}</span></div>`:""}
+  </section>
+  <section class="filebox"><div class="flow-h"><h3>${Lx.fileTitle}</h3><span class="sub">${backupAge()}</span></div><p class="s">${Lx.fileExpl}</p>
+   <div class="fileacts">
+    <button class="fileact" data-act="backup">${ICON_DL}<span><b>${Lx.saveBackup}</b><small>${Lx.saveBackupSub}</small></span></button>
+    <label class="fileact" for="fileIn" role="button" tabindex="0">${ICON_UP}<span><b>${Lx.openBackup}</b><small>${Lx.openBackupSub}</small></span></label>
+    <button class="fileact" data-act="csv">${ICON_SHEET}<span><b>${Lx.exportCsv}</b><small>${Lx.exportCsvSub}</small></span></button>
+   </div></section>
+  <div class="navbar"><button class="btn" data-go="${STEPS.length-2}">${Lx.edit}</button><button class="btn primary" data-act="copy">${Lx.copy}</button></div>`;
+}
+
+const ICON_DL=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>`;
+const ICON_UP=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 21h14"/></svg>`;
+const ICON_SHEET=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>`;
+
+/* ---------- files: backup (.json) and spreadsheet (.csv) ---------- */
+const APP_ID="super-simple-budget",FILE_VERSION=1;
+function backupAge(){
+  if(!S.lastBackup)return L().noBackup;
+  const d=Math.floor((Date.now()-S.lastBackup)/864e5);
+  return L().lastBackup(d<=0?L().today:d===1?L().yesterday:L().daysAgo(d));
+}
+const today=()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`};
+let dlCapP=null;const getDl=()=>dlCapP||(dlCapP=(window.claude&&window.claude.use)?window.claude.use("downloads").catch(()=>null):Promise.resolve(null));
+async function offerFile(filename,data,mime){
+  const dlCap=await getDl();
+  if(dlCap){
+    try{await dlCap.save({filename,data});return true}
+    catch(err){toast(err&&err.code==="declined"?L().declined:L().dlUnavailable);return false}
+  }
+  // ordinary browsers (the Next.js app): a normal download
+  try{const url=URL.createObjectURL(new Blob([data],{type:mime}));const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return true}
+  catch(e){toast(L().dlUnavailable);return false}
+}
+async function saveBackup(){
+  const data={app:APP_ID,version:FILE_VERSION,savedAt:new Date().toISOString(),lang:S.lang,view:S.view,picked:S.picked,v:S.v,est:S.est,custom:S.custom};
+  if(await offerFile(`${L().fileBase}-${today()}.json`,JSON.stringify(data,null,2),"application/json")){S.lastBackup=Date.now();S.changedAt=null;save();renderTally();renderNotice();if(STEPS[S.step]==="results")renderMain();toast(L().backupSaved);return true}
+  return false;
+}
+function cleanBackup(o){
+  if(!o||o.app!==APP_ID||typeof o.version!=="number"||o.version>FILE_VERSION)return null;
+  const str=(s,n=80)=>typeof s==="string"?s.slice(0,n):"";
+  const num=a=>a===""||a==null?"":(isFinite(+a)&&+a>=0&&+a<1e9?+a:"");
+  const fq=f=>FREQ_M[f]?f:"Monthly";
+  const custom={},picked={},v={},est={};
+  Object.keys(BUCKETS).forEach(b=>{
+    custom[b]=Array.isArray(o.custom&&o.custom[b])?o.custom[b].filter(c=>c&&/^c[a-z0-9]{1,16}$/.test(c.id)).slice(0,50).map(c=>({id:c.id,l:str(c.l)})):[];
+    picked[b]=Array.isArray(o.picked&&o.picked[b])?[...new Set(o.picked[b].filter(id=>BUCKETS[b].ids.includes(id)))]:[];
+    const e=o.est&&o.est[b];if(BUCKETS[b].est&&e)est[b]={on:!!e.on,a:num(e.a),f:fq(e.f)};
+  });
+  const ids=new Set([...Object.values(picked).flat(),...Object.values(custom).flat().map(c=>c.id)]);
+  ids.forEach(id=>{const e=o.v&&o.v[id];v[id]={a:num(e&&e.a),f:fq(e&&e.f)}});
+  return {picked,v,est,custom,view:o.view==="year"?"year":"month",lang:o.lang==="fr"?"fr":o.lang==="en"?"en":S.lang};
+}
+function readBackup(file){
+  if(!file)return;const r=new FileReader();
+  r.onload=()=>{let c=null;try{c=cleanBackup(JSON.parse(r.result))}catch(e){}
+    if(!c){toast(L().badFile);return}
+    S={step:STEPS.length-1,isExample:false,more:{},lastBackup:S.lastBackup,changedAt:null,...c};render();save();window.scrollTo({top:0});toast(L().opened)};
+  r.onerror=()=>toast(L().badFile);
+  r.readAsText(file);
+}
+function csvCell(x,sep){
+  let s=String(x??"");
+  if(/^[=+\-@\t\r]/.test(s))s="'"+s;            // stop spreadsheets reading text as a formula
+  return (s.includes(sep)||/["\n\r]/.test(s))?'"'+s.replace(/"/g,'""')+'"':s;
+}
+async function exportCsv(){
+  const Lx=L(),t=totals(),n=v=>v.toFixed(2).replace(".",Lx.dec);
+  const rows=[Lx.csvHead];
+  const add=(sec,name,e)=>rows.push([sec,name,n(+e.a||0),Lx.freq[e.f]||e.f,n(mo(e)),n(mo(e)*12)]);
+  ["income",...OUT].forEach(k=>{
+    if(k!=="income"&&estOn(k)){add(bT(k),Lx.roughTotal(bT(k)),S.est[k]);return}
+    picked(k).forEach(id=>{const e=S.v[id];if(e&&+e.a>0)add(bT(k),label(id),e)});
+  });
+  rows.push([]);
+  rows.push(["",Lx.totalIncome,"","",n(t.inc),n(t.inc*12)]);
+  rows.push(["",Lx.totalPlanned,"","",n(t.out),n(t.out*12)]);
+  rows.push(["",t.bal>=0?Lx.leftOver:Lx.shortfall,"","",n(Math.abs(t.bal)),n(Math.abs(t.bal)*12)]);
+  const text="\ufeff"+rows.map(r=>r.map(c=>csvCell(c,Lx.sep)).join(Lx.sep)).join("\r\n")+"\r\n";
+  if(await offerFile(`${Lx.fileBase}-${today()}.csv`,text,"text/csv"))toast(Lx.csvSaved);
+}
+
+function render(){renderChrome();renderFooter();renderProgress();renderState();renderNotice();renderMain();renderTally()}
+function toast(s){const t=$("#toast");t.textContent=s;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,2400)}
+function touched(){if(S.isExample){S.isExample=false;renderState()}if(!S.changedAt){S.changedAt=Date.now();S.snooze=null}save();renderNotice()}
+const unsaved=()=>!S.isExample&&!!S.changedAt;
+/* notice: changes not in a backup yet */
+function renderNotice(){
+  const n=$("#notice");if(!n)return;
+  const show=unsaved()&&!(S.snooze&&S.snooze>Date.now());
+  n.hidden=!show;
+  if(show)n.innerHTML=`<div class="notice-in"><span class="notice-dot" aria-hidden="true"></span><div class="notice-t"><b>${L().unsavedTitle}</b><span>${L().unsavedBody}</span></div><div class="notice-a"><button class="btn primary" data-act="backup">${L().saveBackup}</button><button class="btn ghost" data-act="snooze">${L().later}</button></div></div>`;
+}
+/* confirmation before replacing or clearing the budget */
+let pending=null;
+function askFirst(kind){
+  if(!unsaved()){runAction(kind);return}
+  pending=kind;const d=$("#dlg"),Lx=L();
+  d.innerHTML=`<div class="dlg-card" role="dialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgB">
+    <h3 id="dlgT">${kind==="fresh"?Lx.dlgClear:Lx.dlgReplace}</h3><p id="dlgB">${Lx.dlgBody}</p>
+    <div class="dlg-a"><button class="btn primary" data-dlg="save">${Lx.saveFirst}</button><button class="btn" data-dlg="go">${Lx.continueAnyway}</button><button class="btn ghost" data-dlg="cancel">${Lx.cancel}</button></div></div>`;
+  d.hidden=false;d.querySelector("button").focus();
+}
+function closeDlg(){const d=$("#dlg");d.hidden=true;d.innerHTML="";pending=null}
+function runAction(kind){
+  if(kind==="open"){document.getElementById("fileIn").click();return}
+  if(kind==="fresh"){S={step:0,isExample:false,lang:S.lang,lastBackup:S.lastBackup,changedAt:null,view:"month",picked:{},v:{},est:{},custom:{},more:{}};render();save();toast(L().blank)}
+  if(kind==="example"){S={step:STEPS.length-1,isExample:true,lang:S.lang,lastBackup:S.lastBackup,changedAt:null,...structuredClone(EXAMPLE)};render();toast(L().exLoaded)}
+}
+
+document.addEventListener("click",async e=>{
+  const db=e.target.closest("[data-dlg]");
+  if(db){const k=pending,act=db.dataset.dlg;
+    if(act==="cancel"){closeDlg();return}
+    if(act==="go"){closeDlg();runAction(k);return}
+    if(act==="save"){if(await saveBackup()){const d=$("#dlg");d.querySelector("#dlgB").textContent=L().dlgDone;
+        d.querySelector(".dlg-a").innerHTML=`<button class="btn primary" data-dlg="go">${k==="open"?L().actOpen:k==="fresh"?L().actClear:L().actExample}</button><button class="btn ghost" data-dlg="cancel">${L().cancel}</button>`;d.querySelector("button").focus()}
+      return}}
+  if(e.target.closest("#dlg")&&e.target.id==="dlg"){closeDlg();return}
+  const ol=e.target.closest('label[for="fileIn"]');
+  if(ol&&unsaved()){e.preventDefault();askFirst("open");return}
+  if(e.target.closest("#langBtn")){S.lang=isFr()?"en":"fr";render();save();return}
+  const go=e.target.closest("[data-go]");if(go){S.step=Math.max(0,Math.min(STEPS.length-1,+go.dataset.go));S.q="";render();save();window.scrollTo({top:0,behavior:"smooth"});return}
+  const v=e.target.closest("[data-view]");if(v){S.view=v.dataset.view;renderTally();renderMain();save();return}
+  const pk=e.target.closest("[data-pick]");if(pk){const id=pk.dataset.pick,b=pk.dataset.b;(S.picked[b]||=[]).includes(id)||S.picked[b].push(id);S.v[id]||={a:"",f:ITEM[id].p||"Monthly"};
+    if(b!==STEPS[S.step]){toast(L().addedTo(bT(b)));touched();renderTally();renderSearch();return}
+    S.q="";renderMain();renderTally();document.getElementById("a-"+id)?.focus();touched();return}
+  const up=e.target.closest("[data-unpick]");if(up){const id=up.dataset.unpick,b=up.dataset.b;S.picked[b]=(S.picked[b]||[]).filter(x=>x!==id);S.custom[b]=(S.custom[b]||[]).filter(c=>c.id!==id);renderMain();renderTally();touched();return}
+  const mr=e.target.closest("[data-more]");if(mr){S.more[mr.dataset.more]=!S.more[mr.dataset.more];renderMain();save();return}
+  const cu=e.target.closest("[data-custom]");if(cu){const b=cu.dataset.custom,id="c"+Date.now().toString(36);(S.custom[b]||=[]).push({id,l:""});S.v[id]={a:"",f:"Monthly"};renderMain();document.getElementById("l-"+id)?.focus();touched();return}
+  const tp=e.target.closest("[data-tip]");if(tp){const el=document.getElementById("t-"+tp.dataset.tip);el.hidden=!el.hidden;tp.setAttribute("aria-expanded",String(!el.hidden));return}
+  const a=e.target.closest("[data-act]");if(!a)return;
+  if(a.dataset.act==="fresh"){askFirst("fresh");return}
+  if(a.dataset.act==="example"){askFirst("example");return}
+  if(a.dataset.act==="snooze"){S.snooze=Date.now()+60*60*1000;save();renderNotice();return}
+  if(a.dataset.act==="backup"){saveBackup();return}
+  if(a.dataset.act==="csv"){exportCsv();return}
+  if(a.dataset.act==="copy"){const t=totals(),Lx=L();const txt=`${Lx.copyHead}\n${Lx.income}${isFr()?NB:""}: ${fmt(t.inc,2)}\n`+OUT.map(k=>`${bT(k)}${isFr()?NB:""}: ${fmt(t.b[k],2)}${estOn(k)?Lx.roughSuffix:""}`).join("\n")+`\n${t.bal>=0?Lx.leftOver:Lx.shortfall}${isFr()?NB:""}: ${fmt(t.bal,2)}`;
+    if(navigator.clipboard)navigator.clipboard.writeText(txt).then(()=>toast(Lx.copied),()=>toast(Lx.noCopy));else toast(Lx.noCopy)}
+});
+document.addEventListener("change",e=>{
+  const el=e.target;
+  if(el.id==="fileIn"){readBackup(el.files&&el.files[0]);el.value="";return}
+  if(el.dataset.est){const b=el.dataset.est;S.est[b]={...(S.est[b]||{a:"",f:"Monthly"}),on:el.checked};renderMain();renderTally();touched();return}
+  if(el.dataset.estf){S.est[el.dataset.estf].f=el.value;renderTally();touched();return}
+  if(el.dataset.k==="f"){(S.v[el.dataset.id]||={a:"",f:"Monthly"}).f=el.value;renderTally();touched()}
+});
+document.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.id==="q"){S.q=el.value;renderSearch();return}
+  if(el.dataset.lab){const c=(S.custom[el.dataset.b]||[]).find(c=>c.id===el.dataset.lab);if(c)c.l=el.value;touched();return}
+  const num=el.dataset.k==="a"||el.dataset.esta;if(!num)return;
+  // accept "1 234,50" (French) and "1,234.50" (English)
+  let raw=el.value;
+  if(isFr())raw=raw.replace(/[\s  ]/g,"").replace(",",".");else raw=raw.replace(/,/g,"");
+  const clean=raw.replace(/[^0-9.]/g,"");
+  if(el.dataset.esta){S.est[el.dataset.esta].a=clean===""?"":+clean}
+  else{(S.v[el.dataset.id]||={a:"",f:"Monthly"}).a=clean===""?"":+clean}
+  renderTally();touched();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#dlg").hidden){closeDlg();return}const l=e.target.closest&&e.target.closest('label[for="fileIn"]');if(l&&(e.key==="Enter"||e.key===" ")){e.preventDefault();askFirst("open")}});
+window.addEventListener("beforeunload",e=>{if(unsaved()){e.preventDefault();e.returnValue=""}});
+render();
+</script>
+
+</body></html>
