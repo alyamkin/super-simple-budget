@@ -31,9 +31,9 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Replace template `page.tsx` with a placeholder that uses the tokens.
 - **Done when** light/dark render with the artifact colours; no CLS from fonts.
 
-### [ ] 3. Locale routing and i18n core
+### [x] 3. Locale routing and i18n core
 `feat(i18n): add [lang] routing, proxy redirect and dictionary loader` · Spec §3.1, §5
-- Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `dynamicParams = false`, `<html lang={bcp47}>`.
+- Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={bcp47}>`.
 - `proxy.ts`: `/` → `/en|/fr` (cookie `NEXT_LOCALE`, `Accept-Language`).
 - `i18n/config.ts`, `i18n/get-dictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
 - Dictionaries with **chrome strings only** for now (app name, subtitle, lang button, footer, meta). Remaining strings arrive with the features that use them.

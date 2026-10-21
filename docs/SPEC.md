@@ -61,7 +61,7 @@ Dependencies we deliberately **do not** add: lodash (native JS is enough), momen
 | URL | Purpose | Rendering |
 | --- | --- | --- |
 | `/` | Redirects to `/en` or `/fr` | `proxy.ts`: cookie `NEXT_LOCALE`, then `Accept-Language` (`fr*` → `fr`), default `en`. 307 redirect. |
-| `/en`, `/fr` | The app | Statically prerendered (`generateStaticParams` → `en`, `fr`; `dynamicParams = false`). |
+| `/en`, `/fr` | The app | Statically prerendered (`generateStaticParams` → `en`, `fr`). `dynamicParams = false` is rejected under Cache Components, so layout and page guard with `hasLocale()` → `notFound()`. |
 | anything else under `/[lang]` | 404 | `notFound()` |
 | `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest`, icons, OG image | SEO | Metadata file conventions (§13). |
 

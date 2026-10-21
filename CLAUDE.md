@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Early build-out following `docs/PLAN.md`: Jest tooling (step 1) and design tokens/fonts (step 2) are in; `app/page.tsx` is a token-styled placeholder. There is no budget logic or data layer yet.
+Early build-out following `docs/PLAN.md`: Jest tooling (step 1), design tokens/fonts (step 2) and locale routing + i18n core (step 3) are in; `app/[lang]/page.tsx` is a placeholder rendering header/footer chrome from the dictionaries. There is no budget logic or data layer yet.
 
 ## Specification
 
@@ -32,4 +32,5 @@ Tests use Jest via `next/jest` (`jest.config.ts`, jsdom by default; pure `domain
   - `reactCompiler: true` — React Compiler auto-memoizes, so manual `useMemo`/`useCallback`/`memo` is usually unnecessary.
   - `partialPrefetching: true`.
 - **Tailwind CSS v4** is wired through Turbopack's `@tailwindcss/turbopack` CSS loader (in `next.config.ts`), not PostCSS — there is no `postcss.config` or `tailwind.config`. Design tokens (copied from the artifact) live on `:root` in `app/globals.css` and are exposed via `@theme inline` as utilities (`bg-surface`, `text-ink`, `border-line`, `bg-b-home`, `font-display`/`font-body`/`font-mono`, `rounded-card`, `phone:`/`tablet:` breakpoints) — no hard-coded hex in components. Dark mode follows `prefers-color-scheme` unless `<html data-theme="light|dark">` overrides it. Fonts (Bricolage Grotesque, Atkinson Hyperlegible, IBM Plex Mono) come from `next/font/google` in `app/layout.tsx`.
+- **Locales** (`en`, `fr`): the root layout lives in `app/[lang]/` (there is no `app/layout.tsx`). `proxy.ts` redirects `/` only. `dynamicParams` is not allowed with Cache Components, so `[lang]` layouts/pages guard with `hasLocale(lang)` → `notFound()`. Copy lives in typed dictionaries `i18n/dictionaries/{en,fr}.ts` (`fr: Dictionary`, key parity tested); servers call `getDictionary(lang)` (`server-only`), clients use `useT()` from `I18nProvider` (`t("a.b", vars)` with `{var}` templates, `plural(key, n)`).
 - Route components use Next's global typed helpers (e.g. `LayoutProps<"/">`, `PageProps<...>`) rather than hand-written prop types.
