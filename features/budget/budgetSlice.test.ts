@@ -18,6 +18,7 @@ import {
   rowAdded,
   rowRemoved,
 } from "@/features/budget/budgetSlice";
+import { hydrated } from "@/store/hydrated";
 
 const { reducer } = budgetSlice;
 const start = (budget: Budget = emptyBudget()) => reducer(budget, { type: "" });
@@ -199,6 +200,19 @@ describe("budget slice", () => {
     expect(reducer(start(), budgetReplaced(EXAMPLE_BUDGET))).toBe(
       EXAMPLE_BUDGET,
     );
+  });
+
+  describe("hydrated", () => {
+    it("takes the stored budget", () => {
+      expect(
+        reducer(start(), hydrated({ budget: EXAMPLE_BUDGET, ui: {} })),
+      ).toBe(EXAMPLE_BUDGET);
+    });
+
+    it("keeps the current budget when nothing was stored", () => {
+      const state = start();
+      expect(reducer(state, hydrated({ budget: null, ui: {} }))).toBe(state);
+    });
   });
 
   describe("isBudgetEdit", () => {

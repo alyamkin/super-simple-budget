@@ -1,0 +1,118 @@
+{
+  "app": "super-simple-budget",
+  "version": 2,
+  "minReaderVersion": 2,
+  "savedAt": "2026-10-21T14:03:00.000Z",
+  "locale": "en",
+  "view": "sideways",
+  "extraTopLevelField": {
+    "ignored": true
+  },
+  "buckets": {
+    "pets": {
+      "rows": [
+        {
+          "id": "petFood",
+          "label": "Pet food",
+          "amount": 80,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "c_aaaaaaaaaa",
+          "custom": true,
+          "label": "Cat sitter",
+          "amount": 40,
+          "frequency": "Monthly"
+        }
+      ]
+    },
+    "home": {
+      "rows": [
+        {
+          "id": "rent",
+          "label": "Rent",
+          "amount": 2000,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "groceries",
+          "label": "Groceries",
+          "amount": 150,
+          "frequency": "Weekly"
+        },
+        {
+          "id": "rent",
+          "label": "Rent again",
+          "amount": 1,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "hoverboardLease",
+          "label": "Hoverboard lease",
+          "amount": 99,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "mysteryItem",
+          "amount": 5,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "not a valid id!",
+          "custom": true,
+          "label": "  Window cleaning  ",
+          "amount": 30,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "ckq2x9",
+          "custom": true,
+          "label": "Snow removal",
+          "amount": "120.5",
+          "frequency": "SemiMonthly"
+        },
+        {
+          "id": "electricity",
+          "label": "Electricity",
+          "amount": -5,
+          "frequency": "Fortnightly"
+        },
+        {
+          "id": "internet",
+          "label": "Internet",
+          "amount": 1000000000.0,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "telephone",
+          "label": "Telephone",
+          "amount": "lots",
+          "frequency": "Monthly"
+        },
+        "not a row",
+        null
+      ],
+      "estimate": {
+        "enabled": "yes",
+        "amount": "2500",
+        "frequency": "Monthly"
+      }
+    },
+    "income": {
+      "rows": [
+        {
+          "id": "myNetIncome",
+          "label": "My net salary",
+          "amount": 3000.456,
+          "frequency": "Every2Weeks"
+        }
+      ],
+      "estimate": {
+        "enabled": true,
+        "amount": 100,
+        "frequency": "Monthly"
+      }
+    },
+    "debt": "not a bucket"
+  }
+}

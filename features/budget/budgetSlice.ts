@@ -16,6 +16,7 @@ import { ITEMS_BY_ID, type ItemId } from "@/domain/catalog/items";
 import type { Frequency } from "@/domain/frequency";
 import { customId } from "@/lib/customId";
 import { normalizeAmount } from "@/lib/parseAmount";
+import { hydrated } from "@/store/hydrated";
 
 /** Longest name a custom row can have (Spec §4.3.1). */
 export const MAX_LABEL_LENGTH = 80;
@@ -130,6 +131,9 @@ export const budgetSlice = createSlice({
     }),
     /** Open file, clear and hydrate: not an edit, so `changedAt` is untouched. */
     budgetReplaced: (_state, action: PayloadAction<Budget>) => action.payload,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(hydrated, (state, action) => action.payload.budget ?? state);
   },
   selectors: {
     selectBudget: (budget) => budget,

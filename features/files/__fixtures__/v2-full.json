@@ -1,0 +1,140 @@
+{
+  "app": "super-simple-budget",
+  "version": 2,
+  "minReaderVersion": 2,
+  "savedAt": "2026-10-21T14:03:00.000Z",
+  "locale": "fr",
+  "view": "year",
+  "buckets": {
+    "income": {
+      "rows": [
+        {
+          "id": "myNetIncome",
+          "label": "Mon salaire net",
+          "amount": 2150,
+          "frequency": "Every2Weeks"
+        },
+        {
+          "id": "spouseNetIncome",
+          "label": "Salaire net de mon ou ma partenaire",
+          "amount": 1850,
+          "frequency": "Every2Weeks"
+        },
+        {
+          "id": "c_k3j9x0aa1b",
+          "custom": true,
+          "label": "Tutorat",
+          "amount": 200,
+          "frequency": "Monthly"
+        }
+      ]
+    },
+    "savings": {
+      "rows": [
+        {
+          "id": "emergencyFund",
+          "label": "Fonds d’urgence",
+          "amount": 150,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "tfsa",
+          "label": "CELI",
+          "amount": null,
+          "frequency": "Monthly"
+        }
+      ]
+    },
+    "home": {
+      "rows": [
+        {
+          "id": "rent",
+          "label": "Loyer",
+          "amount": 2350,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "electricity",
+          "label": "Électricité",
+          "amount": 95.5,
+          "frequency": "Every6Months"
+        }
+      ],
+      "estimate": {
+        "enabled": false,
+        "amount": 2600,
+        "frequency": "Monthly"
+      }
+    },
+    "around": {
+      "rows": [
+        {
+          "id": "carPayments",
+          "label": "Paiements de voiture",
+          "amount": 430,
+          "frequency": "Monthly"
+        },
+        {
+          "id": "gas",
+          "label": "Essence ou recharge",
+          "amount": 60,
+          "frequency": "Weekly"
+        }
+      ]
+    },
+    "everyday": {
+      "rows": [
+        {
+          "id": "groceries",
+          "label": "Épicerie",
+          "amount": 30,
+          "frequency": "Daily"
+        },
+        {
+          "id": "dentist",
+          "label": "Soins dentaires",
+          "amount": 400,
+          "frequency": "Annually"
+        },
+        {
+          "id": "c_0000000001",
+          "custom": true,
+          "label": "Pharmacie",
+          "amount": 25.75,
+          "frequency": "Quarterly"
+        }
+      ]
+    },
+    "family": {
+      "rows": [
+        {
+          "id": "daycare",
+          "label": "Garderie et services de garde",
+          "amount": 450,
+          "frequency": "TwiceMonthly"
+        },
+        {
+          "id": "gifts",
+          "label": "Cadeaux",
+          "amount": 1200,
+          "frequency": "Annually"
+        }
+      ],
+      "estimate": {
+        "enabled": true,
+        "amount": 900,
+        "frequency": "Monthly"
+      }
+    },
+    "debt": {
+      "rows": [
+        {
+          "id": "creditCard",
+          "label": "Solde de carte de crédit",
+          "amount": 0,
+          "frequency": "Monthly"
+        }
+      ]
+    }
+  }
+}

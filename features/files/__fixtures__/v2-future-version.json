@@ -1,0 +1,21 @@
+{
+  "app": "super-simple-budget",
+  "version": 3,
+  "minReaderVersion": 3,
+  "savedAt": "2031-01-01T00:00:00.000Z",
+  "locale": "en",
+  "view": "month",
+  "currency": "CAD",
+  "buckets": {
+    "income": {
+      "rows": [
+        {
+          "id": "myNetIncome",
+          "label": "My net salary",
+          "amount": 2150,
+          "frequency": "Every2Weeks"
+        }
+      ]
+    }
+  }
+}

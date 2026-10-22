@@ -23,8 +23,10 @@ export function I18nProvider({
   return <I18nContext value={translator}>{children}</I18nContext>;
 }
 
-export function useT(): Translator {
+export function useTranslator(): Translator {
   const translator = use(I18nContext);
-  if (!translator) throw new Error("useT must be used inside <I18nProvider>");
+  if (!translator) {
+    throw new Error("useTranslator must be used inside <I18nProvider>");
+  }
   return translator;
 }

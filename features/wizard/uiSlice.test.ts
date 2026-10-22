@@ -19,6 +19,7 @@ import {
   viewChanged,
   type UiState,
 } from "@/features/wizard/uiSlice";
+import { hydrated } from "@/store/hydrated";
 import { makeStore } from "@/store/makeStore";
 
 const { reducer } = uiSlice;
@@ -119,6 +120,30 @@ describe("ui slice", () => {
     it("is not set by budgetReplaced", () => {
       expect(
         reducer(initial(), budgetReplaced(emptyBudget())).changedAt,
+      ).toBeNull();
+    });
+  });
+
+  describe("hydrated", () => {
+    it("restores the stored fields and marks the state hydrated", () => {
+      const state = reducer(
+        reducer(initial(), toastShown({ key: "a" })),
+        hydrated({ budget: null, ui: { step: 4, view: "year", changedAt: 9 } }),
+      );
+      expect(state).toMatchObject({
+        step: 4,
+        view: "year",
+        changedAt: 9,
+        lastFileSaveAt: null,
+        hydrated: true,
+      });
+      expect(state.toast?.key).toBe("a");
+    });
+
+    it("is not a budget edit", () => {
+      expect(
+        reducer(initial(), hydrated({ budget: emptyBudget(), ui: {} }))
+          .changedAt,
       ).toBeNull();
     });
   });

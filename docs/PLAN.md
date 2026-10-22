@@ -35,7 +35,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 `feat(i18n): add [lang] routing, proxy redirect and dictionary loader` · Spec §3.1, §5
 - Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={regionalLocale(lang)}>`.
 - `proxy.ts`: `/` → `/en|/fr` (cookie `NEXT_LOCALE`, `Accept-Language`).
-- `i18n/config.ts`, `i18n/getDictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
+- `i18n/config.ts`, `i18n/getDictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useTranslator()` client hook.
 - Dictionaries with **chrome strings only** for now (app name, subtitle, lang button, footer, meta). Remaining strings arrive with the features that use them.
 - Tests: `translate` (interpolation, plural en/fr, missing var), `hasLocale`, en/fr key parity test (reused by later steps).
 - **Done when** `/` redirects, `/en` and `/fr` prerender (`next build` shows ● static), `/de` 404s.
@@ -69,7 +69,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Initial state = empty budget, step 1.
 - Tests: every reducer; custom id format; selectors memoisation (same reference for same input); totals selectors equal domain results.
 
-### [ ] 8. Backup schema, migrations and persistence
+### [x] 8. Backup schema, migrations and persistence
 `feat(files): add versioned budget schema, migrations and local persistence` · Spec §6.4, §11.1–11.3
 - `features/files/schema.ts` (types, `CURRENT_VERSION = 2`), `migrations/v1ToV2.ts`, `sanitize.ts`, `importJson.ts` (`parseBudgetFile(text) → Result`), `exportJson.ts` (`serializeBudget`).
 - Golden fixtures (append-only): `v1-artifact.json` (artifact export of the example), `v2-full.json`, `v2-unknown-ids.json`, `v2-future-version.json`, `garbage.json`.
