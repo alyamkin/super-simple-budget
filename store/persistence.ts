@@ -131,19 +131,15 @@ export function startPersistence(
   options: PersistenceOptions,
 ): () => void {
   const storage = getStorage(options);
-  let legacy: unknown = null;
-  let payload: HydratedPayload | null = null;
-  let fromLegacy = false;
-  if (storage) {
-    payload = readCurrent(readJson(storage, STORAGE_KEY));
-    legacy = readJson(storage, LEGACY_STORAGE_KEY);
-    if (!payload) {
-      payload = readLegacy(legacy);
-      fromLegacy = payload !== null;
-    }
+  if (!storage) {
+    store.dispatch(hydrated({ budget: null, ui: {} }));
+    return () => {};
   }
-  store.dispatch(hydrated(payload ?? { budget: null, ui: {} }));
-  if (!storage) return () => {};
+
+  const current = readCurrent(readJson(storage, STORAGE_KEY));
+  const legacy = readJson(storage, LEGACY_STORAGE_KEY);
+  const migrated = current ? null : readLegacy(legacy);
+  store.dispatch(hydrated(current ?? migrated ?? { budget: null, ui: {} }));
 
   let timer: ReturnType<typeof setTimeout> | undefined;
   const write = () => {
@@ -160,7 +156,7 @@ export function startPersistence(
   };
 
   // Moved to the current key once; the artifact's demo is just dropped.
-  if (fromLegacy) write();
+  if (migrated) write();
   if (legacy !== null) {
     try {
       storage.removeItem(LEGACY_STORAGE_KEY);

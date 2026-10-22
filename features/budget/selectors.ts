@@ -26,7 +26,6 @@ export const {
   selectBudget,
   selectAllRows,
   selectBucketRows,
-  selectEstimates,
   selectRow,
   selectPickedCount,
   selectEstimate,
@@ -109,8 +108,6 @@ export const selectIncome = (state: RootState) => selectTotals(state).income;
 export const selectOutgoing = (state: RootState) =>
   selectTotals(state).outgoing;
 export const selectSavings = (state: RootState) => selectTotals(state).savings;
-export const selectSpending = (state: RootState) =>
-  selectTotals(state).spending;
 export const selectBalance = (state: RootState) => selectTotals(state).balance;
 
 /** A bucket's monthly total: its rough total when estimated, else its rows. */

@@ -10,7 +10,3 @@ export function customId(): `c_${string}` {
   for (const value of values) id += (value % 36).toString(36);
   return `c_${id}`;
 }
-
-export function isCustomId(value: unknown): value is `c_${string}` {
-  return typeof value === "string" && CUSTOM_ID_PATTERN.test(value);
-}

@@ -2,26 +2,18 @@
 
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import {
-  BUCKETS,
+  bucketColor,
   isEstimable,
   OUTGOING_BUCKETS,
   type EstimableBucketId,
-  type OutgoingBucketId,
 } from "@/domain/catalog/buckets";
 import { balanceLevel, type BalanceLevel } from "@/domain/totals";
 import { selectIsEstimated, selectTotals } from "@/features/budget/selectors";
-import {
-  uiSlice,
-  viewChanged,
-  VIEW_MULTIPLIER,
-  type View,
-} from "@/features/wizard/uiSlice";
+import { viewChanged, type View } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
-import { formatMoney } from "@/lib/format";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-
-const { selectView } = uiSlice.selectors;
 
 const VIEWS: readonly View[] = ["month", "year"];
 
@@ -31,16 +23,12 @@ const BALANCE_CLASSES: Record<BalanceLevel, string> = {
   shortfall: "bg-bad-soft text-bad",
 };
 
-const bucketColor = (bucket: OutgoingBucketId) => `var(${BUCKETS[bucket].color})`;
-
 /** The desktop running total beside the step. */
 export function Tally() {
-  const { t, locale } = useTranslator();
+  const { t } = useTranslator();
+  const { view, money } = useViewMoney();
   const dispatch = useAppDispatch();
-  const view = useAppSelector(selectView);
   const totals = useAppSelector(selectTotals);
-  const multiplier = VIEW_MULTIPLIER[view];
-  const money = (amount: number) => formatMoney(amount * multiplier, locale);
   const level = balanceLevel(totals.balance);
   // The stack shares one scale so it shows both what is planned and what is left.
   const base = Math.max(totals.income, totals.outgoing) || 1;

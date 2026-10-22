@@ -4,10 +4,10 @@ import { flushSync } from "react-dom";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import type { RowId } from "@/domain/budget";
 import type { BucketId } from "@/domain/catalog/buckets";
-import { uiSlice, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import type { PluralKey } from "@/i18n/translate";
-import { formatMoney, formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/format";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { rowRemoved } from "../budgetSlice";
 import { focusById, focusTargets } from "../focusTargets";
@@ -17,8 +17,6 @@ import {
   selectSavingsRate,
 } from "../selectors";
 import { Row } from "./Row";
-
-const { selectView } = uiSlice.selectors;
 
 const COUNT_KEYS: Record<BucketId, PluralKey> = {
   income: "budget.count.income",
@@ -35,11 +33,11 @@ const COUNT_KEYS: Record<BucketId, PluralKey> = {
  * total. On savings, a badge rates the savings rate.
  */
 export function PickedPanel({ bucket }: { bucket: BucketId }) {
-  const { t, plural, locale } = useTranslator();
+  const { t, plural } = useTranslator();
+  const { view, money } = useViewMoney();
   const dispatch = useAppDispatch();
   const ids = useAppSelector((state) => selectRowIds(state, bucket));
   const total = useAppSelector((state) => selectBucketTotal(state, bucket));
-  const view = useAppSelector(selectView);
 
   // Focus goes to the next row's remove button, else the previous one's,
   // else the picker heading.
@@ -59,7 +57,7 @@ export function PickedPanel({ bucket }: { bucket: BucketId }) {
           {ids.length ? plural(COUNT_KEYS[bucket], ids.length) : t("budget.nothingYet")}
         </h3>
         <span className="font-mono text-[.95rem]">
-          {formatMoney(total * VIEW_MULTIPLIER[view], locale)}
+          {money(total)}
           {t(`per.${view}`)}
           {bucket === "savings" && <SavingsBadge />}
         </span>

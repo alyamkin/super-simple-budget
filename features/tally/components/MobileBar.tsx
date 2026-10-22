@@ -8,27 +8,23 @@ import {
   selectIncome,
   selectOutgoing,
 } from "@/features/budget/selectors";
-import { uiSlice, viewChanged, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { viewChanged } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
-import { formatMoney } from "@/lib/format";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-
-const { selectView } = uiSlice.selectors;
 
 /**
  * The tally docked to the bottom below the tablet breakpoint:
  * income, planned and the balance, plus a `/mo` ↔ `/yr` switch.
  */
 export function MobileBar() {
-  const { t, locale } = useTranslator();
+  const { t } = useTranslator();
+  const { view, money } = useViewMoney();
   const dispatch = useAppDispatch();
-  const view = useAppSelector(selectView);
   const income = useAppSelector(selectIncome);
   const outgoing = useAppSelector(selectOutgoing);
   const balance = useAppSelector(selectBalance);
-  const money = (amount: number) =>
-    formatMoney(amount * VIEW_MULTIPLIER[view], locale);
   const short = balanceLevel(balance) === "shortfall";
   const other = view === "month" ? "year" : "month";
 

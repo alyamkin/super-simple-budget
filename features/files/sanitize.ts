@@ -14,7 +14,11 @@ import {
 } from "@/domain/catalog/buckets";
 import { isItemId, ITEMS_BY_ID, type ItemId } from "@/domain/catalog/items";
 import { RETIRED_ITEMS } from "@/domain/catalog/retired";
-import { TIMES_PER_YEAR, type Frequency } from "@/domain/frequency";
+import {
+  DEFAULT_FREQUENCY,
+  TIMES_PER_YEAR,
+  type Frequency,
+} from "@/domain/frequency";
 import { MAX_LABEL_LENGTH } from "@/features/budget/budgetSlice";
 import type { View } from "@/features/wizard/uiSlice";
 import { customId } from "@/lib/customId";
@@ -26,8 +30,6 @@ export const MAX_ROWS_PER_BUCKET = 200;
 
 /** Custom ids from any version: the artifact wrote `"c"` + base 36, v2 `"c_"`. */
 const FILE_CUSTOM_ID = /^c_?([a-z0-9]{1,16})$/;
-
-const DEFAULT_FREQUENCY: Frequency = "Monthly";
 
 /** Frequencies renamed since they were written to files. */
 const LEGACY_FREQUENCIES: Readonly<Record<string, Frequency>> = {

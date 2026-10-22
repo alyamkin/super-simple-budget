@@ -2,6 +2,7 @@
 
 import { STEPS } from "@/domain/catalog/buckets";
 import { useTranslator } from "@/i18n/I18nProvider";
+import { classNames } from "@/lib/classNames";
 import { useAppSelector } from "@/store/hooks";
 import { stepName } from "../stepName";
 import { uiSlice } from "../uiSlice";
@@ -32,11 +33,12 @@ export function Progress() {
             >
               <span
                 aria-hidden="true"
-                className={
+                className={classNames(
+                  "mb-1.5 block h-1.5 rounded-[3px]",
                   index < current
-                    ? "mb-1.5 block h-1.5 rounded-[3px] bg-accent opacity-55"
-                    : "mb-1.5 block h-1.5 rounded-[3px] bg-line group-aria-[current=step]:bg-accent"
-                }
+                    ? "bg-accent opacity-55"
+                    : "bg-line group-aria-[current=step]:bg-accent",
+                )}
               />
               {stepName(t, step)}
             </button>

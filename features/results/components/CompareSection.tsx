@@ -13,13 +13,11 @@ import {
   selectChecks,
   selectRoughBuckets,
 } from "@/features/budget/selectors";
-import { uiSlice, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
-import { formatList, formatMoney, formatPercent } from "@/lib/format";
+import { formatList, formatPercent } from "@/lib/format";
 import { useAppSelector } from "@/store/hooks";
-
-const { selectView } = uiSlice.selectors;
 
 /** Counts are listed worst first, like the checks. */
 const LEVELS: readonly RuleLevel[] = ["red", "yellow", "green"];
@@ -96,7 +94,7 @@ export function CompareSection() {
 
 function RuleRow({ check }: { check: Check }) {
   const { t, locale } = useTranslator();
-  const view = useAppSelector(selectView);
+  const { view, money } = useViewMoney();
   const { category, amount, level, share } = check;
   const bar = ruleBar(category, share);
 
@@ -106,7 +104,7 @@ function RuleRow({ check }: { check: Check }) {
         {t(`categories.${category}`)}{" "}
         <span className="ml-1 font-mono text-[.82rem] font-medium whitespace-nowrap text-muted">
           {formatPercent(share, locale, { decimals: 1 })} ·{" "}
-          {formatMoney(amount * VIEW_MULTIPLIER[view], locale)}
+          {money(amount)}
           {t(`per.${view}`)}
         </span>
       </span>

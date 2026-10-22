@@ -3,7 +3,6 @@ import {
   emptyBudget,
   type Budget,
   type CustomId,
-  type Estimate,
   type Row,
   type RowId,
 } from "@/domain/budget";
@@ -13,15 +12,13 @@ import {
   type EstimableBucketId,
 } from "@/domain/catalog/buckets";
 import { ITEMS_BY_ID, type ItemId } from "@/domain/catalog/items";
-import type { Frequency } from "@/domain/frequency";
+import { DEFAULT_FREQUENCY, type Frequency } from "@/domain/frequency";
 import { customId } from "@/lib/customId";
 import { normalizeAmount } from "@/lib/parseAmount";
 import { hydrated } from "@/store/hydrated";
 
 /** Longest name a custom row can have. */
 export const MAX_LABEL_LENGTH = 80;
-
-const ESTIMATE_FREQUENCY: Frequency = "Monthly";
 
 type RowRef = { bucket: BucketId; id: RowId };
 
@@ -40,11 +37,6 @@ const edit = <P>(apply: (state: Budget, payload: P) => void) => ({
 
 const findRow = (state: Budget, { bucket, id }: RowRef): Row | undefined =>
   state.rows[bucket].find((row) => row.id === id);
-
-const findEstimate = (
-  state: Budget,
-  bucket: EstimableBucketId,
-): Estimate | undefined => state.estimates[bucket];
 
 export const budgetSlice = createSlice({
   name: "budget",
@@ -76,7 +68,7 @@ export const budgetSlice = createSlice({
           id,
           label: "",
           amount: null,
-          frequency: "Monthly",
+          frequency: DEFAULT_FREQUENCY,
         });
       },
       prepare: ({ bucket }: { bucket: BucketId }) => ({
@@ -104,13 +96,13 @@ export const budgetSlice = createSlice({
     /** Switches a bucket to one rough total and back; its rows are kept. */
     estimateToggled: edit<{ bucket: EstimableBucketId; enabled: boolean }>(
       (state, { bucket, enabled }) => {
-        const estimate = findEstimate(state, bucket);
+        const estimate = state.estimates[bucket];
         if (estimate) estimate.enabled = enabled;
         else if (enabled) {
           state.estimates[bucket] = {
             enabled,
             amount: null,
-            frequency: ESTIMATE_FREQUENCY,
+            frequency: DEFAULT_FREQUENCY,
           };
         }
       },
@@ -119,14 +111,14 @@ export const budgetSlice = createSlice({
       bucket: EstimableBucketId;
       amount: number | null;
     }>((state, { bucket, amount }) => {
-      const estimate = findEstimate(state, bucket);
+      const estimate = state.estimates[bucket];
       if (estimate) estimate.amount = normalizeAmount(amount);
     }),
     estimateFrequencyChanged: edit<{
       bucket: EstimableBucketId;
       frequency: Frequency;
     }>((state, { bucket, frequency }) => {
-      const estimate = findEstimate(state, bucket);
+      const estimate = state.estimates[bucket];
       if (estimate) estimate.frequency = frequency;
     }),
     /** Open file, clear and hydrate: not an edit, so `changedAt` is untouched. */
@@ -139,7 +131,6 @@ export const budgetSlice = createSlice({
     selectBudget: (budget) => budget,
     selectAllRows: (budget) => budget.rows,
     selectBucketRows: (budget, bucket: BucketId) => budget.rows[bucket],
-    selectEstimates: (budget) => budget.estimates,
     selectRow: (budget, bucket: BucketId, id: RowId) =>
       budget.rows[bucket].find((row) => row.id === id),
     selectPickedCount: (budget, bucket: BucketId) =>

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { STEPS, type BucketId } from "@/domain/catalog/buckets";
+import { RESULTS_STEP, type BucketId } from "@/domain/catalog/buckets";
 import { isBudgetEdit } from "@/features/budget/budgetSlice";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 import type { MessageKey } from "@/i18n/translate";
@@ -51,12 +51,10 @@ export const PERSISTED_UI_KEYS = [
 
 export type PersistedUi = Pick<UiState, (typeof PERSISTED_UI_KEYS)[number]>;
 
-const LAST_STEP = STEPS.length - 1;
-
 /** An existing step index; anything else is the first step. */
 export function clampStep(value: number): number {
   const step = Math.trunc(value);
-  return Number.isFinite(step) ? Math.min(Math.max(step, 0), LAST_STEP) : 0;
+  return Number.isFinite(step) ? Math.min(Math.max(step, 0), RESULTS_STEP) : 0;
 }
 
 export const NOTICE_SNOOZE_MS = 60 * 60 * 1000;
@@ -143,7 +141,6 @@ export const uiSlice = createSlice({
   },
   selectors: {
     selectStep: (ui) => ui.step,
-    selectStepId: (ui) => STEPS[ui.step],
     selectView: (ui) => ui.view,
     selectShowAllChips: (ui, bucket: BucketId) =>
       ui.showAllChips[bucket] === true,

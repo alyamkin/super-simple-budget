@@ -24,6 +24,9 @@ export const TIMES_PER_YEAR: Record<Frequency, number> = {
 /** Every frequency, most to least frequent (the select's option order). */
 export const FREQUENCIES = Object.keys(TIMES_PER_YEAR) as Frequency[];
 
+/** For rows and rough totals that have no frequency of their own yet. */
+export const DEFAULT_FREQUENCY: Frequency = "Monthly";
+
 /** Converts an amount paid at `frequency` to its monthly equivalent. */
 export const toMonthly = (amount: number, frequency: Frequency): number =>
   (amount * TIMES_PER_YEAR[frequency]) / 12;

@@ -1,6 +1,6 @@
 "use client";
 
-import { STEPS } from "@/domain/catalog/buckets";
+import { LAST_BUCKET_STEP, STEPS } from "@/domain/catalog/buckets";
 import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Toaster } from "@/features/notices/components/Toaster";
 import { UnsavedNotice } from "@/features/notices/components/UnsavedNotice";
@@ -21,7 +21,7 @@ import { useTranslator } from "@/i18n/I18nProvider";
 import { useAppSelector } from "@/store/hooks";
 import { MAIN_ID } from "./SkipLink";
 
-const { selectStepId, selectHydrated, selectIsUnsaved } = uiSlice.selectors;
+const { selectStep, selectHydrated, selectIsUnsaved } = uiSlice.selectors;
 
 /**
  * The interactive island: the unsaved-changes notice, progress, the current
@@ -29,10 +29,11 @@ const { selectStepId, selectHydrated, selectIsUnsaved } = uiSlice.selectors;
  */
 export function BudgetApp() {
   const { t } = useTranslator();
-  const step = useAppSelector(selectStepId);
+  const index = useAppSelector(selectStep);
+  const step = STEPS[index];
   const hydrated = useAppSelector(selectHydrated);
   useBeforeUnload(useAppSelector(selectIsUnsaved));
-  usePrefetchResults(STEPS.indexOf(step) === STEPS.length - 2);
+  usePrefetchResults(index === LAST_BUCKET_STEP);
 
   return (
     <div aria-busy={!hydrated}>
@@ -49,7 +50,7 @@ export function BudgetApp() {
             <>
               <StepHeading
                 eyebrow={t("wizard.stepOf", {
-                  n: STEPS.indexOf(step) + 1,
+                  n: index + 1,
                   total: STEPS.length,
                   name: t(`buckets.${step}.title`),
                 })}

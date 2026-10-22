@@ -4,14 +4,11 @@ import { useId } from "react";
 import { Button } from "@/components/ui/Button";
 import { useFileActions } from "@/features/files/useFileActions";
 import { noticeSnoozed, uiSlice } from "@/features/wizard/uiSlice";
-import { STEP_HEADING_ID } from "@/features/wizard/useGoToStep";
+import { focusStepHeading } from "@/features/wizard/useGoToStep";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const { selectIsUnsaved, selectIsNoticeShown } = uiSlice.selectors;
-
-/** Its buttons disappear with it, so focus moves on to the step heading. */
-const moveFocusOn = () => document.getElementById(STEP_HEADING_ID)?.focus();
 
 /**
  * "Changes not saved to a file" above the progress: save now or
@@ -32,13 +29,14 @@ export function UnsavedNotice() {
 
   if (!shown) return null;
 
+  // The buttons disappear with the notice, so focus moves on to the heading.
   const onSave = () => {
-    if (save()) moveFocusOn();
+    if (save()) focusStepHeading();
   };
 
   const onLater = () => {
     dispatch(noticeSnoozed());
-    moveFocusOn();
+    focusStepHeading();
   };
 
   return (
