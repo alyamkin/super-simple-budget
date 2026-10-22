@@ -5,6 +5,7 @@ import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/exampleBudget";
 import {
   computeChecks,
   headline,
+  incomeFlow,
   nextSteps,
   roughBuckets,
   topExpenses,
@@ -27,6 +28,7 @@ import {
   selectChips,
   selectFlaggedChecks,
   selectHeadline,
+  selectIncomeFlow,
   selectIncome,
   selectNextSteps,
   selectPickedItemIds,
@@ -61,6 +63,7 @@ describe("totals selectors", () => {
       checks.filter((c) => c.level !== "green"),
     );
     expect(selectHeadline(state)).toEqual(headline(totals));
+    expect(selectIncomeFlow(state)).toEqual(incomeFlow(totals));
     expect(selectTopExpenses(state)).toEqual(topExpenses(EXAMPLE_BUDGET));
     expect(selectRoughBuckets(state)).toEqual(roughBuckets(EXAMPLE_BUDGET));
     expect(selectNextSteps(state)).toEqual(

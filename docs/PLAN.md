@@ -113,7 +113,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ## Phase 3 — Results
 
-### [ ] 15. Results: headline, income flow, top expenses
+### [x] 15. Results: headline, income flow, top expenses
 `feat(results): add plan headline, income flow bar and biggest expenses` · Spec §4.6 (1–4), §8.1–8.2, §10.2–10.3
 - Deps: `recharts`.
 - `ResultsView` loaded with `next/dynamic` (`ssr: false`, skeleton); `usePrefersReducedMotion`; chart selectors; `IncomeFlowBar`, `TopExpenses` (Recharts, rules in Spec §10.0); ESLint `no-restricted-imports` for `recharts` outside `charts/`; `ResizeObserver` stub in `jest.setup.ts`.

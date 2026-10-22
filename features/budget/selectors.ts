@@ -11,6 +11,7 @@ import {
   computeChecks,
   flaggedChecks,
   headline,
+  incomeFlow,
   nextSteps,
   roughBuckets,
   topExpenses,
@@ -146,6 +147,8 @@ export const selectRoughBuckets = createAppSelector(
   roughBuckets,
   keepIfShallowEqual,
 );
+
+export const selectIncomeFlow = createAppSelector([selectTotals], incomeFlow);
 
 export const selectTopExpenses = createAppSelector([selectBudget], topExpenses);
 

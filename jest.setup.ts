@@ -25,3 +25,12 @@ if (
 if (typeof window !== "undefined") {
   window.scrollTo = jest.fn();
 }
+
+// jsdom has no layout observers; Recharts' ResponsiveContainer needs one.
+if (typeof window !== "undefined" && !window.ResizeObserver) {
+  window.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
