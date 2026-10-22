@@ -605,6 +605,22 @@ export const en = {
       tip: "",
     },
   },
+  rule: {
+    level: {
+      green: "On track",
+      yellow: "A bit off",
+      red: "Needs attention",
+    },
+    savings: {
+      zero: "You're not setting anything aside yet. The usual target is at least {edge} of income.",
+      green: "You meet the usual target of at least {edge} of income.",
+      under: "A little under the usual target of at least {edge} of income.",
+    },
+    zero: "You haven't planned anything here. Most households spend something, up to about {edge} of income.",
+    green: "Within the usual range of up to {edge} of income.",
+    yellow: "A bit above the usual range of up to {edge} of income.",
+    red: "Well above the usual range of up to {edge} of income.",
+  },
   footer: {
     about: "About this tool",
     privacy:

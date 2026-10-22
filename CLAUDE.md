@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Early build-out following `docs/PLAN.md`, steps 1–5 done: Jest tooling, design tokens/fonts, locale routing + i18n core, money/frequency utilities (`domain/frequency.ts`, `lib/format.ts`, `lib/parse-amount.ts`) and the item catalog (`domain/catalog/`; item/category/bucket text lives in the dictionaries). `app/[lang]/page.tsx` is a placeholder rendering header/footer chrome. No totals/rules, store or UI yet.
+Early build-out following `docs/PLAN.md`, steps 1–6 done: Jest tooling, design tokens/fonts, locale routing + i18n core, money/frequency utilities (`domain/frequency.ts`, `lib/format.ts`, `lib/parse-amount.ts`), the item catalog (`domain/catalog/`; item/category/bucket text lives in the dictionaries) and the pure results logic (`domain/budget.ts` types, `totals.ts`, `rules.ts`, `results.ts`; locale-free — they return data and dictionary keys, the UI formats). `app/[lang]/page.tsx` is a placeholder rendering header/footer chrome. No store or UI yet.
 
 ## Specification
 

@@ -606,6 +606,22 @@ export const fr: Dictionary = {
       tip: "",
     },
   },
+  rule: {
+    level: {
+      green: "Sur la bonne voie",
+      yellow: "À surveiller",
+      red: "À revoir",
+    },
+    savings: {
+      zero: "Vous ne mettez rien de côté pour l’instant. La cible habituelle est d’au moins {edge} du revenu.",
+      green: "Vous atteignez la cible habituelle d’au moins {edge} du revenu.",
+      under: "Un peu sous la cible habituelle d’au moins {edge} du revenu.",
+    },
+    zero: "Vous n’avez rien prévu ici. La plupart des ménages y consacrent un montant, jusqu’à environ {edge} du revenu.",
+    green: "Dans la fourchette habituelle, soit jusqu’à {edge} du revenu.",
+    yellow: "Un peu au-dessus de la fourchette habituelle, qui va jusqu’à {edge} du revenu.",
+    red: "Nettement au-dessus de la fourchette habituelle, qui va jusqu’à {edge} du revenu.",
+  },
   footer: {
     about: "À propos de cet outil",
     privacy:
