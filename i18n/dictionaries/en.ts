@@ -26,6 +26,20 @@ export const en = {
   tally: {
     label: "Running total",
     title: "Your plan",
+    showAmounts: "Show amounts",
+    view: { month: "Monthly", year: "Yearly" },
+    switchTo: { month: "Show monthly amounts", year: "Show yearly amounts" },
+    income: "Income",
+    rough: "rough",
+    leftOver: "Left over",
+    shortfall: "Shortfall",
+    planned: "Planned",
+    left: "Left",
+    short: "Short",
+    announce: {
+      leftOver: "Left over {amount} per month",
+      shortfall: "Shortfall {amount} per month",
+    },
   },
   results: {
     eyebrow: "Your plan",
