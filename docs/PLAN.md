@@ -119,7 +119,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `ResultsView` loaded with `next/dynamic` (`ssr: false`, skeleton); `usePrefersReducedMotion`; chart selectors; `IncomeFlowBar`, `TopExpenses` (Recharts, rules in Spec §10.0); ESLint `no-restricted-imports` for `recharts` outside `charts/`; `ResizeObserver` stub in `jest.setup.ts`.
 - Tests: example headline text; no-income state; shortfall key item; top-5 subtitle and share sentence; chart wrappers `aria-hidden`; axe.
 
-### [ ] 16. Results: spending donut
+### [x] 16. Results: spending donut
 `feat(results): add spending donut chart` · Spec §8.3, §10.1
 - `SpendingDonut` (Recharts `PieChart`, centre label, legend `<table>`), CSS empty ring.
 - Tests: legend rows and percentages; chart wrapper `aria-hidden`; empty state; mount/unmount `ResultsView` 20× leaves no observers/timers; axe.

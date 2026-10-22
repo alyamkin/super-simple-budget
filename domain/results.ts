@@ -102,7 +102,36 @@ export function incomeFlow(totals: Totals): IncomeFlow | null {
   };
 }
 
-export type Expense ={ bucket: OutgoingBucketId; amount: number } & (
+/** Donut order (Spec §8.3): spending buckets first, savings last. */
+const SPLIT_ORDER: readonly OutgoingBucketId[] = [
+  "home",
+  "around",
+  "everyday",
+  "family",
+  "debt",
+  "savings",
+];
+
+export type SpendingSplit = {
+  /** Non-zero buckets in donut order; `share` is of `total`. */
+  parts: { bucket: OutgoingBucketId; amount: number; share: number }[];
+  /** Everything planned to go out, monthly. */
+  total: number;
+};
+
+/** "Where your money goes": each outgoing bucket's part of the plan. */
+export function spendingSplit(totals: Totals): SpendingSplit {
+  const total = totals.outgoing;
+  return {
+    parts: SPLIT_ORDER.flatMap((bucket) => {
+      const amount = totals.byBucket[bucket];
+      return amount > 0 ? { bucket, amount, share: amount / total } : [];
+    }),
+    total,
+  };
+}
+
+export type Expense = { bucket: OutgoingBucketId; amount: number } & (
   | { kind: "estimate" }
   | { kind: "row"; row: Row }
 );

@@ -14,6 +14,7 @@ import {
   incomeFlow,
   nextSteps,
   roughBuckets,
+  spendingSplit,
   topExpenses,
 } from "@/domain/results";
 import { evaluateRule } from "@/domain/rules";
@@ -149,6 +150,11 @@ export const selectRoughBuckets = createAppSelector(
 );
 
 export const selectIncomeFlow = createAppSelector([selectTotals], incomeFlow);
+
+export const selectSpendingSplit = createAppSelector(
+  [selectTotals],
+  spendingSplit,
+);
 
 export const selectTopExpenses = createAppSelector([selectBudget], topExpenses);
 

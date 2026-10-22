@@ -8,6 +8,7 @@ import {
   incomeFlow,
   nextSteps,
   roughBuckets,
+  spendingSplit,
   topExpenses,
 } from "@/domain/results";
 import { computeTotals } from "@/domain/totals";
@@ -36,6 +37,7 @@ import {
   selectRow,
   selectRowIds,
   selectSavingsRate,
+  selectSpendingSplit,
   selectTopExpenses,
   selectTotals,
 } from "@/features/budget/selectors";
@@ -64,6 +66,7 @@ describe("totals selectors", () => {
     );
     expect(selectHeadline(state)).toEqual(headline(totals));
     expect(selectIncomeFlow(state)).toEqual(incomeFlow(totals));
+    expect(selectSpendingSplit(state)).toEqual(spendingSplit(totals));
     expect(selectTopExpenses(state)).toEqual(topExpenses(EXAMPLE_BUDGET));
     expect(selectRoughBuckets(state)).toEqual(roughBuckets(EXAMPLE_BUDGET));
     expect(selectNextSteps(state)).toEqual(

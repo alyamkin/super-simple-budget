@@ -132,7 +132,9 @@ describe("Where your income goes", () => {
 
   it("is not shown when nothing comes in or goes out", () => {
     renderResults(emptyBudget());
-    expect(screen.queryByRole("figure")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("figure", { name: "Where your income goes" }),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -172,6 +174,75 @@ describe("Your biggest expenses", () => {
     expect(
       screen.queryByRole("figure", { name: "Your biggest expenses" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("Where your money goes", () => {
+  it("lists each planned bucket with its share of the plan and amount", () => {
+    renderResults(EXAMPLE_BUDGET);
+    const donut = figure("Where your money goes");
+    expect(within(donut).getByRole("table")).toBeInTheDocument();
+    const rows = within(donut).getAllByRole("row").slice(1);
+    expect(
+      rows.map((row) =>
+        [...row.children].map((cell) => cell.textContent),
+      ),
+    ).toEqual([
+      ["Home and bills", "40%", "$2,718"],
+      ["Getting around", "15%", "$1,031"],
+      ["Everyday living", "21%", "$1,457"],
+      ["Family, fun and giving", "7%", "$450"],
+      ["Debt payments", "8%", "$540"],
+      ["Savings", "9%", "$600"],
+    ]);
+    expect(
+      within(donut).getByRole("columnheader", { name: "Share of plan" }),
+    ).toBeInTheDocument();
+  });
+
+  it("follows the yearly view", () => {
+    renderResults(budgetWith({ home: [row("rent", 1000)] }), { yearly: true });
+    const donut = figure("Where your money goes");
+    expect(within(donut).getByRole("cell", { name: "$12,000" })).toBeInTheDocument();
+  });
+
+  it("shows an empty ring when nothing is planned", () => {
+    renderResults(budgetWith({ income: [row("myNetIncome", 1000)] }));
+    const donut = figure("Where your money goes");
+    expect(within(donut).getByText("Nothing planned yet")).toBeInTheDocument();
+    expect(within(donut).queryByRole("table")).not.toBeInTheDocument();
+    expect(donut.querySelector(".recharts-wrapper")).toBeNull();
+  });
+
+  it("draws the donut out of reach of assistive technology", () => {
+    renderResults(EXAMPLE_BUDGET);
+    const chart = figure("Where your money goes").querySelector(".recharts-wrapper");
+    expect(chart?.closest('[aria-hidden="true"]')).not.toBeNull();
+    expect(chart?.querySelectorAll("[tabindex]:not([tabindex='-1'])")).toHaveLength(0);
+  });
+});
+
+/** jsdom runs `requestAnimationFrame` callbacks on a 16 ms timer. */
+const FRAME_MS = 16;
+
+describe("memory", () => {
+  const activeObservers = () =>
+    (window.ResizeObserver as unknown as { active: Set<unknown> }).active;
+
+  afterEach(() => jest.useRealTimers());
+
+  it("leaves no observers or timers after 20 mounts", () => {
+    jest.useFakeTimers();
+    for (let i = 0; i < 20; i++) {
+      const { unmount } = renderResults(EXAMPLE_BUDGET);
+      expect(activeObservers().size).toBeGreaterThan(0);
+      unmount();
+    }
+    expect(activeObservers().size).toBe(0);
+    // Recharts batches its store updates per animation frame: let the last
+    // frame run, after which nothing may be scheduled any more.
+    jest.advanceTimersByTime(FRAME_MS);
+    expect(jest.getTimerCount()).toBe(0);
   });
 });
 

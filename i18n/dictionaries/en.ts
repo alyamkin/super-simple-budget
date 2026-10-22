@@ -66,6 +66,14 @@ export const en = {
       shortfall: "Shortfall",
       incomeMark: "Income",
     },
+    donut: {
+      title: "Where your money goes",
+      planned: "Planned{per}",
+      nothingPlanned: "Nothing planned yet",
+      category: "Category",
+      share: "Share of plan",
+      amount: "Amount",
+    },
     top: {
       title: "Your biggest expenses",
       count: { one: "{n} of {m} item", other: "{n} of {m} items" },

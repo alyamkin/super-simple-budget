@@ -27,10 +27,22 @@ if (typeof window !== "undefined") {
 }
 
 // jsdom has no layout observers; Recharts' ResponsiveContainer needs one.
+// `active` holds the observers still watching something, for leak tests.
 if (typeof window !== "undefined" && !window.ResizeObserver) {
   window.ResizeObserver = class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+    static active = new Set<ResizeObserver>();
+    private targets = new Set<Element>();
+    observe(target: Element) {
+      this.targets.add(target);
+      ResizeObserver.active.add(this);
+    }
+    unobserve(target: Element) {
+      this.targets.delete(target);
+      if (!this.targets.size) ResizeObserver.active.delete(this);
+    }
+    disconnect() {
+      this.targets.clear();
+      ResizeObserver.active.delete(this);
+    }
   };
 }

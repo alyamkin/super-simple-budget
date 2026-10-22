@@ -11,6 +11,7 @@ import {
   incomeFlow,
   nextSteps,
   roughBuckets,
+  spendingSplit,
   topExpenses,
 } from "@/domain/results";
 import { computeTotals } from "@/domain/totals";
@@ -162,6 +163,41 @@ describe("incomeFlow", () => {
 
   it("is null when nothing comes in or goes out", () => {
     expect(incomeFlow(computeTotals(emptyBudget()))).toBeNull();
+  });
+});
+
+describe("spendingSplit", () => {
+  it("lists the example's buckets in donut order with shares of the plan", () => {
+    const { parts, total } = spendingSplit(computeTotals(EXAMPLE_BUDGET));
+    expect(total).toBeCloseTo(6795.17);
+    expect(parts.map((p) => p.bucket)).toEqual([
+      "home",
+      "around",
+      "everyday",
+      "family",
+      "debt",
+      "savings",
+    ]);
+    expect(parts[0].amount).toBeCloseTo(2717.5);
+    expect(parts[0].share).toBeCloseTo(2717.5 / 6795.17);
+    expect(parts.reduce((sum, p) => sum + p.share, 0)).toBeCloseTo(1);
+  });
+
+  it("skips empty buckets", () => {
+    const totals = computeTotals(
+      budgetWith({ savings: [row("emergencyFund", 100)], home: [row("rent", 300)] }),
+    );
+    expect(spendingSplit(totals)).toEqual({
+      parts: [
+        { bucket: "home", amount: 300, share: 0.75 },
+        { bucket: "savings", amount: 100, share: 0.25 },
+      ],
+      total: 400,
+    });
+  });
+
+  it("is empty when nothing is planned", () => {
+    expect(spendingSplit(computeTotals(emptyBudget()))).toEqual({ parts: [], total: 0 });
   });
 });
 

@@ -70,6 +70,14 @@ export const fr: Dictionary = {
       shortfall: "Manque",
       incomeMark: "Revenu",
     },
+    donut: {
+      title: "Où va votre argent",
+      planned: "Prévu{per}",
+      nothingPlanned: "Rien n’est encore prévu",
+      category: "Catégorie",
+      share: "Part du plan",
+      amount: "Montant",
+    },
     top: {
       title: "Vos plus grosses dépenses",
       count: { one: "{n} élément sur {m}", other: "{n} éléments sur {m}" },
