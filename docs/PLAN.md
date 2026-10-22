@@ -96,7 +96,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Focus rules after add/remove.
 - Tests: pick → row appears and amount input focused; type amount updates step total; frequency change; tip toggle `aria-expanded`; remove focus target; custom row naming; axe empty/filled.
 
-### [ ] 12. Item search and toasts
+### [x] 12. Item search and toasts
 `feat(budget): add cross-bucket item search and toasts` · Spec §4.3 (5), §4.4, §4.8 (toasts)
 - `lib/normalizeSearch.ts`, `ItemSearch` (local state, polite result count), `Toaster` (always-mounted live region, 2.4 s, key-based messages).
 - Tests: accent-insensitive search in fr ("garderie", "epicerie"); max 10; already picked excluded; other-bucket add → toast "Added to …" and stays on step.
