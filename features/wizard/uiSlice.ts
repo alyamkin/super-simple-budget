@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { STEPS, type BucketId } from "@/domain/catalog/buckets";
 import { isBudgetEdit } from "@/features/budget/budgetSlice";
+import { hydrated } from "@/store/hydrated";
 
 export type View = "month" | "year";
 
@@ -30,7 +31,25 @@ export type UiState = {
   hydrated: boolean;
 };
 
+/** The fields kept in local storage (Spec §6.4). */
+export const PERSISTED_UI_KEYS = [
+  "step",
+  "view",
+  "showAllChips",
+  "lastFileSaveAt",
+  "changedAt",
+  "noticeSnoozedUntil",
+] as const satisfies readonly (keyof UiState)[];
+
+export type PersistedUi = Pick<UiState, (typeof PERSISTED_UI_KEYS)[number]>;
+
 const LAST_STEP = STEPS.length - 1;
+
+/** An existing step index; anything else is the first step. */
+export function clampStep(value: number): number {
+  const step = Math.trunc(value);
+  return Number.isFinite(step) ? Math.min(Math.max(step, 0), LAST_STEP) : 0;
+}
 
 export const NOTICE_SNOOZE_MS = 60 * 60 * 1000;
 
@@ -53,10 +72,7 @@ export const uiSlice = createSlice({
   reducers: {
     /** Clamped to an existing step. */
     stepChanged: (state, action: PayloadAction<number>) => {
-      const step = Math.trunc(action.payload);
-      state.step = Number.isFinite(step)
-        ? Math.min(Math.max(step, 0), LAST_STEP)
-        : 0;
+      state.step = clampStep(action.payload);
     },
     viewChanged: (state, action: PayloadAction<View>) => {
       state.view = action.payload;
@@ -90,6 +106,10 @@ export const uiSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(hydrated, (state, action) => {
+      Object.assign(state, action.payload.ui);
+      state.hydrated = true;
+    });
     builder.addMatcher(isBudgetEdit, (state, action) => {
       state.changedAt ??= action.meta.at;
     });

@@ -1,0 +1,173 @@
+{
+  "app": "super-simple-budget",
+  "version": 1,
+  "savedAt": "2026-10-21T14:03:00.000Z",
+  "lang": "en",
+  "view": "month",
+  "picked": {
+    "income": [
+      "myNetIncome",
+      "spouseNetIncome"
+    ],
+    "home": [
+      "rent",
+      "tenantInsurance",
+      "electricity",
+      "internet",
+      "telephone",
+      "subscriptions",
+      "bankFees",
+      "taxPrep"
+    ],
+    "around": [
+      "carPayments",
+      "carInsurance",
+      "gas",
+      "transitPass",
+      "carRegistration"
+    ],
+    "everyday": [
+      "groceries",
+      "restaurants",
+      "clothes",
+      "hairdresser",
+      "dentist"
+    ],
+    "family": [
+      "travel",
+      "gifts",
+      "memberships"
+    ],
+    "savings": [
+      "emergencyFund",
+      "retirement",
+      "homePurchase"
+    ],
+    "debt": [
+      "creditCard",
+      "studentLoan"
+    ]
+  },
+  "v": {
+    "myNetIncome": {
+      "a": 2150,
+      "f": "Every2Weeks"
+    },
+    "spouseNetIncome": {
+      "a": 1850,
+      "f": "Every2Weeks"
+    },
+    "rent": {
+      "a": 2350,
+      "f": "Monthly"
+    },
+    "tenantInsurance": {
+      "a": 28,
+      "f": "Monthly"
+    },
+    "electricity": {
+      "a": 95,
+      "f": "Monthly"
+    },
+    "internet": {
+      "a": 70,
+      "f": "Monthly"
+    },
+    "telephone": {
+      "a": 110,
+      "f": "Monthly"
+    },
+    "subscriptions": {
+      "a": 35,
+      "f": "Monthly"
+    },
+    "bankFees": {
+      "a": 17,
+      "f": "Monthly"
+    },
+    "carPayments": {
+      "a": 430,
+      "f": "Monthly"
+    },
+    "carInsurance": {
+      "a": 175,
+      "f": "Monthly"
+    },
+    "gas": {
+      "a": 60,
+      "f": "Weekly"
+    },
+    "transitPass": {
+      "a": 156,
+      "f": "Monthly"
+    },
+    "carRegistration": {
+      "a": 120,
+      "f": "Annually"
+    },
+    "taxPrep": {
+      "a": 150,
+      "f": "Annually"
+    },
+    "groceries": {
+      "a": 210,
+      "f": "Weekly"
+    },
+    "restaurants": {
+      "a": 70,
+      "f": "Weekly"
+    },
+    "clothes": {
+      "a": 150,
+      "f": "Monthly"
+    },
+    "hairdresser": {
+      "a": 60,
+      "f": "Monthly"
+    },
+    "dentist": {
+      "a": 400,
+      "f": "Annually"
+    },
+    "travel": {
+      "a": 3000,
+      "f": "Annually"
+    },
+    "gifts": {
+      "a": 1200,
+      "f": "Annually"
+    },
+    "memberships": {
+      "a": 900,
+      "f": "Annually"
+    },
+    "creditCard": {
+      "a": 300,
+      "f": "Monthly"
+    },
+    "studentLoan": {
+      "a": 240,
+      "f": "Monthly"
+    },
+    "emergencyFund": {
+      "a": 150,
+      "f": "Monthly"
+    },
+    "retirement": {
+      "a": 250,
+      "f": "Monthly"
+    },
+    "homePurchase": {
+      "a": 200,
+      "f": "Monthly"
+    }
+  },
+  "est": {
+    "family": {
+      "on": true,
+      "a": 450,
+      "f": "Monthly"
+    }
+  },
+  "custom": {}
+}

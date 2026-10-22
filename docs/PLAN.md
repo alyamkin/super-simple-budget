@@ -69,7 +69,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Initial state = empty budget, step 1.
 - Tests: every reducer; custom id format; selectors memoisation (same reference for same input); totals selectors equal domain results.
 
-### [ ] 8. Backup schema, migrations and persistence
+### [x] 8. Backup schema, migrations and persistence
 `feat(files): add versioned budget schema, migrations and local persistence` · Spec §6.4, §11.1–11.3
 - `features/files/schema.ts` (types, `CURRENT_VERSION = 2`), `migrations/v1ToV2.ts`, `sanitize.ts`, `importJson.ts` (`parseBudgetFile(text) → Result`), `exportJson.ts` (`serializeBudget`).
 - Golden fixtures (append-only): `v1-artifact.json` (artifact export of the example), `v2-full.json`, `v2-unknown-ids.json`, `v2-future-version.json`, `garbage.json`.
