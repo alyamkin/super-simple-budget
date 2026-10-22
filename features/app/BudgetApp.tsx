@@ -5,7 +5,10 @@ import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Toaster } from "@/features/notices/components/Toaster";
 import { UnsavedNotice } from "@/features/notices/components/UnsavedNotice";
 import { useBeforeUnload } from "@/features/notices/useBeforeUnload";
-import { LazyResultsView } from "@/features/results/components/LazyResultsView";
+import {
+  LazyResultsView,
+  usePrefetchResults,
+} from "@/features/results/components/LazyResultsView";
 import { ResultsHeading } from "@/features/results/components/ResultsHeading";
 import { BalanceAnnouncer } from "@/features/tally/components/BalanceAnnouncer";
 import { MobileBar } from "@/features/tally/components/MobileBar";
@@ -29,6 +32,7 @@ export function BudgetApp() {
   const step = useAppSelector(selectStepId);
   const hydrated = useAppSelector(selectHydrated);
   useBeforeUnload(useAppSelector(selectIsUnsaved));
+  usePrefetchResults(STEPS.indexOf(step) === STEPS.length - 2);
 
   return (
     <div aria-busy={!hydrated}>
