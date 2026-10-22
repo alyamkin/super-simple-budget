@@ -61,6 +61,11 @@ export const en = {
     searchPlaceholder: "Search all items, e.g. gym, daycare, parking",
     searchResults: { one: "{n} result", other: "{n} results" },
     noMatch: "No match. Use “Something else” to add your own.",
+    estimateToggle: "Give a rough total instead",
+    estimateHint:
+      "Short on time? One ballpark number is enough to start. You can itemize later.",
+    estimateQuestion: "About how much on {name}?",
+    estimateFrequency: "Rough total frequency",
   },
   toasts: {
     addedTo: "Added to {bucket}",

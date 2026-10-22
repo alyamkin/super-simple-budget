@@ -64,6 +64,11 @@ export const fr: Dictionary = {
     searchResults: { one: "{n} résultat", other: "{n} résultats" },
     noMatch:
       "Aucun résultat. Utilisez « Autre chose » pour ajouter votre propre élément.",
+    estimateToggle: "Donner plutôt un total approximatif",
+    estimateHint:
+      "Vous manquez de temps? Un montant approximatif suffit pour commencer. Vous pourrez détailler plus tard.",
+    estimateQuestion: "Environ combien au total?",
+    estimateFrequency: "Fréquence du total approximatif",
   },
   toasts: {
     addedTo: "Ajouté à l’étape « {bucket} »",
