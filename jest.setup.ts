@@ -3,13 +3,18 @@ import { toHaveNoViolations } from "jest-axe";
 
 expect.extend(toHaveNoViolations);
 
-// jsdom has no modal dialogs yet: open/close just toggle `open` and fire `close`.
+// jsdom has no modal dialogs yet: open/close just toggle `open` and fire
+// `close`, and Esc closes an open dialog as the browser's would.
 if (
   typeof HTMLDialogElement !== "undefined" &&
   !HTMLDialogElement.prototype.showModal
 ) {
+  const closeOnEscape = function (this: HTMLDialogElement, event: KeyboardEvent) {
+    if (event.key === "Escape") this.close();
+  };
   HTMLDialogElement.prototype.showModal = function showModal() {
     this.open = true;
+    this.addEventListener("keydown", closeOnEscape);
     this.querySelector<HTMLElement>(
       "button, input, select, textarea, [tabindex]",
     )?.focus();

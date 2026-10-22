@@ -8,6 +8,7 @@ import {
   rowAdded,
 } from "@/features/budget/budgetSlice";
 import {
+  budgetCleared,
   fileOpened,
   fileSaved,
   NOTICE_SNOOZE_MS,
@@ -83,6 +84,27 @@ describe("ui slice", () => {
     expect(state.lastFileSaveAt).toBe(50);
   });
 
+  it("budgetCleared clears changedAt and the expanded chip lists", () => {
+    const state = reducer(
+      {
+        ...initial(),
+        step: 7,
+        view: "year",
+        showAllChips: { home: true },
+        changedAt: 100,
+        lastFileSaveAt: 50,
+      },
+      budgetCleared(),
+    );
+    expect(state).toMatchObject({
+      step: 7,
+      view: "year",
+      showAllChips: {},
+      changedAt: null,
+      lastFileSaveAt: 50,
+    });
+  });
+
   it("noticeSnoozed hides the notice for an hour", () => {
     jest.spyOn(Date, "now").mockReturnValue(1000);
     expect(reducer(initial(), noticeSnoozed()).noticeSnoozedUntil).toBe(
@@ -133,6 +155,15 @@ describe("ui slice", () => {
       );
       expect(first.changedAt).toBe(10);
       expect(second.changedAt).toBe(10);
+    });
+
+    it("shows a snoozed notice again for new changes, not for later edits", () => {
+      const snoozed = { ...initial(), noticeSnoozedUntil: 5000 };
+      const edit = rowAdded({ itemId: "rent" });
+      expect(reducer(snoozed, edit).noticeSnoozedUntil).toBeNull();
+      expect(
+        reducer({ ...snoozed, changedAt: 1 }, edit).noticeSnoozedUntil,
+      ).toBe(5000);
     });
 
     it("is not set by budgetReplaced", () => {

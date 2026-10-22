@@ -105,6 +105,14 @@ export const uiSlice = createSlice({
       state.view = action.payload;
       state.changedAt = null;
     },
+    /**
+     * The budget was cleared (its empty budget replaces the current one
+     * through `budgetReplaced`): nothing is unsaved, chip lists start short.
+     */
+    budgetCleared: (state) => {
+      state.showAllChips = {};
+      state.changedAt = null;
+    },
     /** "Later" on the unsaved-changes notice hides it for an hour. */
     noticeSnoozed: {
       reducer: (state, action: PayloadAction<number>) => {
@@ -127,7 +135,10 @@ export const uiSlice = createSlice({
       state.hydrated = true;
     });
     builder.addMatcher(isBudgetEdit, (state, action) => {
-      state.changedAt ??= action.meta.at;
+      if (state.changedAt !== null) return;
+      // New unsaved changes: a notice snoozed for older ones shows again.
+      state.changedAt = action.meta.at;
+      state.noticeSnoozedUntil = null;
     });
   },
   selectors: {
@@ -153,6 +164,7 @@ export const {
   showAllChipsToggled,
   fileSaved,
   fileOpened,
+  budgetCleared,
   noticeSnoozed,
   toastShown,
   toastDismissed,

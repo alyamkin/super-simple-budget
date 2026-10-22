@@ -176,6 +176,7 @@ export const en = {
     notBudgetFile: "This file isn't a Super Simple Budget file.",
     newerVersion: "This file was made by a newer version of Super Simple Budget.",
     tooLarge: "This file is too large to be a Super Simple Budget file.",
+    cleared: "Started a blank budget",
   },
   files: {
     title: "Keep your budget",
@@ -187,6 +188,7 @@ export const en = {
     openHint: "Continue from a saved .json file",
     exportCsv: "Export to spreadsheet",
     exportCsvHint: ".csv file for Excel or Numbers, for viewing only",
+    clear: "Clear budget",
     lastSaved: "Last saved to a file: {when}",
     notSaved: "Not saved to a file yet",
     today: "today",
@@ -202,6 +204,23 @@ export const en = {
       yearly: "Yearly",
       totalIncome: "Total income",
       totalPlanned: "Total planned",
+    },
+  },
+  notices: {
+    unsavedTitle: "Changes not saved to a file",
+    unsavedBody:
+      "Your budget is kept in this browser, but your latest changes aren't saved to a file yet.",
+    later: "Later",
+    confirm: {
+      clearTitle: "Clear your budget?",
+      openTitle: "Replace your current budget?",
+      body: "Changes you made since you last saved your budget will be lost. Save your budget first to keep them.",
+      saved: "Budget saved. You can continue safely.",
+      saveFirst: "Save budget first",
+      continue: "Continue without saving",
+      cancel: "Cancel",
+      clear: "Clear my budget",
+      open: "Choose a file to open",
     },
   },
   per: {
