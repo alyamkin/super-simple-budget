@@ -64,3 +64,12 @@ export const SheetIcon = icon(
     <path d="M3 10h18M3 15h18M9 4v16" />
   </>,
 );
+
+export const FileIcon = icon(
+  18,
+  2,
+  <path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM14 3v5h5" />,
+  true,
+);
+
+export const ChevronDownIcon = icon(14, 2.2, <path d="M6 9l6 6 6-6" />, true);

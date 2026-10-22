@@ -17,7 +17,7 @@ const LAST_BUCKET = RESULTS - 1;
 /**
  * "← Back" / "Next: {bucket} →" under a bucket step (Spec §4.3.6); on the
  * results, "← Edit" goes back to the last bucket and "Copy summary" copies
- * the plan (Spec §4.6.9).
+ * the plan (Spec §4.6.8).
  */
 export function StepNav() {
   const { t } = useTranslator();

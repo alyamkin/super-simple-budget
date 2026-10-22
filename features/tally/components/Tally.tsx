@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import {
   BUCKETS,
@@ -11,8 +10,6 @@ import {
 } from "@/domain/catalog/buckets";
 import { balanceLevel, type BalanceLevel } from "@/domain/totals";
 import { selectIsEstimated, selectTotals } from "@/features/budget/selectors";
-import { LastSaved } from "@/features/files/components/LastSaved";
-import { useFileActions } from "@/features/files/useFileActions";
 import {
   uiSlice,
   viewChanged,
@@ -40,7 +37,6 @@ const bucketColor = (bucket: OutgoingBucketId) => `var(${BUCKETS[bucket].color})
 export function Tally() {
   const { t, locale } = useTranslator();
   const dispatch = useAppDispatch();
-  const { save, exportCsv } = useFileActions();
   const view = useAppSelector(selectView);
   const totals = useAppSelector(selectTotals);
   const multiplier = VIEW_MULTIPLIER[view];
@@ -114,17 +110,6 @@ export function Tally() {
         </div>
         <div className="font-display text-[1.9rem] font-bold tabular-nums">
           {money(totals.balance)}
-        </div>
-      </div>
-      <div className="mt-3.5 grid gap-1.5 border-t border-line pt-3 text-[.82rem]">
-        <LastSaved className="text-[.85rem] text-muted" />
-        <div className="flex flex-wrap gap-x-3.5 gap-y-1">
-          <Button variant="link" onClick={save}>
-            {t("files.save")}
-          </Button>
-          <Button variant="link" onClick={exportCsv}>
-            {t("files.exportCsv")}
-          </Button>
         </div>
       </div>
     </aside>

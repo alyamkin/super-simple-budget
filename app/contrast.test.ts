@@ -59,6 +59,7 @@ const UI: Pair[] = [
   ["line-strong", "accent-soft"], // switch track (off)
   ["surface", "line-strong"], // switch knob (off)
   ["surface", "accent"], // switch knob (on)
+  ["warn", "bg"], // File menu unsaved dot
 ];
 
 describe.each(Object.entries(themes))("%s theme", (_, tokens) => {

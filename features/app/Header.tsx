@@ -1,3 +1,4 @@
+import { FileMenu } from "@/features/files/components/FileMenu";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 import { LanguageLink } from "./LanguageLink";
 
@@ -17,10 +18,13 @@ function BrandMark() {
   );
 }
 
-/** App name, subtitle and the language link (Spec §4.1). Server-rendered. */
+/**
+ * App name, subtitle, the File menu and the language link (Spec §4.1).
+ * Server-rendered around the two client controls.
+ */
 export function Header({ app }: { app: Dictionary["app"] }) {
   return (
-    <header className="mb-2 flex flex-wrap items-center justify-between gap-3 pb-4 max-phone:flex-nowrap">
+    <header className="relative mb-2 flex flex-wrap items-center justify-between gap-3 pb-4 max-phone:flex-nowrap">
       <div className="flex items-center gap-3 max-phone:min-w-0 max-phone:flex-1">
         <BrandMark />
         <div className="min-w-0">
@@ -32,7 +36,10 @@ export function Header({ app }: { app: Dictionary["app"] }) {
           </p>
         </div>
       </div>
-      <LanguageLink className="btn inline-flex items-center border-line bg-transparent px-2 text-accent hover:border-accent max-phone:min-h-10 max-phone:px-3" />
+      <div className="flex flex-none items-center gap-2">
+        <FileMenu />
+        <LanguageLink className="btn inline-flex items-center border-line bg-transparent px-2 text-accent hover:border-accent max-phone:min-h-10 max-phone:px-3" />
+      </div>
     </header>
   );
 }
