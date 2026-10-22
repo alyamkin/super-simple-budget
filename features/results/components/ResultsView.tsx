@@ -1,5 +1,6 @@
 "use client";
 
+import { FileBox } from "@/features/files/components/FileBox";
 import { CompareSection } from "./CompareSection";
 import { IncomeFlowBar } from "./IncomeFlowBar";
 import { NextSteps } from "./NextSteps";
@@ -18,6 +19,7 @@ export function ResultsView() {
       <SpendingDonut />
       <CompareSection />
       <NextSteps />
+      <FileBox />
     </>
   );
 }

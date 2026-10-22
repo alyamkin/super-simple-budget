@@ -18,6 +18,7 @@ import {
   MAX_LABEL_LENGTH,
 } from "../budgetSlice";
 import { focusTargets } from "../focusTargets";
+import { rowLabel } from "../rowLabel";
 import { selectRow } from "../selectors";
 
 type RowProps = {
@@ -42,9 +43,7 @@ export function Row({ bucket, id, onRemove }: RowProps) {
   const amountId = focusTargets.amount(id);
   const tipId = `tip-${id}`;
   const catalog = row.kind === "catalog";
-  const name = catalog
-    ? t(`items.${row.id}.label`)
-    : row.label.trim() || t("budget.yourItem");
+  const name = rowLabel(t, row);
   const help = catalog ? t(`items.${row.id}.help`) : "";
   const tip = catalog ? t(`items.${row.id}.tip`) : "";
   const fundType = catalog ? ITEMS_BY_ID[row.id].fundType : undefined;

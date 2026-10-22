@@ -390,6 +390,16 @@ describe("memory", () => {
   });
 });
 
+describe("Keep your budget", () => {
+  it("comes after the next steps", () => {
+    renderResults(EXAMPLE_BUDGET);
+    const regions = screen
+      .getAllByRole("region")
+      .map((region) => region.querySelector("h3")?.textContent);
+    expect(regions.slice(-2)).toEqual(["Next steps", "Keep your budget"]);
+  });
+});
+
 describe("charts", () => {
   it("are hidden from assistive technology", () => {
     const { container } = renderResults(EXAMPLE_BUDGET);

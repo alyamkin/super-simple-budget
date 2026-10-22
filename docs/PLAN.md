@@ -136,7 +136,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ## Phase 4 — Files and safety
 
-### [ ] 19. Save, open and CSV export
+### [x] 19. Save, open and CSV export
 `feat(files): add JSON save/open and CSV export` · Spec §11, §4.6 (8)
 - `lib/csv.ts` (escaping), `features/files/exportCsv.ts`, `lib/download.ts`, `FileBox`, tally file links, hidden file input via button.
 - Tests: CSV exact output for example (en with `,`/`.`, fr with `;`/`,`), formula-injection escaping, BOM + CRLF; open valid/invalid/oversized file → state + toast; object URL revoked.

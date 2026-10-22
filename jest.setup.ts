@@ -46,3 +46,15 @@ if (typeof window !== "undefined" && !window.ResizeObserver) {
     }
   };
 }
+
+// jsdom's Blob has no `text()`; opening a budget file reads the file with it.
+if (typeof Blob !== "undefined" && !Blob.prototype.text) {
+  Blob.prototype.text = function text(this: Blob) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(this);
+    });
+  };
+}

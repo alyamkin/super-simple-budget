@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/exampleBudget";
 import { CUSTOM_ID_PATTERN } from "@/lib/customId";
-import { parseBudgetFile, readBudgetData } from "./importJson";
+import { parseBudgetFile, readBudgetData, readBudgetFile } from "./importJson";
 import { MAX_FILE_BYTES } from "./schema";
 
 /** Golden fixtures are append-only: never edit one, add a new file instead. */
@@ -103,6 +103,36 @@ describe("parseBudgetFile", () => {
     });
     expect(parse).not.toHaveBeenCalled();
     parse.mockRestore();
+  });
+});
+
+describe("readBudgetFile", () => {
+  it("reads a chosen file", async () => {
+    const file = new Blob([fixture("v1-artifact.json")]);
+    await expect(readBudgetFile(file)).resolves.toEqual({
+      ok: true,
+      budget: EXAMPLE_BUDGET,
+      view: "month",
+    });
+  });
+
+  it("refuses a file over 1 MB without reading it", async () => {
+    const file = new Blob([" ".repeat(MAX_FILE_BYTES + 1)]);
+    const text = jest.spyOn(file, "text");
+    await expect(readBudgetFile(file)).resolves.toEqual({
+      ok: false,
+      error: "tooLarge",
+    });
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it("reports a file that can't be read", async () => {
+    const file = new Blob(["{}"]);
+    jest.spyOn(file, "text").mockRejectedValue(new Error("gone"));
+    await expect(readBudgetFile(file)).resolves.toEqual({
+      ok: false,
+      error: "notBudgetFile",
+    });
   });
 });
 

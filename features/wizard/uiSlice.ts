@@ -97,6 +97,14 @@ export const uiSlice = createSlice({
       },
       prepare: stamped,
     },
+    /**
+     * A budget file was opened (its budget replaces the current one through
+     * `budgetReplaced`): show it in the file's view, nothing is unsaved.
+     */
+    fileOpened: (state, action: PayloadAction<View>) => {
+      state.view = action.payload;
+      state.changedAt = null;
+    },
     /** "Later" on the unsaved-changes notice hides it for an hour. */
     noticeSnoozed: {
       reducer: (state, action: PayloadAction<number>) => {
@@ -144,6 +152,7 @@ export const {
   viewChanged,
   showAllChipsToggled,
   fileSaved,
+  fileOpened,
   noticeSnoozed,
   toastShown,
   toastDismissed,
