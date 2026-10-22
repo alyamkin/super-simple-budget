@@ -48,6 +48,24 @@ export function readBudgetData(
   };
 }
 
+/**
+ * Reads a file the user chose; never throws. Large files are refused before
+ * they are read.
+ */
+export async function readBudgetFile(
+  file: Blob,
+  options?: SanitizeOptions,
+): Promise<ReadResult> {
+  if (file.size > MAX_FILE_BYTES) return { ok: false, error: "tooLarge" };
+  let text: string;
+  try {
+    text = await file.text();
+  } catch {
+    return { ok: false, error: "notBudgetFile" };
+  }
+  return parseBudgetFile(text, options);
+}
+
 /** Parses the text of a budget file; never throws. */
 export function parseBudgetFile(
   text: string,

@@ -8,6 +8,7 @@ import {
   rowAdded,
 } from "@/features/budget/budgetSlice";
 import {
+  fileOpened,
   fileSaved,
   NOTICE_SNOOZE_MS,
   noticeSnoozed,
@@ -70,6 +71,16 @@ describe("ui slice", () => {
     );
     expect(state.lastFileSaveAt).toBe(500);
     expect(state.changedAt).toBeNull();
+  });
+
+  it("fileOpened shows the file's view and clears changedAt", () => {
+    const state = reducer(
+      { ...initial(), changedAt: 100, lastFileSaveAt: 50 },
+      fileOpened("year"),
+    );
+    expect(state.view).toBe("year");
+    expect(state.changedAt).toBeNull();
+    expect(state.lastFileSaveAt).toBe(50);
   });
 
   it("noticeSnoozed hides the notice for an hour", () => {

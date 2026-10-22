@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { act, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { Provider } from "react-redux";
@@ -8,7 +8,7 @@ import {
   estimateToggled,
   rowAdded,
 } from "@/features/budget/budgetSlice";
-import { uiSlice } from "@/features/wizard/uiSlice";
+import { fileSaved, uiSlice } from "@/features/wizard/uiSlice";
 import type { Locale } from "@/i18n/config";
 import { makeStore, type AppStore } from "@/store/makeStore";
 import { renderWithI18n } from "@/test/renderWithI18n";
@@ -114,6 +114,38 @@ describe("Tally", () => {
     renderTally({ store });
     expect(amountOf("Home and bills rough")).toHaveTextContent("$1,800");
     expect(within(tally()).getAllByText("rough")).toHaveLength(1);
+  });
+
+  it("says when the budget was last saved to a file", () => {
+    const store = budget(1000, 500);
+    renderTally({ store });
+    expect(tally()).toHaveTextContent("Not saved to a file yet");
+
+    act(() => {
+      store.dispatch(fileSaved());
+    });
+    expect(tally()).toHaveTextContent("Last saved to a file: today");
+  });
+
+  it("saves and exports from its links", async () => {
+    const user = userEvent.setup();
+    const createObjectURL = jest.fn(() => "blob:budget");
+    Object.assign(URL, { createObjectURL, revokeObjectURL: jest.fn() });
+    const click = jest
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+    const { store } = renderTally({ store: budget(1000, 500) });
+
+    await user.click(within(tally()).getByRole("button", { name: "Export to spreadsheet" }));
+    expect(store.getState().ui.lastFileSaveAt).toBeNull();
+    await user.click(within(tally()).getByRole("button", { name: "Save budget" }));
+    expect(store.getState().ui.lastFileSaveAt).not.toBeNull();
+
+    expect(click.mock.contexts.map((link) => (link as HTMLAnchorElement).download)).toEqual([
+      expect.stringMatching(/\.csv$/),
+      expect.stringMatching(/\.json$/),
+    ]);
+    click.mockRestore();
   });
 
   it("speaks French", () => {

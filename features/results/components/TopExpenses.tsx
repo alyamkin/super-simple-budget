@@ -2,6 +2,7 @@
 
 import { BUCKETS } from "@/domain/catalog/buckets";
 import type { Expense } from "@/domain/results";
+import { rowLabel } from "@/features/budget/rowLabel";
 import {
   selectIncome,
   selectTopExpenses,
@@ -23,10 +24,7 @@ function expenseLabel(t: Translator["t"], expense: Expense): string {
       name: t(`buckets.${expense.bucket}.title`),
     });
   }
-  const { row } = expense;
-  return row.kind === "catalog"
-    ? t(`items.${row.id}.label`)
-    : row.label.trim() || t("budget.yourItem");
+  return rowLabel(t, expense.row);
 }
 
 /** "Your biggest expenses": the top 5 as bars (Spec §4.6.4, §8.2, §10.3). */
