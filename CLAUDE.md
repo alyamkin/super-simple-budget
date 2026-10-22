@@ -20,7 +20,7 @@ Package manager is **pnpm** (pinned via `packageManager` in `package.json`).
 - `pnpm lint` — ESLint (flat config, `eslint-config-next` core-web-vitals + typescript)
 - `pnpm typecheck` — type-check (`tsc --noEmit`)
 - `pnpm test` / `pnpm test:watch` / `pnpm test:coverage` — Jest
-- Single test: `pnpm test lib/cn.test.ts` or `pnpm test -t "test name"`
+- Single test: `pnpm test lib/class-names.test.ts` or `pnpm test -t "test name"`
 
 Tests use Jest via `next/jest` (`jest.config.ts`, jsdom by default; pure `domain/`/`lib/` tests opt into node with a `@jest-environment node` docblock), React Testing Library + user-event, and `jest-axe`. `jest.setup.ts` registers jest-dom matchers and `toHaveNoViolations`. Test files sit next to the code as `*.test.ts(x)`.
 

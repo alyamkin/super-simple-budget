@@ -419,7 +419,7 @@ Use utilities (`bg-surface text-ink border-line`) — no hard-coded hex in compo
 Small, stateless, typed props, forward native attributes (`ComponentPropsWithRef<"button">`), no business logic:
 `Button` (variants `default | primary | ghost | link`), `Chip` (`add | more`), `Switch` (native checkbox, `role="switch"`), `SegmentedControl` (`aria-pressed` buttons), `StatusBadge` (`green | yellow | red | none`), `MoneyInput`, `FrequencySelect`, `IconButton`, `Dialog` (native `<dialog>` wrapper), `VisuallyHidden`, `Icon` set (tip, close, search, download, upload, sheet — inline SVG from artifact, `aria-hidden`, `currentColor`).
 
-A tiny `cn()` helper (string join, no dependency) for conditional classes.
+A tiny `classNames()` helper (`lib/class-names.ts`) (string join, no dependency) for conditional classes.
 
 ### 9.3 Responsive rules (from artifact CSS)
 
@@ -640,7 +640,7 @@ i18n/
 domain/                   # pure TS, 100% unit-tested, no React/Redux imports
   frequency.ts  catalog/{items.ts,categories.ts,buckets.ts,retired.ts}  totals.ts  rules.ts  results.ts  __fixtures__/example-budget.ts
 lib/
-  format.ts  parse-amount.ts  csv.ts  download.ts  normalize-search.ts  cn.ts  ids.ts
+  format.ts  parse-amount.ts  csv.ts  download.ts  normalize-search.ts  class-names.ts  ids.ts
 store/
   makeStore.ts  hooks.ts  StoreProvider.tsx  persistence.ts
 features/

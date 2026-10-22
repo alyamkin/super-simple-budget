@@ -20,7 +20,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `jest.config.ts` via `next/jest` (`dir: "./"`, `testEnvironment: "jsdom"`, `coverageProvider: "v8"`, `setupFilesAfterEnv`, `moduleNameMapper` for `@/*`).
 - `jest.setup.ts`: jest-dom + `toHaveNoViolations`.
 - Scripts: `test`, `test:watch`, `test:coverage`, `typecheck`.
-- One smoke test (`lib/cn.ts` + test) to prove the pipeline.
+- One smoke test (`lib/class-names.ts` + test) to prove the pipeline.
 - Update `CLAUDE.md` commands section.
 - **Done when** `pnpm test` and `pnpm typecheck` pass.
 
