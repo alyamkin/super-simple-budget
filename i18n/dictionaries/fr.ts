@@ -101,6 +101,40 @@ export const fr: Dictionary = {
       notCompared:
         "Aucune comparaison n’est possible pour les étapes où vous avez donné un total approximatif : {buckets}.",
     },
+    next: {
+      title: "Prochaines étapes",
+      addIncome: {
+        title: "Ajoutez votre revenu",
+        body: "Revenez à la première étape pour que nous puissions comparer votre plan à ce que vous recevez.",
+        action: "Aller au revenu",
+      },
+      closeGap: {
+        title: "Comblez un manque de {amount} par mois",
+        startWith:
+          "Commencez par la catégorie « {category} », qui dépasse la fourchette habituelle.",
+        startLargest:
+          "Commencez par votre poste de dépenses le plus important et cherchez un changement possible dès ce mois-ci.",
+      },
+      surplus: {
+        title: "Donnez un rôle à votre surplus de {amount}",
+        body: "Le jour de la paie, transférez-le vers votre épargne ou vers des remboursements de dettes supplémentaires, avant qu’il soit dépensé.",
+      },
+      emergencyFund: {
+        title: "Créez un fonds d’urgence",
+        body: "Visez de 3 à 6 mois de dépenses. Un petit virement automatique est un bon début.",
+      },
+      itemize: {
+        title: "Détaillez vos totaux approximatifs dès que possible",
+        body: "Vous avez fait une estimation pour {buckets}. En détaillant ces montants, vous verrez où économiser et nous pourrons les comparer à la fourchette habituelle.",
+      },
+      name: "« {name} »",
+    },
+    summary: {
+      copy: "Copier le résumé",
+      title: "Mon plan budgétaire (mensuel)",
+      line: "{name} : {amount}",
+      roughLine: "{name} : {amount} (approx.)",
+    },
   },
   budget: {
     nothingYet: "Rien n’a encore été ajouté",
@@ -143,6 +177,8 @@ export const fr: Dictionary = {
   },
   toasts: {
     addedTo: "Ajouté à l’étape « {bucket} »",
+    copied: "Résumé copié",
+    noCopy: "La copie n’est pas disponible ici.",
   },
   per: {
     month: "/mois",

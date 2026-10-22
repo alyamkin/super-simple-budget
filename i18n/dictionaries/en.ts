@@ -94,6 +94,39 @@ export const en = {
       addIncome: "Add your income to compare your plan with the usual range.",
       notCompared: "Not compared because you gave a rough total: {buckets}.",
     },
+    next: {
+      title: "Next steps",
+      addIncome: {
+        title: "Add your income",
+        body: "Go back to the first step so we can compare your plan with what comes in.",
+        action: "Go to income",
+      },
+      closeGap: {
+        title: "Close a gap of {amount} a month",
+        startWith: "Start with {category}, which is above the usual range.",
+        startLargest:
+          "Start with your largest bucket and look for one change you can make this month.",
+      },
+      surplus: {
+        title: "Give your {amount} surplus a job",
+        body: "Move it to savings or extra debt payments on payday, before it gets spent.",
+      },
+      emergencyFund: {
+        title: "Start an emergency fund",
+        body: "Aim for 3 to 6 months of expenses. A small automatic transfer is a good start.",
+      },
+      itemize: {
+        title: "Itemize your rough totals when you can",
+        body: "You estimated {buckets}. Breaking it down shows where to save and lets us check it against the usual range.",
+      },
+      name: "{name}",
+    },
+    summary: {
+      copy: "Copy summary",
+      title: "My budget plan (monthly)",
+      line: "{name}: {amount}",
+      roughLine: "{name}: {amount} (rough)",
+    },
   },
   budget: {
     nothingYet: "Nothing added yet",
@@ -134,6 +167,8 @@ export const en = {
   },
   toasts: {
     addedTo: "Added to {bucket}",
+    copied: "Summary copied",
+    noCopy: "Copy isn't available here.",
   },
   per: {
     month: "/mo",

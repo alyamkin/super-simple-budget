@@ -7,6 +7,7 @@ import {
 } from "@/domain/catalog/buckets";
 import {
   evaluateRule,
+  RULES,
   type RuleCategory,
   type RuleLevel,
 } from "@/domain/rules";
@@ -175,7 +176,7 @@ export function topExpenses(budget: Budget): TopExpenses {
 
 export type NextStep =
   | { kind: "addIncome" }
-  /** `startWith`: the worst category outside the usual range, if any. */
+  /** `startWith`: the worst category above the usual range, if any. */
   | { kind: "closeGap"; gap: number; startWith: RuleCategory | null }
   | { kind: "surplus"; surplus: number }
   | { kind: "emergencyFund" }
@@ -192,7 +193,10 @@ export function nextSteps(
   const steps: NextStep[] = [];
   if (totals.income <= 0) steps.push({ kind: "addIncome" });
   if (totals.balance < 0) {
-    const [worst] = flaggedChecks(checks);
+    // Flagged for being too high, not for missing savings or insurance.
+    const worst = flaggedChecks(checks).find(
+      (check) => RULES[check.category].kind === "ceiling" && check.amount > 0,
+    );
     steps.push({
       kind: "closeGap",
       gap: -totals.balance,

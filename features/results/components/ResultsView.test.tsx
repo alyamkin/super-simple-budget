@@ -1,4 +1,5 @@
 import { screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { Provider } from "react-redux";
 import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/exampleBudget";
@@ -32,7 +33,7 @@ function renderResults(
   const store = makeStore();
   store.dispatch(budgetReplaced(budget));
   if (yearly) store.dispatch(viewChanged("year"));
-  return renderWithI18n(
+  const view = renderWithI18n(
     <Provider store={store}>
       <main>
         <ResultsHeading />
@@ -41,6 +42,7 @@ function renderResults(
     </Provider>,
     { locale },
   );
+  return { ...view, store };
 }
 
 const figure = (name: string) => screen.getByRole("figure", { name });
@@ -297,6 +299,70 @@ describe("How your plan compares", () => {
     for (const item of ruleRows()) {
       expect(item.querySelector("i")?.closest('[aria-hidden="true"]')).not.toBeNull();
     }
+  });
+});
+
+describe("Next steps", () => {
+  const section = (name = "Next steps") => screen.getByRole("region", { name });
+  /** Each tip as "title — body". */
+  const tips = (name?: string) =>
+    within(section(name))
+      .getAllByRole("listitem")
+      .map((tip) => {
+        const title = within(tip).getByRole("heading", { level: 4 });
+        return `${title.textContent} — ${tip.querySelector("p")?.textContent}`;
+      });
+
+  it("gives the example's surplus a job and asks to itemize its rough total", () => {
+    renderResults(EXAMPLE_BUDGET);
+    expect(tips()).toEqual([
+      "Give your $1,872 surplus a job — Move it to savings or extra debt payments on payday, before it gets spent.",
+      "Itemize your rough totals when you can — You estimated family, fun and giving. Breaking it down shows where to save and lets us check it against the usual range.",
+    ]);
+  });
+
+  it("asks for income first and goes back to the income step", async () => {
+    const user = userEvent.setup();
+    const { store } = renderResults(budgetWith({ home: [row("rent", 500)] }));
+    expect(tips()).toEqual([
+      "Add your income — Go back to the first step so we can compare your plan with what comes in.",
+      "Close a gap of $500 a month — Start with your largest bucket and look for one change you can make this month.",
+      "Start an emergency fund — Aim for 3 to 6 months of expenses. A small automatic transfer is a good start.",
+    ]);
+    await user.click(within(section()).getByRole("button", { name: "Go to income" }));
+    expect(store.getState().ui.step).toBe(0);
+  });
+
+  it("starts closing a gap with the category above the usual range", () => {
+    renderResults(
+      budgetWith({
+        income: [row("myNetIncome", 1000)],
+        savings: [row("emergencyFund", 100)],
+        home: [row("rent", 1000), row("life", 50)],
+        everyday: [row("groceries", 100), row("clothes", 10)],
+      }),
+    );
+    expect(tips()).toEqual([
+      "Close a gap of $260 a month — Start with home, which is above the usual range.",
+    ]);
+  });
+
+  it("is not shown when no tip applies", () => {
+    renderResults(
+      budgetWith({
+        income: [row("myNetIncome", 1000)],
+        savings: [row("emergencyFund", 1000)],
+      }),
+    );
+    expect(screen.queryByRole("region", { name: "Next steps" })).not.toBeInTheDocument();
+  });
+
+  it("speaks French", () => {
+    renderResults(EXAMPLE_BUDGET, { locale: "fr" });
+    expect(tips("Prochaines étapes")).toEqual([
+      "Donnez un rôle à votre surplus de 1\u00a0872\u00a0$ — Le jour de la paie, transférez-le vers votre épargne ou vers des remboursements de dettes supplémentaires, avant qu’il soit dépensé.",
+      "Détaillez vos totaux approximatifs dès que possible — Vous avez fait une estimation pour «\u00a0Famille, loisirs et dons\u00a0». En détaillant ces montants, vous verrez où économiser et nous pourrons les comparer à la fourchette habituelle.",
+    ]);
   });
 });
 

@@ -2,6 +2,7 @@
 
 import { CompareSection } from "./CompareSection";
 import { IncomeFlowBar } from "./IncomeFlowBar";
+import { NextSteps } from "./NextSteps";
 import { SpendingDonut } from "./SpendingDonut";
 import { TopExpenses } from "./TopExpenses";
 
@@ -16,6 +17,7 @@ export function ResultsView() {
       <TopExpenses />
       <SpendingDonut />
       <CompareSection />
+      <NextSteps />
     </>
   );
 }

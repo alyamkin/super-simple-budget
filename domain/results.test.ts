@@ -264,6 +264,19 @@ describe("nextSteps", () => {
     ]);
   });
 
+  it("never starts a gap with a category flagged for being too low", () => {
+    // Savings and insurance are red at zero; everything else is only yellow.
+    const steps = stepsOf(
+      budgetWith({
+        income: [row("myNetIncome", 1000)],
+        home: [row("rent", 400)],
+        everyday: [row("groceries", 290), row("clothes", 100)],
+        debt: [row("creditCard", 250)],
+      }),
+    );
+    expect(steps).toContainEqual({ kind: "closeGap", gap: 40, startWith: "housing" });
+  });
+
   it("closes a gap from the largest bucket when nothing is flagged", () => {
     const steps = stepsOf(budgetWith({ home: [row("rent", 500)] }));
     expect(steps).toContainEqual({ kind: "closeGap", gap: 500, startWith: null });
