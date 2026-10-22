@@ -1,6 +1,7 @@
 "use client";
 
 import { IncomeFlowBar } from "./IncomeFlowBar";
+import { SpendingDonut } from "./SpendingDonut";
 import { TopExpenses } from "./TopExpenses";
 
 /**
@@ -12,6 +13,7 @@ export function ResultsView() {
     <>
       <IncomeFlowBar />
       <TopExpenses />
+      <SpendingDonut />
     </>
   );
 }
