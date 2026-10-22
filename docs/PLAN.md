@@ -124,7 +124,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `SpendingDonut` (Recharts `PieChart`, centre label, legend `<table>`), CSS empty ring.
 - Tests: legend rows and percentages; chart wrapper `aria-hidden`; empty state; mount/unmount `ResultsView` 20× leaves no observers/timers; axe.
 
-### [ ] 17. Results: rule-of-thumb comparison
+### [x] 17. Results: rule-of-thumb comparison
 `feat(results): add comparison with usual Canadian ranges` · Spec §4.6 (6), §7.4
 - `CompareSection` (counts by level, rule rows with sentence + decorative bar, "not compared" note, empty states).
 - Tests: example → insurance "Needs attention" first; rough buckets listed; no-income message.

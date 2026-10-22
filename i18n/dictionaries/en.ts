@@ -82,6 +82,18 @@ export const en = {
       largest: "Your largest costs, from highest to lowest.",
       roughTotal: "{name} (rough total)",
     },
+    compare: {
+      title: "How your plan compares",
+      explain:
+        "Each category as a share of your income, compared with the usual range for Canadians. The black mark shows where the usual range ends.",
+      count: {
+        red: { one: "{n} needs attention", other: "{n} need attention" },
+        yellow: { one: "{n} a bit off", other: "{n} a bit off" },
+        green: { one: "{n} on track", other: "{n} on track" },
+      },
+      addIncome: "Add your income to compare your plan with the usual range.",
+      notCompared: "Not compared because you gave a rough total: {buckets}.",
+    },
   },
   budget: {
     nothingYet: "Nothing added yet",

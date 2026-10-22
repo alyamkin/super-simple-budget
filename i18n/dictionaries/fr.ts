@@ -87,6 +87,20 @@ export const fr: Dictionary = {
         "Vos dépenses les plus importantes, de la plus élevée à la plus basse.",
       roughTotal: "{name} (total approximatif)",
     },
+    compare: {
+      title: "Comparaison de votre plan",
+      explain:
+        "Chaque catégorie en pourcentage de votre revenu, comparée à la fourchette habituelle au Canada. Le trait noir indique la limite de cette fourchette.",
+      count: {
+        red: { one: "{n} à revoir", other: "{n} à revoir" },
+        yellow: { one: "{n} à surveiller", other: "{n} à surveiller" },
+        green: { one: "{n} sur la bonne voie", other: "{n} sur la bonne voie" },
+      },
+      addIncome:
+        "Ajoutez votre revenu pour comparer votre plan à la fourchette habituelle.",
+      notCompared:
+        "Aucune comparaison n’est possible pour les étapes où vous avez donné un total approximatif : {buckets}.",
+    },
   },
   budget: {
     nothingYet: "Rien n’a encore été ajouté",

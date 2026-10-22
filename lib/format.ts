@@ -47,3 +47,15 @@ export function formatPercent(
     ratio,
   );
 }
+
+const listFormats = new Map<Locale, Intl.ListFormat>();
+
+/** Joins names into a sentence list: `A, B and C` (en-CA), `A, B et C` (fr-CA). */
+export function formatList(names: readonly string[], locale: Locale): string {
+  let format = listFormats.get(locale);
+  if (!format) {
+    format = new Intl.ListFormat(regionalLocale(locale), { type: "conjunction" });
+    listFormats.set(locale, format);
+  }
+  return format.format(names);
+}
