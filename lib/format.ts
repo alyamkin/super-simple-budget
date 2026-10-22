@@ -1,4 +1,4 @@
-import { toBcp47, type Locale } from "@/i18n/config";
+import { regionalLocale, type Locale } from "@/i18n/config";
 
 export type FormatOptions = { decimals?: number };
 
@@ -12,7 +12,7 @@ function numberFormat(
   const key = `${locale} ${JSON.stringify(options)}`;
   let format = formatters.get(key);
   if (!format) {
-    format = new Intl.NumberFormat(toBcp47(locale), options);
+    format = new Intl.NumberFormat(regionalLocale(locale), options);
     formatters.set(key, format);
   }
   return format;

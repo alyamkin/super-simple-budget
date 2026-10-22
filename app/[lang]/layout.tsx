@@ -5,7 +5,7 @@ import {
   Bricolage_Grotesque,
   IBM_Plex_Mono,
 } from "next/font/google";
-import { hasLocale, locales, toBcp47 } from "@/i18n/config";
+import { hasLocale, locales, regionalLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import "../globals.css";
@@ -56,7 +56,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang={toBcp47(lang)}
+      lang={regionalLocale(lang)}
       className={`${bricolage.variable} ${atkinson.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

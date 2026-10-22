@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { hasLocale, locales, toBcp47 } from "@/i18n/config";
+import { hasLocale, locales, regionalLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 const BUCKET_SWATCHES = [
@@ -28,8 +28,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </div>
         <Link
           href={`/${otherLang}`}
-          hrefLang={toBcp47(otherLang)}
-          lang={toBcp47(otherLang)}
+          hrefLang={regionalLocale(otherLang)}
+          lang={regionalLocale(otherLang)}
           aria-label={language.switchAria}
           className="rounded-lg border border-line px-3 py-2 font-bold text-accent"
         >

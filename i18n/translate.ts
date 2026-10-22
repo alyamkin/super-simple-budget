@@ -1,4 +1,4 @@
-import { toBcp47, type Locale } from "./config";
+import { regionalLocale, type Locale } from "./config";
 import type { Dictionary } from "./dictionaries/en";
 
 export type TemplateVars = Record<string, string | number>;
@@ -40,7 +40,7 @@ const pluralRulesCache = new Map<Locale, Intl.PluralRules>();
 function pluralRules(locale: Locale): Intl.PluralRules {
   let rules = pluralRulesCache.get(locale);
   if (!rules) {
-    rules = new Intl.PluralRules(toBcp47(locale));
+    rules = new Intl.PluralRules(regionalLocale(locale));
     pluralRulesCache.set(locale, rules);
   }
   return rules;

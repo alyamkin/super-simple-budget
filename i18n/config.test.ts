@@ -5,7 +5,7 @@ import {
   defaultLocale,
   hasLocale,
   negotiateLocale,
-  toBcp47,
+  regionalLocale,
 } from "@/i18n/config";
 
 describe("hasLocale", () => {
@@ -21,10 +21,10 @@ describe("hasLocale", () => {
   );
 });
 
-describe("toBcp47", () => {
+describe("regionalLocale", () => {
   it("maps to Canadian tags", () => {
-    expect(toBcp47("en")).toBe("en-CA");
-    expect(toBcp47("fr")).toBe("fr-CA");
+    expect(regionalLocale("en")).toBe("en-CA");
+    expect(regionalLocale("fr")).toBe("fr-CA");
   });
 });
 

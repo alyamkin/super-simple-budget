@@ -182,8 +182,8 @@ Order of sections (all amounts follow the Monthly/Yearly view unless noted):
 
 ## 5. Internationalisation
 
-- Locales: `en` → `en-CA`, `fr` → `fr-CA`. `<html lang>` uses the BCP-47 tag.
-- Config: `i18n/config.ts` exports `locales`, `defaultLocale`, `hasLocale()`, `toBcp47()`.
+- Locales: `en` → `en-CA`, `fr` → `fr-CA`. `<html lang>` and `Intl` use the regional locale (`regionalLocale()`).
+- Config: `i18n/config.ts` exports `locales`, `defaultLocale`, `hasLocale()`, `regionalLocale()`.
 - **Dictionaries are plain serialisable data** (`i18n/dictionaries/en.ts`, `fr.ts`, typed by `Dictionary = typeof en`; `fr` must satisfy it). This lets a Server Component load the dictionary with `getDictionary(lang)` (`import "server-only"`) and pass **only the active locale** to the client `I18nProvider`.
 - Artifact strings that are functions become templates:
   - Interpolation: `"Step {n} of {total} · {name}"` → `t("stepOf", { n, total, name })`.
