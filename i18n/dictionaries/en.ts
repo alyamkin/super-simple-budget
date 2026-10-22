@@ -57,6 +57,13 @@ export const en = {
     tip: "Tip for {label}",
     remove: "Remove {label}",
     ofIncome: "{p} of income",
+    searchLabel: "Search all items",
+    searchPlaceholder: "Search all items, e.g. gym, daycare, parking",
+    searchResults: { one: "{n} result", other: "{n} results" },
+    noMatch: "No match. Use “Something else” to add your own.",
+  },
+  toasts: {
+    addedTo: "Added to {bucket}",
   },
   per: {
     month: "/mo",

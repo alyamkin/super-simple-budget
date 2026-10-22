@@ -1,6 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { STEPS, type BucketId } from "@/domain/catalog/buckets";
 import { isBudgetEdit } from "@/features/budget/budgetSlice";
+import type { Dictionary } from "@/i18n/dictionaries/en";
+import type { MessageKey } from "@/i18n/translate";
 import { hydrated } from "@/store/hydrated";
 
 export type View = "month" | "year";
@@ -8,14 +10,17 @@ export type View = "month" | "year";
 /** Amounts are stored monthly; the yearly view multiplies at display time. */
 export const VIEW_MULTIPLIER: Record<View, number> = { month: 1, year: 12 };
 
-/** Narrowed to the dictionary's toast keys when the Toaster lands (step 12). */
-export type ToastKey = string;
+export type ToastKey = keyof Dictionary["toasts"];
 
-/** Stores a key + params, not text, so a toast survives a language switch. */
+/**
+ * Stores keys, not text, so a toast survives a language switch: `key` names
+ * a `toasts.*` message and each param is a message key, translated when the
+ * toast is shown (e.g. `{ bucket: "buckets.home.title" }`).
+ */
 export type Toast = {
   id: number;
   key: ToastKey;
-  params?: Record<string, string>;
+  params?: Record<string, MessageKey>;
 };
 
 export type UiState = {

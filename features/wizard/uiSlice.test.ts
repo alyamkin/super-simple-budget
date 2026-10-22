@@ -81,25 +81,32 @@ describe("ui slice", () => {
 
   describe("toasts", () => {
     it("toastShown replaces the toast with a new id", () => {
-      const first = reducer(initial(), toastShown({ key: "copied" }));
+      const first = reducer(
+        initial(),
+        toastShown({ key: "addedTo", params: { bucket: "buckets.home.title" } }),
+      );
       const second = reducer(
         first,
-        toastShown({ key: "addedTo", params: { bucket: "Home" } }),
+        toastShown({ key: "addedTo", params: { bucket: "buckets.debt.title" } }),
       );
-      expect(first.toast).toEqual({ id: 1, key: "copied" });
+      expect(first.toast).toEqual({
+        id: 1,
+        key: "addedTo",
+        params: { bucket: "buckets.home.title" },
+      });
       expect(second.toast).toEqual({
         id: 2,
         key: "addedTo",
-        params: { bucket: "Home" },
+        params: { bucket: "buckets.debt.title" },
       });
     });
 
     it("toastDismissed hides only the toast it was set for", () => {
       const state = reducer(
-        reducer(initial(), toastShown({ key: "a" })),
-        toastShown({ key: "b" }),
+        reducer(initial(), toastShown({ key: "addedTo" })),
+        toastShown({ key: "addedTo" }),
       );
-      expect(reducer(state, toastDismissed(1)).toast?.key).toBe("b");
+      expect(reducer(state, toastDismissed(1)).toast?.id).toBe(2);
       expect(reducer(state, toastDismissed(2)).toast).toBeNull();
     });
   });
@@ -127,7 +134,7 @@ describe("ui slice", () => {
   describe("hydrated", () => {
     it("restores the stored fields and marks the state hydrated", () => {
       const state = reducer(
-        reducer(initial(), toastShown({ key: "a" })),
+        reducer(initial(), toastShown({ key: "addedTo" })),
         hydrated({ budget: null, ui: { step: 4, view: "year", changedAt: 9 } }),
       );
       expect(state).toMatchObject({
@@ -137,7 +144,7 @@ describe("ui slice", () => {
         lastFileSaveAt: null,
         hydrated: true,
       });
-      expect(state.toast?.key).toBe("a");
+      expect(state.toast?.key).toBe("addedTo");
     });
 
     it("is not a budget edit", () => {

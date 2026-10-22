@@ -1,5 +1,6 @@
 import type { BucketId } from "@/domain/catalog/buckets";
 import { ChipPicker } from "./ChipPicker";
+import { ItemSearch } from "./ItemSearch";
 import { PickedPanel } from "./PickedPanel";
 
 /** The body of a bucket step, between its heading and the nav (Spec §4.3). */
@@ -8,6 +9,7 @@ export function BucketStep({ bucket }: { bucket: BucketId }) {
     <>
       <PickedPanel bucket={bucket} />
       <ChipPicker bucket={bucket} />
+      <ItemSearch bucket={bucket} />
     </>
   );
 }

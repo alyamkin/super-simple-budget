@@ -67,7 +67,7 @@ describe("hydration", () => {
     first.store.dispatch(viewChanged("year"));
     first.store.dispatch(showAllChipsToggled("home"));
     first.store.dispatch(rowAdded({ itemId: "parking" }));
-    first.store.dispatch(toastShown({ key: "saved" }));
+    first.store.dispatch(toastShown({ key: "addedTo" }));
     first.stop();
 
     const { store } = start();
@@ -224,7 +224,7 @@ describe("writes", () => {
 
   it("skip changes to transient ui state", () => {
     const { store } = start();
-    store.dispatch(toastShown({ key: "saved" }));
+    store.dispatch(toastShown({ key: "addedTo" }));
     expect(jest.getTimerCount()).toBe(0);
   });
 

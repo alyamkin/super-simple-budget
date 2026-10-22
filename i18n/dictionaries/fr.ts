@@ -58,6 +58,15 @@ export const fr: Dictionary = {
     tip: "Conseil : {label}",
     remove: "Retirer : {label}",
     ofIncome: "{p} du revenu",
+    searchLabel: "Chercher parmi tous les éléments",
+    searchPlaceholder:
+      "Chercher parmi tous les éléments (p. ex. gym, garderie, stationnement)",
+    searchResults: { one: "{n} résultat", other: "{n} résultats" },
+    noMatch:
+      "Aucun résultat. Utilisez « Autre chose » pour ajouter votre propre élément.",
+  },
+  toasts: {
+    addedTo: "Ajouté à l’étape « {bucket} »",
   },
   per: {
     month: "/mois",

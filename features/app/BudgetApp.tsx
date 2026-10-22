@@ -2,6 +2,7 @@
 
 import { STEPS } from "@/domain/catalog/buckets";
 import { BucketStep } from "@/features/budget/components/BucketStep";
+import { Toaster } from "@/features/notices/components/Toaster";
 import { Progress } from "@/features/wizard/components/Progress";
 import { StepHeading } from "@/features/wizard/components/StepHeading";
 import { StepNav } from "@/features/wizard/components/StepNav";
@@ -49,6 +50,7 @@ export function BudgetApp() {
           <h3 className="text-base font-bold">{t("tally.title")}</h3>
         </aside>
       </div>
+      <Toaster />
     </div>
   );
 }
