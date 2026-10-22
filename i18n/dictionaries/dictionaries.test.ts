@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { FREQUENCIES } from "@/domain/frequency";
 import { en } from "@/i18n/dictionaries/en";
 import { fr } from "@/i18n/dictionaries/fr";
 
@@ -34,4 +35,10 @@ describe("dictionaries", () => {
       expect(dict.meta.description.length).toBeLessThanOrEqual(160);
     },
   );
+
+  it("labels every frequency, and nothing else", () => {
+    for (const dict of Object.values(dictionaries)) {
+      expect(Object.keys(dict.frequency).sort()).toEqual([...FREQUENCIES].sort());
+    }
+  });
 });

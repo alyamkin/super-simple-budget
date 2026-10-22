@@ -7,14 +7,15 @@ export const defaultLocale: Locale = "en";
 /** Cookie that remembers an explicit language choice (read by `proxy.ts`). */
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 
-const BCP47: Record<Locale, string> = { en: "en-CA", fr: "fr-CA" };
+const REGIONAL_LOCALES: Record<Locale, string> = { en: "en-CA", fr: "fr-CA" };
 
 export function hasLocale(value: unknown): value is Locale {
   return (locales as readonly unknown[]).includes(value);
 }
 
-export function toBcp47(locale: Locale): string {
-  return BCP47[locale];
+/** The locale with its region (`en` → `en-CA`), as `Intl` and `<html lang>` expect it. */
+export function regionalLocale(locale: Locale): string {
+  return REGIONAL_LOCALES[locale];
 }
 
 /**

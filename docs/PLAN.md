@@ -20,7 +20,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `jest.config.ts` via `next/jest` (`dir: "./"`, `testEnvironment: "jsdom"`, `coverageProvider: "v8"`, `setupFilesAfterEnv`, `moduleNameMapper` for `@/*`).
 - `jest.setup.ts`: jest-dom + `toHaveNoViolations`.
 - Scripts: `test`, `test:watch`, `test:coverage`, `typecheck`.
-- One smoke test (`lib/cn.ts` + test) to prove the pipeline.
+- One smoke test (`lib/class-names.ts` + test) to prove the pipeline.
 - Update `CLAUDE.md` commands section.
 - **Done when** `pnpm test` and `pnpm typecheck` pass.
 
@@ -33,14 +33,14 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ### [x] 3. Locale routing and i18n core
 `feat(i18n): add [lang] routing, proxy redirect and dictionary loader` · Spec §3.1, §5
-- Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={bcp47}>`.
+- Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={regionalLocale(lang)}>`.
 - `proxy.ts`: `/` → `/en|/fr` (cookie `NEXT_LOCALE`, `Accept-Language`).
 - `i18n/config.ts`, `i18n/get-dictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
 - Dictionaries with **chrome strings only** for now (app name, subtitle, lang button, footer, meta). Remaining strings arrive with the features that use them.
 - Tests: `translate` (interpolation, plural en/fr, missing var), `hasLocale`, en/fr key parity test (reused by later steps).
 - **Done when** `/` redirects, `/en` and `/fr` prerender (`next build` shows ● static), `/de` 404s.
 
-### [ ] 4. Money and frequency utilities
+### [x] 4. Money and frequency utilities
 `feat(domain): add frequency conversion, money formatting and parsing` · Spec §7.1, §7.6
 - `domain/frequency.ts` (`TIMES_PER_YEAR`, `toMonthly`, `FREQUENCIES`) — ported from old `src/utils/utils.ts`.
 - `lib/format.ts` (cached `Intl.NumberFormat`, `formatMoney`, `formatPercent`), `lib/parse-amount.ts` (ported from old `useInputAmount` as pure functions).
