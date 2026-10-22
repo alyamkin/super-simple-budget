@@ -14,7 +14,6 @@ describe("parseAmount", () => {
     [".5", 0.5],
     ["0", 0],
     ["1.999", 1.99],
-    ["1.2.3", 1.23],
   ])("en %j → %p", (input, expected) => {
     expect(parseAmount(input, "en")).toBe(expected);
   });
@@ -32,7 +31,7 @@ describe("parseAmount", () => {
     expect(parseAmount(input, "fr")).toBe(expected);
   });
 
-  it.each(["", "   ", "abc", "12abc", "1e12", "-5", "$", ",", "."])(
+  it.each(["", "   ", "abc", "12abc", "1e12", "-5", "$", ",", ".", "1.2.3"])(
     "%j is not an amount",
     (input) => {
       expect(parseAmount(input, "en")).toBeNull();

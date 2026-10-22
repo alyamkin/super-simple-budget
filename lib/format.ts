@@ -2,29 +2,26 @@ import { toBcp47, type Locale } from "@/i18n/config";
 
 export type FormatOptions = { decimals?: number };
 
-// Bounded: one entry per (locale, style, decimals) actually used.
+// One formatter per locale and options, created on first use.
 const formatters = new Map<string, Intl.NumberFormat>();
 
-function formatter(
+function numberFormat(
   locale: Locale,
-  style: "currency" | "percent",
-  decimals: number,
+  options: Intl.NumberFormatOptions,
 ): Intl.NumberFormat {
-  const key = `${locale}|${style}|${decimals}`;
+  const key = `${locale} ${JSON.stringify(options)}`;
   let format = formatters.get(key);
   if (!format) {
-    format = new Intl.NumberFormat(toBcp47(locale), {
-      style,
-      currency: "CAD",
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-      // No "-$0" for -0 or values that round to zero.
-      signDisplay: "negative",
-    });
+    format = new Intl.NumberFormat(toBcp47(locale), options);
     formatters.set(key, format);
   }
   return format;
 }
+
+const digits = (decimals: number) => ({
+  minimumFractionDigits: decimals,
+  maximumFractionDigits: decimals,
+});
 
 /** Formats CAD: `$1,235` (en-CA), `1 235 $` (fr-CA). */
 export function formatMoney(
@@ -32,7 +29,12 @@ export function formatMoney(
   locale: Locale,
   { decimals = 0 }: FormatOptions = {},
 ): string {
-  return formatter(locale, "currency", decimals).format(amount);
+  return numberFormat(locale, {
+    style: "currency",
+    currency: "CAD",
+    signDisplay: "negative", // no "-$0"
+    ...digits(decimals),
+  }).format(amount);
 }
 
 /** Formats a ratio as a percentage: `0.25` → `25%` (en-CA), `25 %` (fr-CA). */
@@ -41,5 +43,7 @@ export function formatPercent(
   locale: Locale,
   { decimals = 0 }: FormatOptions = {},
 ): string {
-  return formatter(locale, "percent", decimals).format(ratio);
+  return numberFormat(locale, { style: "percent", ...digits(decimals) }).format(
+    ratio,
+  );
 }

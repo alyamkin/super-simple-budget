@@ -1,67 +1,28 @@
-import { toBcp47, type Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 
 /** Exclusive upper bound for amounts (Spec §6.2). */
 export const MAX_AMOUNT = 1e9;
 
-const MAX_DECIMALS = 2;
-
-type Separators = { group: string; decimal: string; currency: string };
-
-// Bounded: at most one entry per locale.
-const separatorsCache = new Map<Locale, Separators>();
-
-/** Reads the locale's separators and CAD symbol from `Intl` instead of hard-coding them. */
-function separators(locale: Locale): Separators {
-  let found = separatorsCache.get(locale);
-  if (!found) {
-    const parts = new Intl.NumberFormat(toBcp47(locale), {
-      style: "currency",
-      currency: "CAD",
-    }).formatToParts(12345.6);
-    const part = (type: Intl.NumberFormatPartTypes) =>
-      parts.find((p) => p.type === type)?.value ?? "";
-    found = {
-      group: part("group"),
-      decimal: part("decimal"),
-      currency: part("currency"),
-    };
-    separatorsCache.set(locale, found);
-  }
-  return found;
-}
+/** Whole part, then optionally `.` or `,` and the decimals. */
+const AMOUNT = /^(\d*)(?:[.,](\d*))?$/;
 
 /**
  * Turns what the user typed into an amount, or `null` when there is none.
  *
- * Strips the currency symbol, whitespace (incl. U+00A0/U+202F) and group
- * separators; accepts `.` and the locale's decimal separator, keeping only the
- * first one; truncates to 2 decimals and clamps below {@link MAX_AMOUNT}.
- * Anything else (letters, signs, exponents) makes the input invalid → `null`.
+ * Ignores `$` and spaces (incl. U+00A0/U+202F, the French thousands separators).
+ * English commas are thousands separators; in French `,` is the decimal mark.
+ * `.` is a decimal mark in both. Keeps 2 decimals and stays below {@link MAX_AMOUNT}.
  */
 export function parseAmount(input: string, locale: Locale): number | null {
-  const { group, decimal, currency } = separators(locale);
+  let text = input.replace(/[\s$]/g, "");
+  if (locale === "en") text = text.replaceAll(",", "");
 
-  let cleaned = input.replace(/\s/g, "");
-  if (currency) cleaned = cleaned.replaceAll(currency, "");
-  // A group separator that is not also a decimal mark (fr-CA groups with a space).
-  if (group && group !== "." && group !== decimal) {
-    cleaned = cleaned.replaceAll(group, "");
-  }
+  const match = AMOUNT.exec(text);
+  if (!match) return null;
 
-  let integer = "";
-  let fraction: string | null = null;
-  for (const char of cleaned) {
-    if (char >= "0" && char <= "9") {
-      if (fraction === null) integer += char;
-      else fraction += char;
-    } else if (char === "." || char === decimal) {
-      fraction ??= "";
-    } else {
-      return null;
-    }
-  }
+  const [, whole, decimals = ""] = match;
+  if (!whole && !decimals) return null;
 
-  if (!integer && !fraction) return null;
-  const value = Number(`${integer || "0"}.${(fraction ?? "").slice(0, MAX_DECIMALS)}`);
-  return Math.min(value, MAX_AMOUNT - 10 ** -MAX_DECIMALS);
+  const amount = Number(`${whole || "0"}.${decimals.slice(0, 2)}`);
+  return Math.min(amount, MAX_AMOUNT - 0.01);
 }
