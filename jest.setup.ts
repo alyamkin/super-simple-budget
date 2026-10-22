@@ -20,3 +20,8 @@ if (
     this.dispatchEvent(new Event("close"));
   };
 }
+
+// jsdom logs "Not implemented" for scrolling; step changes scroll to the top.
+if (typeof window !== "undefined") {
+  window.scrollTo = jest.fn();
+}

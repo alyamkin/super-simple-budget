@@ -83,7 +83,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `components/ui/*`: Button, IconButton, Chip, Switch, SegmentedControl, Pill, StatusBadge, MoneyInput (draft-while-focused), FrequencySelect, Dialog, VisuallyHidden, Icons.
 - Tests: roles/names/states; keyboard; MoneyInput fr comma typing; axe per component.
 
-### [ ] 10. App shell
+### [x] 10. App shell
 `feat(app): add header, progress, step navigation and footer` · Spec §4.1, §4.2, §4.7, §12
 - Server: `app/[lang]/page.tsx` renders header text, footer, skip link; client island `BudgetApp`.
 - `Header` (brand + language link only), `LanguageLink`, `Progress`, `StepHeading` (focus + `document.title`), `StepNav`, `Footer`.

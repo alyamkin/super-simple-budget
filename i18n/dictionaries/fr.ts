@@ -8,10 +8,28 @@ export const fr: Dictionary = {
   app: {
     name: "Budget super simple",
     subtitle: "Choisissez ce que vous payez, ignorez le reste",
+    skipToMain: "Passer au contenu principal",
   },
   language: {
     switchLabel: "English",
     switchAria: "Show in English",
+  },
+  wizard: {
+    progress: "Progression",
+    results: "Résultats",
+    stepOf: "Étape {n} de {total} · {name}",
+    back: "← Retour",
+    next: "Suivant : {name} →",
+    seePlan: "Voir mon plan →",
+    edit: "← Modifier",
+    documentTitle: "{step} — {app}",
+  },
+  tally: {
+    label: "Total courant",
+    title: "Votre plan",
+  },
+  results: {
+    eyebrow: "Votre plan",
   },
   frequency: {
     Daily: "Chaque jour",
