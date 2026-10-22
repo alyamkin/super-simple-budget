@@ -20,9 +20,11 @@ export const BUCKET_IDS = STEPS.filter(
   (step): step is BucketId => step !== "results",
 );
 
+export type OutgoingBucketId = Exclude<BucketId, "income">;
+
 /** Buckets that money goes out to (everything but income). */
 export const OUTGOING_BUCKETS = BUCKET_IDS.filter(
-  (bucket): bucket is Exclude<BucketId, "income"> => bucket !== "income",
+  (bucket): bucket is OutgoingBucketId => bucket !== "income",
 );
 
 /** Buckets that accept one rough total instead of itemized rows. */

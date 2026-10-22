@@ -53,7 +53,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Dictionaries: `items.*`, `categories.*`, `fundTypes.*`, bucket titles/questions/ledes (EN from `D`/`T.en`, FR from `FR`/`T.fr`).
 - Tests: ids unique; every item maps to exactly one bucket; every popular id exists and belongs to that bucket; every id has en+fr label; counts (16/9/79/15).
 
-### [ ] 6. Totals and rules of thumb
+### [x] 6. Totals and rules of thumb
 `feat(domain): add totals and rules of thumb` · Spec §7.3–7.5, §8
 - `domain/totals.ts`, `domain/rules.ts` (cleaned table), `domain/results.ts` (checks list, top expenses, next steps, headline data), test fixture `domain/__fixtures__/example-budget.ts`.
 - Dictionary: rule sentences, level names.
