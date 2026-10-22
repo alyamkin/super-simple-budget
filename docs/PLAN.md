@@ -90,7 +90,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Layout grid + responsive rules (tally placeholder).
 - Tests: progress `aria-current`; clicking a step moves focus to `h2`; Next/Back labels; axe both locales.
 
-### [ ] 11. Bucket step: rows and chip picker
+### [x] 11. Bucket step: rows and chip picker
 `feat(budget): add picked rows and chip picker` · Spec §4.3, §4.3.1, §4.4
 - `BucketStep`, `PickedPanel` (count heading, step total, savings badge), `Row` (catalog/custom, tip toggle, fund tag, remove), `ChipPicker` (popular, show more/fewer, something else).
 - Focus rules after add/remove.

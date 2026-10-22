@@ -31,6 +31,38 @@ export const fr: Dictionary = {
   results: {
     eyebrow: "Votre plan",
   },
+  budget: {
+    nothingYet: "Rien n’a encore été ajouté",
+    count: {
+      income: { one: "{n} source de revenu", other: "{n} sources de revenu" },
+      savings: {
+        one: "{n} objectif d’épargne",
+        other: "{n} objectifs d’épargne",
+      },
+      debt: { one: "{n} dette", other: "{n} dettes" },
+      other: { one: "{n} dépense ajoutée", other: "{n} dépenses ajoutées" },
+    },
+    emptyHint:
+      "Sélectionnez les éléments ci-dessous qui s’appliquent à vous. Ignorez ce que vous ne payez pas.",
+    anythingElse: "Autre chose?",
+    tapWhat: "Sélectionnez ce qui s’applique",
+    add: "Ajouter : {label}",
+    showMore: "Afficher {n} de plus",
+    showFewer: "Afficher moins",
+    somethingElse: "+ Autre chose",
+    nameItem: "Nommez cet élément",
+    itemName: "Nom de l’élément",
+    yourItem: "Votre élément",
+    amount: "Montant : {label}",
+    frequency: "Fréquence : {label}",
+    tip: "Conseil : {label}",
+    remove: "Retirer : {label}",
+    ofIncome: "{p} du revenu",
+  },
+  per: {
+    month: "/mois",
+    year: "/an",
+  },
   frequency: {
     Daily: "Chaque jour",
     Weekly: "Chaque semaine",

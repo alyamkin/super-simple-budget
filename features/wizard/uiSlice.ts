@@ -5,6 +5,9 @@ import { hydrated } from "@/store/hydrated";
 
 export type View = "month" | "year";
 
+/** Amounts are stored monthly; the yearly view multiplies at display time. */
+export const VIEW_MULTIPLIER: Record<View, number> = { month: 1, year: 12 };
+
 /** Narrowed to the dictionary's toast keys when the Toaster lands (step 12). */
 export type ToastKey = string;
 

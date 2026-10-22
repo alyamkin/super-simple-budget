@@ -30,6 +30,38 @@ export const en = {
   results: {
     eyebrow: "Your plan",
   },
+  budget: {
+    nothingYet: "Nothing added yet",
+    count: {
+      income: { one: "{n} source of income", other: "{n} sources of income" },
+      savings: { one: "{n} savings goal", other: "{n} savings goals" },
+      debt: { one: "{n} debt", other: "{n} debts" },
+      other: {
+        one: "You pay for {n} thing here",
+        other: "You pay for {n} things here",
+      },
+    },
+    emptyHint:
+      "Tap the items below that apply to you. Skip anything you don't pay for.",
+    anythingElse: "Anything else?",
+    tapWhat: "Tap what applies",
+    add: "Add {label}",
+    showMore: "Show {n} more",
+    showFewer: "Show fewer",
+    somethingElse: "+ Something else",
+    nameItem: "Name this item",
+    itemName: "Item name",
+    yourItem: "Your item",
+    amount: "{label} amount",
+    frequency: "{label} frequency",
+    tip: "Tip for {label}",
+    remove: "Remove {label}",
+    ofIncome: "{p} of income",
+  },
+  per: {
+    month: "/mo",
+    year: "/yr",
+  },
   frequency: {
     Daily: "Daily",
     Weekly: "Weekly",
