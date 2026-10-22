@@ -39,6 +39,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Jest's HTML coverage report (`pnpm test:coverage`).
+    "coverage/**",
   ]),
 ]);
 

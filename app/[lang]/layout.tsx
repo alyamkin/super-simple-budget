@@ -12,25 +12,29 @@ import { I18nProvider } from "@/i18n/I18nProvider";
 import { StoreProvider } from "@/store/StoreProvider";
 import "../globals.css";
 
+// `subsets` only picks what is preloaded: the latin-ext faces (e.g. "œ") are
+// still declared and download on demand through their unicode-range.
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: ["500", "700"],
   display: "swap",
 });
 
 const atkinson = Atkinson_Hyperlegible({
   variable: "--font-atkinson",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
 });
 
 const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: "500",
   display: "swap",
+  // Numbers only; not worth competing with the page text for bandwidth.
+  preload: false,
 });
 
 // `dynamicParams = false` is not allowed with Cache Components; unknown

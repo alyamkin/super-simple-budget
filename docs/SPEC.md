@@ -396,12 +396,12 @@ Rendered as `<ul>` of `.tip` cards (`h3` + `p`).
 
 ### 9.1 Tokens (`app/globals.css`)
 
-Copy the artifact `:root` tokens 1:1 (light + dark). Dark applies under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme="light"])`, and under `:root[data-theme="dark"]` (hook for a future toggle). Expose them to Tailwind:
+Copy the artifact `:root` tokens 1:1 (light + dark), except two contrast fixes from the step 22 audit (`docs/audit.md`): light `--muted` is #566b71, and `--line-strong` (light #74888d, dark #6b8989) draws form-control boundaries (field borders, the switch track) where `--line` is too faint for WCAG 1.4.11. Dark applies under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme="light"])`, and under `:root[data-theme="dark"]` (hook for a future toggle). Expose them to Tailwind:
 
 ```css
 @theme inline {
   --color-bg: var(--bg); --color-surface: var(--surface); --color-ink: var(--ink); --color-muted: var(--muted);
-  --color-line: var(--line); --color-accent: var(--accent); --color-accent-soft: var(--accent-soft);
+  --color-line: var(--line); --color-line-strong: var(--line-strong); --color-accent: var(--accent); --color-accent-soft: var(--accent-soft);
   --color-good: var(--good); --color-good-soft: var(--good-soft); --color-good-mid: var(--good-mid);
   --color-warn: var(--warn); --color-warn-soft: var(--warn-soft); --color-bad: var(--bad); --color-bad-soft: var(--bad-soft);
   --color-b-home: var(--b-home); --color-b-around: var(--b-around); --color-b-everyday: var(--b-everyday);
@@ -618,7 +618,7 @@ Rules:
 5. Object URLs always revoked; file reading via `file.text()`.
 6. No polling, no intervals. "N days ago" is computed at render (it changes at most daily; re-rendered on any state change).
 7. Search: pre-built normalised index per locale (computed once per dictionary), simple `includes` over ~104 items — no debounce needed.
-8. Fonts via `next/font` (subset `latin`, `latin-ext` for French), only the weights used (Bricolage 500/700, Atkinson 400/700, Plex Mono 500).
+8. Fonts via `next/font`, only the weights used (Bricolage 500/700, Atkinson 400/700, Plex Mono 500). Preload only the `latin` subset (`subsets` picks what is preloaded; the `latin-ext` faces still load on demand through `unicode-range`), and don't preload Plex Mono (numbers only).
 9. Leak test: a Jest test mounts/unmounts `StoreProvider` 50× and asserts no remaining `window` listeners (spy on `addEventListener`/`removeEventListener` counts) and no pending timers (`jest.getTimerCount() === 0`).
 
 ---

@@ -154,7 +154,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `.env.example` with `NEXT_PUBLIC_SITE_URL`.
 - Tests: metadata objects per locale (alternates, canonical); sitemap entries.
 
-### [ ] 22. Hardening and audit
+### [x] 22. Hardening and audit
 `chore: accessibility, performance and memory audit` · Spec §12, §14, §17
 - Run axe across all states in both locales; fix findings. Contrast check for all token pairs (light/dark).
 - `next build` bundle sizes vs budgets; Lighthouse mobile on `/en` and `/fr`; record numbers in `docs/audit.md`.
