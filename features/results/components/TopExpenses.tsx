@@ -27,7 +27,7 @@ function expenseLabel(t: Translator["t"], expense: Expense): string {
   return rowLabel(t, expense.row);
 }
 
-/** "Your biggest expenses": the top 5 as bars (Spec §4.6.4, §8.2, §10.3). */
+/** "Your biggest expenses": the top 5 as bars. */
 export function TopExpenses() {
   const { t, plural, locale } = useTranslator();
   const { top, count, share } = useAppSelector(selectTopExpenses);

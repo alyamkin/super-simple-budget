@@ -128,7 +128,7 @@ function sanitizeEstimate(raw: unknown): Estimate | null {
 }
 
 /**
- * Repairs the `buckets` of a v2 file into a valid budget (Spec §11.3 rule 4).
+ * Repairs the `buckets` of a v2 file into a valid budget.
  * Never throws: whatever cannot be repaired is dropped.
  */
 export function sanitizeBuckets(

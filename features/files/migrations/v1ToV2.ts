@@ -1,7 +1,7 @@
 import { isRecord } from "../schema";
 
 /**
- * Version 1, written by the artifact (Spec §11.2): picked ids per bucket,
+ * Version 1, written by the artifact: picked ids per bucket,
  * values by id, rough totals and custom rows in separate maps.
  *
  * Never edit this migration: files written in v1 must keep opening the same.

@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/config";
 
-/** Exclusive upper bound for amounts (Spec §6.2). */
+/** Exclusive upper bound for amounts. */
 export const MAX_AMOUNT = 1e9;
 
 /** Whole part, then optionally `.` or `,` and the decimals. */
@@ -28,7 +28,7 @@ export function parseAmount(input: string, locale: Locale): number | null {
 }
 
 /**
- * Brings an amount within the stored bounds (Spec §6.2): `0 ≤ amount <`
+ * Brings an amount within the stored bounds: `0 ≤ amount <`
  * {@link MAX_AMOUNT}, rounded to 2 decimals. Anything not a finite number is
  * an empty field.
  */

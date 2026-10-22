@@ -8,7 +8,7 @@ import { useAppDispatch, useAppStore } from "@/store/hooks";
 import { summaryText } from "../summaryText";
 
 /**
- * The results' primary "Copy summary" button (Spec §4.6.8, §4.9). Reads the
+ * The results' primary "Copy summary" button. Reads the
  * store on click, so it never re-renders while the plan changes.
  */
 export function CopySummary({ className }: { className?: string }) {

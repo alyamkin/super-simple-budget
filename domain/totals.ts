@@ -74,7 +74,7 @@ export function computeTotals(budget: Budget): Totals {
 
 export type BalanceLevel = "leftOver" | "even" | "shortfall";
 
-/** Within half a dollar of zero counts as even (Spec §4.5). */
+/** Within half a dollar of zero counts as even. */
 const EVEN_THRESHOLD = 0.5;
 
 /** How a monthly balance reads: left over, even or short. */

@@ -21,7 +21,7 @@ type KeyEntry = {
   amount: number;
 };
 
-/** "Where your income goes": the flow bar and its key (Spec §4.6.3, §10.2). */
+/** "Where your income goes": the flow bar and its key. */
 export function IncomeFlowBar() {
   const { t, locale } = useTranslator();
   const flow = useAppSelector(selectIncomeFlow);

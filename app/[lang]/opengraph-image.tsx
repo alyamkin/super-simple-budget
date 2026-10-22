@@ -17,7 +17,7 @@ export async function generateImageMetadata({ params }: Props) {
   return [{ id: "card", alt: meta.title, size, contentType: "image/png" }];
 }
 
-/** 1200×630 share card: brand mark, localised name and subtitle (Spec §13). */
+/** 1200×630 share card: brand mark, localised name and subtitle. */
 export default async function OpenGraphImage({ params }: Props) {
   const { app } = await dictionaryFor(params);
   return new ImageResponse(

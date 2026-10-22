@@ -30,7 +30,7 @@ export type Estimate = {
   frequency: Frequency;
 };
 
-/** What the user entered (Spec §6.2). */
+/** What the user entered. */
 export type Budget = {
   /** Order = display order. */
   rows: Record<BucketId, Row[]>;

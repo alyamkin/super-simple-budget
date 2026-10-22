@@ -7,7 +7,7 @@ import { SpendingDonut } from "./SpendingDonut";
 import { TopExpenses } from "./TopExpenses";
 
 /**
- * The results sections below the headline (Spec §4.6.3–7). Loaded on demand
+ * The results sections below the headline. Loaded on demand
  * through `LazyResultsView`, so Recharts stays out of the wizard's bundle.
  */
 export function ResultsView() {

@@ -10,7 +10,7 @@ const row = (id: ItemId, amount: number, frequency: Frequency): Row => ({
 });
 
 /**
- * The artifact's `EXAMPLE` budget (Spec §7.5): every bucket, several
+ * The artifact's `EXAMPLE` budget: every bucket, several
  * frequencies and a rough total for family (its rows are kept but ignored).
  */
 export const EXAMPLE_BUDGET: Budget = {

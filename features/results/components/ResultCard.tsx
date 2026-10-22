@@ -8,9 +8,9 @@ type ResultCardProps = {
 };
 
 /**
- * A results panel around a chart: a `figure` captioned by its `h3`
- * (Spec §10.0), so the decorative chart and its text read as one unit. The
- * figure is named by the heading alone, without the aside.
+ * A results panel around a chart: a `figure` captioned by its `h3`, so the
+ * decorative chart and its text read as one unit. The figure is named by the
+ * heading alone, without the aside.
  */
 export function ResultCard({ title, aside, children }: ResultCardProps) {
   const titleId = useId();

@@ -9,7 +9,7 @@ import { EstimateToggle } from "./EstimateToggle";
 import { ItemSearch } from "./ItemSearch";
 import { PickedPanel } from "./PickedPanel";
 
-/** The body of a bucket step, between its heading and the nav (Spec §4.3). */
+/** The body of a bucket step, between its heading and the nav. */
 export function BucketStep({ bucket }: { bucket: BucketId }) {
   const estimated = useAppSelector(
     (state) => isEstimable(bucket) && selectIsEstimated(state, bucket),

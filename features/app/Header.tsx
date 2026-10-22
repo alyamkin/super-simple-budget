@@ -19,7 +19,7 @@ function BrandMark() {
 }
 
 /**
- * App name, subtitle, the File menu and the language link (Spec §4.1).
+ * App name, subtitle, the File menu and the language link.
  * Server-rendered around the two client controls.
  */
 export function Header({ app }: { app: Dictionary["app"] }) {

@@ -63,7 +63,7 @@ function readJson(storage: Storage, key: string): unknown {
   }
 }
 
-/** `ssb:state` (Spec §6.4), read through the same pipeline as files. */
+/** `ssb:state`, read through the same pipeline as files. */
 function readCurrent(stored: unknown): HydratedPayload | null {
   if (!isRecord(stored)) return null;
   const budget = isRecord(stored.budget) ? stored.budget : {};

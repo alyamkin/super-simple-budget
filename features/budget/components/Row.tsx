@@ -28,7 +28,7 @@ type RowProps = {
 };
 
 /**
- * One picked item (Spec §4.3.1): label · amount · frequency · tip · remove.
+ * One picked item: label · amount · frequency · tip · remove.
  * Below the phone breakpoint the label shares the top line with the two icon
  * buttons, and the amount and frequency take the second line.
  */

@@ -2,7 +2,7 @@
 const FORMULA_START = /^[=+\-@\t\r]/;
 
 /**
- * One CSV cell (Spec §11.4): text that a spreadsheet would run as a formula
+ * One CSV cell: text that a spreadsheet would run as a formula
  * gets a leading `'`, and a cell holding the delimiter, a quote or a line
  * break is quoted.
  */

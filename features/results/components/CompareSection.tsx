@@ -34,7 +34,7 @@ const ROW = "border-t border-line px-[18px] py-2.5 max-tablet:px-3.5";
 
 /**
  * "How your plan compares": each itemized category as a share of income
- * against the usual Canadian range (Spec §4.6.6, §7.4). The bars are
+ * against the usual Canadian range. The bars are
  * decorative; the share, status and sentence carry the information.
  */
 export function CompareSection() {

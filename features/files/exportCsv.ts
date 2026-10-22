@@ -6,14 +6,14 @@ import type { Locale } from "@/i18n/config";
 import type { Translator } from "@/i18n/translate";
 import { toCsv } from "@/lib/csv";
 
-/** What a spreadsheet in each language expects (Spec §11.4). */
+/** What a spreadsheet in each language expects. */
 const CSV_FORMAT: Record<Locale, { delimiter: string; decimal: string }> = {
   en: { delimiter: ",", decimal: "." },
   fr: { delimiter: ";", decimal: "," },
 };
 
 /**
- * Column order is a contract: never reorder, only append (Spec §11.4). The
+ * Column order is a contract: never reorder, only append. The
  * header text may be re-translated.
  */
 const COLUMNS = [

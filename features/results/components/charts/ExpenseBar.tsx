@@ -14,7 +14,7 @@ type ExpenseBarProps = {
 const HEIGHT = 10;
 
 /**
- * One biggest-expense bar on a track (Spec §10.3). Decorative: the label,
+ * One biggest-expense bar on a track. Decorative: the label,
  * amount and share around it are HTML.
  */
 export function ExpenseBar({ amount, largest, color, animate }: ExpenseBarProps) {

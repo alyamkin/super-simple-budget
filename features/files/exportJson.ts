@@ -27,7 +27,7 @@ function toFileRow(row: Row, itemLabel: (id: ItemId) => string): FileRow {
     : { id: row.id, label: itemLabel(row.id), amount, frequency };
 }
 
-/** The budget in the current file format (Spec §11.1). */
+/** The budget in the current file format. */
 export function toBudgetFile(
   budget: Budget,
   { locale, view, itemLabel, savedAt = new Date() }: ExportOptions,

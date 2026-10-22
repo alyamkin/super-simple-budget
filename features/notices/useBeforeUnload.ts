@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
 /**
- * Asks the browser to confirm leaving the page while `when` is true (Spec
- * §4.8). The listener exists only then, so a saved budget leaves freely and
- * the page stays eligible for the back/forward cache.
+ * Asks the browser to confirm leaving the page while `when` is true. The
+ * listener exists only then, so a saved budget leaves freely and the page
+ * stays eligible for the back/forward cache.
  */
 export function useBeforeUnload(when: boolean) {
   useEffect(() => {

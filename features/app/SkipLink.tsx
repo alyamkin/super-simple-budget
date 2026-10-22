@@ -1,7 +1,7 @@
 /** Target of the skip link: the step content. */
 export const MAIN_ID = "main";
 
-/** The first focusable element: jumps past the header and progress (Spec §12). */
+/** The first focusable element: jumps past the header and progress. */
 export function SkipLink({ label }: { label: string }) {
   return (
     <a

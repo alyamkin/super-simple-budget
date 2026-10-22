@@ -10,7 +10,7 @@ import { formatList, formatMoney } from "@/lib/format";
 import { useAppSelector } from "@/store/hooks";
 
 /**
- * "Next steps": up to four tips in priority order (Spec §4.6.7, §8.4).
+ * "Next steps": up to four tips in priority order.
  * Hidden when no tip applies. Tips are `h4`s under the section's `h3`, like
  * the artifact's `.tip h4`, so the heading outline stays in order.
  */

@@ -16,8 +16,8 @@ const { selectShowAllChips } = uiSlice.selectors;
 
 /**
  * Chips for the bucket's popular, not-yet-picked items, the rest behind
- * "Show {n} more", and "+ Something else" for a custom row (Spec §4.3.4).
- * A pick focuses the new row's first field (Spec §4.4).
+ * "Show {n} more", and "+ Something else" for a custom row.
+ * A pick focuses the new row's first field.
  */
 export function ChipPicker({ bucket }: { bucket: BucketId }) {
   const { t } = useTranslator();

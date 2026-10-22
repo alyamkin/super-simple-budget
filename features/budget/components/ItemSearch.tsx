@@ -16,10 +16,9 @@ import { buildSearchIndex, searchItems } from "../itemSearch";
 import { selectPickedItemIds } from "../selectors";
 
 /**
- * Search across every bucket's items (Spec §4.3.5). A hit from this bucket
- * clears the search and focuses the new row's amount; one from another bucket
- * stays here, shows "Added to {bucket}" and keeps focus in the search box
- * (Spec §4.4).
+ * Search across every bucket's items. A hit from this bucket clears the
+ * search and focuses the new row's amount; one from another bucket stays
+ * here, shows "Added to {bucket}" and keeps focus in the search box.
  */
 export function ItemSearch({ bucket }: { bucket: BucketId }) {
   const { t, plural } = useTranslator();

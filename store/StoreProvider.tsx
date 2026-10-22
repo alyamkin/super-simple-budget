@@ -8,7 +8,7 @@ import { makeStore } from "./makeStore";
 import { startPersistence } from "./persistence";
 
 /**
- * Creates this tree's store once, on first render (Spec §6.1), and hydrates it
+ * Creates this tree's store once, on first render, and hydrates it
  * from local storage after mount, so server and first client render match.
  */
 export function StoreProvider({ children }: { children: ReactNode }) {

@@ -23,7 +23,7 @@ function ogLocale(locale: Locale): string {
   return regionalLocale(locale).replace("-", "_");
 }
 
-/** Page metadata for one locale (Spec §13). */
+/** Page metadata for one locale. */
 export function localeMetadata(
   locale: Locale,
   { app, meta }: Pick<Dictionary, "app" | "meta">,

@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 const { selectView } = uiSlice.selectors;
 
 /**
- * The tally docked to the bottom below the tablet breakpoint (Spec §4.5):
+ * The tally docked to the bottom below the tablet breakpoint:
  * income, planned and the balance, plus a `/mo` ↔ `/yr` switch.
  */
 export function MobileBar() {

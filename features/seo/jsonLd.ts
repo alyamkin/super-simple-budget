@@ -3,7 +3,7 @@ import type { Dictionary } from "@/i18n/dictionaries/en";
 import { siteUrl } from "@/lib/siteUrl";
 import { localePath } from "./metadata";
 
-/** schema.org `WebApplication` for one locale's page (Spec §13). */
+/** schema.org `WebApplication` for one locale's page. */
 export function webApplicationJsonLd(
   locale: Locale,
   { app, meta }: Pick<Dictionary, "app" | "meta">,

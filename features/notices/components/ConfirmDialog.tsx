@@ -27,7 +27,7 @@ type ConfirmDialogProps = {
 };
 
 /**
- * Asks before an action replaces an unsaved budget (Spec §4.8). Mount it only
+ * Asks before an action replaces an unsaved budget. Mount it only
  * while asking. "Save budget first" keeps it open: once the file is saved the
  * body says so and the primary button runs the action.
  */

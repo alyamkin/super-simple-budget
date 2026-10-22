@@ -7,7 +7,7 @@ import { useTranslator } from "@/i18n/I18nProvider";
 const ONE_YEAR_S = 60 * 60 * 24 * 365;
 
 /**
- * Link to the same page in the other language (Spec §4.1). Remembers the
+ * Link to the same page in the other language. Remembers the
  * choice in the cookie `proxy.ts` reads for `/`. The budget survives the
  * switch because it lives in local storage.
  */

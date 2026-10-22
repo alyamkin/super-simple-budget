@@ -31,8 +31,8 @@ const COUNT_KEYS: Record<BucketId, PluralKey> = {
 };
 
 /**
- * The step's picked rows under a heading with their count and the step total
- * (Spec §4.3.3). On savings, a badge rates the savings rate.
+ * The step's picked rows under a heading with their count and the step
+ * total. On savings, a badge rates the savings rate.
  */
 export function PickedPanel({ bucket }: { bucket: BucketId }) {
   const { t, plural, locale } = useTranslator();
@@ -42,7 +42,7 @@ export function PickedPanel({ bucket }: { bucket: BucketId }) {
   const view = useAppSelector(selectView);
 
   // Focus goes to the next row's remove button, else the previous one's,
-  // else the picker heading (Spec §4.3.1).
+  // else the picker heading.
   const remove = (id: RowId) => {
     const index = ids.indexOf(id);
     const neighbour = ids[index + 1] ?? ids[index - 1];

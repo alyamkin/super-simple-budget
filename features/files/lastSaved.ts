@@ -10,7 +10,7 @@ export function localDay(time: number): number {
 
 /**
  * "Last saved to a file: today / yesterday / N days ago" or "Not saved to a
- * file yet" (Spec §4.5). Calendar days, so last night's save is "yesterday".
+ * file yet". Calendar days, so last night's save is "yesterday".
  */
 export function lastSavedText(
   t: Translator["t"],

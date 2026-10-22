@@ -1,5 +1,5 @@
 // Gzip sizes of the JS a locale page loads, measured from `.next` after
-// `pnpm build` (Spec §14 budgets). Run: `node scripts/bundleSize.mjs`.
+// `pnpm build`. Run: `node scripts/bundleSize.mjs`.
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { gzipSync } from "node:zlib";

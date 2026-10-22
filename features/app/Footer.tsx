@@ -1,7 +1,7 @@
 import { VisuallyHidden } from "@/components/ui/VisuallyHidden";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 
-/** "About this tool": privacy, advice and credits (Spec §4.7). Server-rendered. */
+/** "About this tool": privacy, advice and credits. Server-rendered. */
 export function Footer({ footer }: { footer: Dictionary["footer"] }) {
   return (
     <footer className="mt-10 grid max-w-[72ch] gap-1.5 border-t border-line pt-[18px] text-[.84rem] text-muted">

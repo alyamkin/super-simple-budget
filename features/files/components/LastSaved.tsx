@@ -8,8 +8,8 @@ import { lastSavedText, localDay } from "../lastSaved";
 
 const { selectLastFileSaveAt } = uiSlice.selectors;
 
-// Read on every render, never pushed: the text changes at most once a day
-// (Spec §14.6), and nothing has been saved yet when the server renders.
+// Read on every render, never pushed: the text changes at most once a day,
+// and nothing has been saved yet when the server renders.
 const noSubscription = () => () => {};
 const today = () => localDay(Date.now());
 const serverToday = () => 0;
