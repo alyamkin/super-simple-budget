@@ -106,7 +106,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `EstimateToggle` + estimate row; rows hidden but kept.
 - Tests: toggle on/off keeps rows; totals use estimate; switch accessible name/state.
 
-### [ ] 14. Running tally and mobile bar
+### [x] 14. Running tally and mobile bar
 `feat(tally): add running total, mobile bar and balance announcer` · Spec §4.5
 - `Tally`, `MobileBar`, `SegmentedControl` month/year, `BalanceAnnouncer` (1 s debounce, cleans up timer).
 - Tests: yearly ×12; balance classes/text; announcer fires once after typing stops (fake timers); no timers after unmount.

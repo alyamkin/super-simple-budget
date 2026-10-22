@@ -27,6 +27,23 @@ export const fr: Dictionary = {
   tally: {
     label: "Total courant",
     title: "Votre plan",
+    showAmounts: "Afficher les montants",
+    view: { month: "Mensuel", year: "Annuel" },
+    switchTo: {
+      month: "Afficher les montants mensuels",
+      year: "Afficher les montants annuels",
+    },
+    income: "Revenu",
+    rough: "approx.",
+    leftOver: "Reste",
+    shortfall: "Manque",
+    planned: "Prévu",
+    left: "Reste",
+    short: "Manque",
+    announce: {
+      leftOver: "Reste {amount} par mois",
+      shortfall: "Manque {amount} par mois",
+    },
   },
   results: {
     eyebrow: "Votre plan",

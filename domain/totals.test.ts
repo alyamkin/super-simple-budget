@@ -3,7 +3,7 @@
  */
 import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/exampleBudget";
 import { emptyBudget, type Budget } from "@/domain/budget";
-import { computeTotals, monthly } from "@/domain/totals";
+import { balanceLevel, computeTotals, monthly } from "@/domain/totals";
 import { formatMoney } from "@/lib/format";
 
 const money = (n: number) => formatMoney(n, "en", { decimals: 2 });
@@ -104,5 +104,19 @@ describe("computeTotals", () => {
     expect(t.outgoing).toBe(300);
     expect(t.spending).toBe(200);
     expect(t.balance).toBe(-300);
+  });
+});
+
+describe("balanceLevel", () => {
+  it.each([
+    [100, "leftOver"],
+    [0.51, "leftOver"],
+    [0.5, "even"],
+    [0, "even"],
+    [-0.5, "even"],
+    [-0.51, "shortfall"],
+    [-100, "shortfall"],
+  ] as const)("%d is %s", (balance, level) => {
+    expect(balanceLevel(balance)).toBe(level);
   });
 });

@@ -3,6 +3,9 @@
 import { STEPS } from "@/domain/catalog/buckets";
 import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Toaster } from "@/features/notices/components/Toaster";
+import { BalanceAnnouncer } from "@/features/tally/components/BalanceAnnouncer";
+import { MobileBar } from "@/features/tally/components/MobileBar";
+import { Tally } from "@/features/tally/components/Tally";
 import { Progress } from "@/features/wizard/components/Progress";
 import { StepHeading } from "@/features/wizard/components/StepHeading";
 import { StepNav } from "@/features/wizard/components/StepNav";
@@ -42,14 +45,10 @@ export function BudgetApp() {
           )}
           <StepNav />
         </main>
-        {/* Placeholder until the tally lands (PLAN step 14). */}
-        <aside
-          aria-label={t("tally.label")}
-          className="sticky top-5 rounded-card border border-line bg-surface p-[18px] max-tablet:hidden"
-        >
-          <h3 className="text-base font-bold">{t("tally.title")}</h3>
-        </aside>
+        <Tally />
       </div>
+      <MobileBar />
+      <BalanceAnnouncer />
       <Toaster />
     </div>
   );
