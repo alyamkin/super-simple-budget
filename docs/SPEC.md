@@ -241,7 +241,7 @@ type BudgetState = {
 - `amount: null` = empty field (shown as placeholder), distinct from `0`.
 - Amount bounds: `0 ≤ amount < 1e9`, max 2 decimals (rounded on parse).
 - `CustomId` = `"c_" + 10 base-36 chars` from `crypto.getRandomValues`.
-- Actions: `rowAdded({ bucket, itemId })`, `customRowAdded({ bucket })` (id generated in `prepare`), `rowRemoved`, `amountChanged`, `frequencyChanged`, `customLabelChanged`, `estimateToggled`, `estimateAmountChanged`, `estimateFrequencyChanged`, `budgetReplaced(BudgetState)` (open file / clear / hydrate).
+- Actions: `rowAdded({ itemId })` (bucket derived from the item; already picked → no-op), `customRowAdded({ bucket })` (id generated in `prepare`), `rowRemoved`, `amountChanged`, `frequencyChanged`, `customLabelChanged` (rows addressed by `{ bucket, id }`), `estimateToggled({ bucket, enabled })`, `estimateAmountChanged`, `estimateFrequencyChanged`, `budgetReplaced(BudgetState)` (open file / clear / hydrate). Every data edit stamps `meta.at = Date.now()` in `prepare` (reducers stay pure); the `isBudgetEdit` matcher (`isAnyOf`) lets `ui` set `changedAt` from it.
 
 ### 6.3 `ui` slice — persisted (except transient bits), not exported
 
@@ -348,7 +348,7 @@ Rule bar scale (decorative): `scale = max(0.3, share × 1.15, greenEdge × 2)`; 
 
 ### 7.5 Example budget (test fixture only)
 
-Not shown in the app. Kept as `domain/__fixtures__/example-budget.ts` because it exercises every bucket, frequencies and a rough total. From artifact `EXAMPLE` (line 488). Test vector (monthly, en-CA):
+Not shown in the app. Kept as `domain/__fixtures__/exampleBudget.ts` because it exercises every bucket, frequencies and a rough total. From artifact `EXAMPLE` (line 488). Test vector (monthly, en-CA):
 
 | | Amount |
 | --- | --- |
@@ -363,7 +363,7 @@ Not shown in the app. Kept as `domain/__fixtures__/example-budget.ts` because it
 | **Balance** | **1,871.50** → "You have $1,872 left each month" |
 | Flagged | 1 (insurance = 0 → red) |
 
-### 7.6 Formatting and parsing (`lib/format.ts`, `lib/parse-amount.ts`)
+### 7.6 Formatting and parsing (`lib/format.ts`, `lib/parseAmount.ts`)
 
 - `formatMoney(n, locale, { decimals = 0 })` and `formatPercent(ratio, locale, { decimals = 0 })` with a **module-level cache** of `Intl.NumberFormat` per `(locale, options)` key — not hooks (replaces old `useCurrencyFormatter`/`usePercentFormatter`; React Compiler makes hooks pointless here).
 - `parseAmount(input, locale) → number | null`: pure function. Ignore `$` and spaces (incl. U+00A0/U+202F); in `en` commas are thousands separators, in `fr` `,` is the decimal mark; `.` is a decimal mark in both. One decimal mark at most, truncate to 2 decimals, clamp to `< 1e9`. Anything else (letters, signs, exponents) or empty → `null`.
@@ -419,7 +419,7 @@ Use utilities (`bg-surface text-ink border-line`) — no hard-coded hex in compo
 Small, stateless, typed props, forward native attributes (`ComponentPropsWithRef<"button">`), no business logic:
 `Button` (variants `default | primary | ghost | link`), `Chip` (`add | more`), `Switch` (native checkbox, `role="switch"`), `SegmentedControl` (`aria-pressed` buttons), `StatusBadge` (`green | yellow | red | none`), `MoneyInput`, `FrequencySelect`, `IconButton`, `Dialog` (native `<dialog>` wrapper), `VisuallyHidden`, `Icon` set (tip, close, search, download, upload, sheet — inline SVG from artifact, `aria-hidden`, `currentColor`).
 
-A tiny `classNames()` helper (`lib/class-names.ts`) (string join, no dependency) for conditional classes.
+A tiny `classNames()` helper (`lib/classNames.ts`) (string join, no dependency) for conditional classes.
 
 ### 9.3 Responsive rules (from artifact CSS)
 
@@ -635,12 +635,12 @@ app/
   icon.svg  apple-icon.png  manifest.ts  robots.ts  sitemap.ts
 proxy.ts                  # "/" → "/en" | "/fr"
 i18n/
-  config.ts  get-dictionary.ts  I18nProvider.tsx  translate.ts   # t(), plural(), useT()
+  config.ts  getDictionary.ts  I18nProvider.tsx  translate.ts   # t(), plural(), useT()
   dictionaries/en.ts  dictionaries/fr.ts
 domain/                   # pure TS, 100% unit-tested, no React/Redux imports
-  frequency.ts  catalog/{items.ts,categories.ts,buckets.ts,retired.ts}  totals.ts  rules.ts  results.ts  __fixtures__/example-budget.ts
+  frequency.ts  catalog/{items.ts,categories.ts,buckets.ts,retired.ts}  totals.ts  rules.ts  results.ts  __fixtures__/exampleBudget.ts
 lib/
-  format.ts  parse-amount.ts  csv.ts  download.ts  normalize-search.ts  class-names.ts  ids.ts
+  format.ts  parseAmount.ts  csv.ts  download.ts  normalizeSearch.ts  classNames.ts  customId.ts
 store/
   makeStore.ts  hooks.ts  StoreProvider.tsx  persistence.ts
 features/
@@ -656,7 +656,7 @@ docs/                     # SPEC.md, PLAN.md, reference/artifact.html
 ```
 
 Conventions:
-- Files: components `PascalCase.tsx`, everything else `kebab-case.ts` or `camelCase` slice files as above; tests next to code as `*.test.ts(x)`.
+- Files: components `PascalCase.tsx`, everything else `camelCase.ts` (e.g. `parseAmount.ts`, `budgetSlice.ts`), except Next.js file conventions (`opengraph-image.tsx`); tests next to code as `*.test.ts(x)`.
 - Named exports only (except Next.js file conventions).
 - Import direction: `app → features → (components/ui, store, i18n, lib, domain)`; `domain` and `lib` import nothing from above. Enforce with ESLint `no-restricted-imports`.
 - No barrel files that re-export whole folders (keeps tree-shaking and test isolation simple).

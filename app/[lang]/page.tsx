@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { hasLocale, locales, regionalLocale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/get-dictionary";
+import { getDictionary } from "@/i18n/getDictionary";
 
 const BUCKET_SWATCHES = [
   "bg-b-home",

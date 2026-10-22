@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { classNames } from "@/lib/class-names";
+import { classNames } from "@/lib/classNames";
 
 describe("classNames", () => {
   it("joins class names with a space", () => {

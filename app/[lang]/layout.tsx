@@ -6,8 +6,9 @@ import {
   IBM_Plex_Mono,
 } from "next/font/google";
 import { hasLocale, locales, regionalLocale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/get-dictionary";
+import { getDictionary } from "@/i18n/getDictionary";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { StoreProvider } from "@/store/StoreProvider";
 import "../globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -61,7 +62,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <I18nProvider locale={lang} dictionary={dictionary}>
-          {children}
+          <StoreProvider>{children}</StoreProvider>
         </I18nProvider>
       </body>
     </html>

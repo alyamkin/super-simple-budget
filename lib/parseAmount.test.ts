@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { parseAmount } from "@/lib/parse-amount";
+import { normalizeAmount, parseAmount } from "@/lib/parseAmount";
 
 describe("parseAmount", () => {
   it.each([
@@ -43,5 +43,20 @@ describe("parseAmount", () => {
     expect(parseAmount("999999999.99", "en")).toBe(999_999_999.99);
     expect(parseAmount("1000000000", "en")).toBe(999_999_999.99);
     expect(parseAmount("123456789012", "fr")).toBeLessThan(1e9);
+  });
+});
+
+describe("normalizeAmount", () => {
+  it("keeps an empty field empty", () => {
+    expect(normalizeAmount(null)).toBeNull();
+    expect(normalizeAmount(NaN)).toBeNull();
+    expect(normalizeAmount(Infinity)).toBeNull();
+  });
+
+  it("rounds to 2 decimals and stays within bounds", () => {
+    expect(normalizeAmount(12.345)).toBe(12.35);
+    expect(normalizeAmount(0)).toBe(0);
+    expect(normalizeAmount(-5)).toBe(0);
+    expect(normalizeAmount(5e9)).toBe(999_999_999.99);
   });
 });
