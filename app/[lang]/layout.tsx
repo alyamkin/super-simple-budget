@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import {
   Atkinson_Hyperlegible,
@@ -70,6 +71,7 @@ export default async function RootLayout({
         <I18nProvider locale={lang} dictionary={dictionary}>
           <StoreProvider>{children}</StoreProvider>
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );
