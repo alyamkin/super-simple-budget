@@ -4,13 +4,10 @@ import { classNames } from "@/lib/classNames";
 export type ButtonVariant = "default" | "primary" | "ghost" | "link";
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  default:
-    "rounded-[9px] border border-line bg-surface px-[18px] py-2.5 hover:border-accent max-tablet:min-h-11",
-  primary:
-    "rounded-[9px] border border-accent bg-accent px-[18px] py-2.5 text-surface max-tablet:min-h-11",
-  ghost:
-    "rounded-[9px] border border-transparent bg-transparent px-2 py-2.5 text-accent hover:border-accent max-tablet:min-h-11",
-  link: "border-0 bg-transparent px-0 py-1 text-[.85rem] text-accent underline underline-offset-[3px]",
+  default: "btn border-line bg-surface hover:border-accent",
+  primary: "btn border-accent bg-accent text-surface",
+  ghost: "btn border-transparent bg-transparent px-2 text-accent hover:border-accent",
+  link: "border-0 bg-transparent px-0 py-1 text-[.85rem] font-bold text-accent underline underline-offset-[3px]",
 };
 
 type ButtonProps = ComponentPropsWithRef<"button"> & { variant?: ButtonVariant };
@@ -25,7 +22,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={classNames("font-bold", VARIANTS[variant], className)}
+      className={classNames(VARIANTS[variant], className)}
       {...props}
     />
   );

@@ -4,7 +4,6 @@ import { useState, type ComponentPropsWithRef } from "react";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
 import { amountToInput, parseAmount } from "@/lib/parseAmount";
-import { fieldClassName } from "./fieldClassName";
 
 type MoneyInputProps = Omit<
   ComponentPropsWithRef<"input">,
@@ -65,8 +64,7 @@ export function MoneyInput({
           onBlur?.(event);
         }}
         className={classNames(
-          fieldClassName,
-          "text-right font-mono text-[.95rem] tabular-nums",
+          "field text-right font-mono tabular-nums [--field-text:.95rem]",
           suffix ? "pr-6 pl-2" : "pr-2 pl-[22px]",
         )}
       />

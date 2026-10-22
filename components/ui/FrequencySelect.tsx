@@ -4,7 +4,6 @@ import type { ComponentPropsWithRef } from "react";
 import { FREQUENCIES, type Frequency } from "@/domain/frequency";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
-import { fieldClassName } from "./fieldClassName";
 
 type FrequencySelectProps = Omit<
   ComponentPropsWithRef<"select">,
@@ -27,7 +26,7 @@ export function FrequencySelect({
       {...props}
       value={value}
       onChange={(event) => onValueChange(event.target.value as Frequency)}
-      className={classNames(fieldClassName, "px-2 text-[.88rem]", className)}
+      className={classNames("field px-2 [--field-text:.88rem]", className)}
     >
       {FREQUENCIES.map((frequency) => (
         <option key={frequency} value={frequency}>
