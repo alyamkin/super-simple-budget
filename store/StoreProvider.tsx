@@ -13,6 +13,10 @@ import { startPersistence } from "./persistence";
  */
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState(makeStore);
+  // What the server rendered. Selectors read it while hydrating, because Next
+  // hydrates the page after this layout's effects have already hydrated the
+  // store; React re-renders with the real state once hydration is done.
+  const [serverState] = useState(store.getState);
   const { locale, t } = useTranslator();
   const itemLabel = useEffectEvent((id: ItemId) => t(`items.${id}.label`));
 
@@ -21,5 +25,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [store, locale],
   );
 
-  return <Provider store={store}>{children}</Provider>;
+  return (
+    <Provider store={store} serverState={serverState}>
+      {children}
+    </Provider>
+  );
 }

@@ -7,10 +7,28 @@ export const en = {
   app: {
     name: "Super Simple Budget",
     subtitle: "Tap what you pay for, skip the rest",
+    skipToMain: "Skip to main content",
   },
   language: {
     switchLabel: "Français",
     switchAria: "Afficher en français",
+  },
+  wizard: {
+    progress: "Progress",
+    results: "Results",
+    stepOf: "Step {n} of {total} · {name}",
+    back: "← Back",
+    next: "Next: {name} →",
+    seePlan: "See my plan →",
+    edit: "← Edit",
+    documentTitle: "{step} — {app}",
+  },
+  tally: {
+    label: "Running total",
+    title: "Your plan",
+  },
+  results: {
+    eyebrow: "Your plan",
   },
   frequency: {
     Daily: "Daily",
