@@ -101,7 +101,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `lib/normalizeSearch.ts`, `ItemSearch` (local state, polite result count), `Toaster` (always-mounted live region, 2.4 s, key-based messages).
 - Tests: accent-insensitive search in fr ("garderie", "epicerie"); max 10; already picked excluded; other-bucket add → toast "Added to …" and stays on step.
 
-### [ ] 13. Rough-total estimates
+### [x] 13. Rough-total estimates
 `feat(budget): add rough-total estimate toggle` · Spec §4.3 (2), §7.3
 - `EstimateToggle` + estimate row; rows hidden but kept.
 - Tests: toggle on/off keeps rows; totals use estimate; switch accessible name/state.
