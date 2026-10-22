@@ -1,5 +1,5 @@
 /**
- * Saves `content` as a file through a temporary `<a download>` (Spec §11.5).
+ * Saves `content` as a file through a temporary `<a download>`.
  * Returns whether the download could start; the object URL is revoked once
  * the click has been handled.
  */

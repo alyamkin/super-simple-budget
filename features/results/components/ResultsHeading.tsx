@@ -12,7 +12,7 @@ import { formatMoney, formatPercent } from "@/lib/format";
 import { useAppSelector } from "@/store/hooks";
 
 /**
- * The results' eyebrow, headline and lede (Spec §4.6.1–2), always monthly.
+ * The results' eyebrow, headline and lede, always monthly.
  * Not code-split with the charts: step changes focus this `h2` right away.
  */
 export function ResultsHeading() {

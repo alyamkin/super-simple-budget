@@ -7,7 +7,7 @@ import { serializeJsonLd, webApplicationJsonLd } from "@/features/seo/jsonLd";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/getDictionary";
 
-/** Server shell around the client island (Spec §4, §14.1). */
+/** Server shell around the client island. */
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();

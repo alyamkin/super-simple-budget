@@ -4,7 +4,7 @@ import type { ChangeEvent, Ref } from "react";
 import { useFileActions } from "../useFileActions";
 
 /**
- * The hidden `.json` picker behind an "Open budget" button (Spec §11): click
+ * The hidden `.json` picker behind an "Open budget" button: click
  * it through `ref` and the chosen file replaces the budget.
  */
 export function BudgetFileInput({ ref }: { ref: Ref<HTMLInputElement> }) {

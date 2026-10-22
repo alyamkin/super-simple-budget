@@ -33,7 +33,7 @@ const BALANCE_CLASSES: Record<BalanceLevel, string> = {
 
 const bucketColor = (bucket: OutgoingBucketId) => `var(${BUCKETS[bucket].color})`;
 
-/** The desktop running total beside the step (Spec §4.5). */
+/** The desktop running total beside the step. */
 export function Tally() {
   const { t, locale } = useTranslator();
   const dispatch = useAppDispatch();

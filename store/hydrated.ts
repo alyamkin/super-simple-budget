@@ -9,7 +9,7 @@ export type HydratedPayload = {
 };
 
 /**
- * Local storage was read after mount (Spec §6.4). Its own module because both
+ * Local storage was read after mount. Its own module because both
  * slices handle it and `uiSlice` already imports `budgetSlice`.
  */
 export const hydrated = createAction<HydratedPayload>("store/hydrated");

@@ -3,7 +3,7 @@ import { languageAlternates, localePath } from "@/features/seo/metadata";
 import { locales } from "@/i18n/config";
 import { siteUrl } from "@/lib/siteUrl";
 
-/** One entry per locale page, each listing every language version (Spec §13). */
+/** One entry per locale page, each listing every language version. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
   const languages = Object.fromEntries(

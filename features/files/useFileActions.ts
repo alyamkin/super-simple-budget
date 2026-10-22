@@ -23,9 +23,8 @@ const { selectView } = uiSlice.selectors;
 const RESULTS = STEPS.length - 1;
 
 /**
- * Save, export, open (Spec §11) and clear (Spec §4.9), each ending with a
- * toast. They read the
- * store when called, so components using them don't re-render on edits.
+ * Save, export, open and clear, each ending with a toast. They read the store
+ * when called, so components using them don't re-render on edits.
  */
 export function useFileActions() {
   const translator = useTranslator();

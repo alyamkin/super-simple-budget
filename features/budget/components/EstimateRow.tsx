@@ -11,7 +11,7 @@ import {
 } from "../budgetSlice";
 import { selectEstimate } from "../selectors";
 
-/** The one rough-total row shown instead of the bucket's items (Spec §4.3.2). */
+/** The one rough-total row shown instead of the bucket's items. */
 export function EstimateRow({ bucket }: { bucket: EstimableBucketId }) {
   const { t, locale } = useTranslator();
   const dispatch = useAppDispatch();

@@ -35,11 +35,11 @@ export type UiState = {
   noticeSnoozedUntil: number | null;
   /** Transient. */
   toast: Toast | null;
-  /** Transient: whether local storage has been read (step 8). */
+  /** Transient: whether local storage has been read. */
   hydrated: boolean;
 };
 
-/** The fields kept in local storage (Spec §6.4). */
+/** The fields kept in local storage. */
 export const PERSISTED_UI_KEYS = [
   "step",
   "view",

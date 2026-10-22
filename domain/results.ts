@@ -25,7 +25,7 @@ const LEVEL_ORDER: Record<RuleLevel, number> = { red: 0, yellow: 1, green: 2 };
 
 /**
  * Rule-of-thumb comparisons for every itemized bucket's categories, worst
- * first, then largest first. Empty without income (Spec §7.4).
+ * first, then largest first. Empty without income.
  */
 export function computeChecks(budget: Budget, totals: Totals): Check[] {
   const checks: Check[] = [];
@@ -80,7 +80,7 @@ export type IncomeFlow = {
 };
 
 /**
- * The "Where your income goes" bar (Spec §10.2): savings, spending and what
+ * The "Where your income goes" bar: savings, spending and what
  * is left over. When outgoing exceeds income, the part beyond income becomes
  * one `over` segment. `null` when there is nothing to show.
  */
@@ -103,7 +103,7 @@ export function incomeFlow(totals: Totals): IncomeFlow | null {
   };
 }
 
-/** Donut order (Spec §8.3): spending buckets first, savings last. */
+/** Donut order: spending buckets first, savings last. */
 const SPLIT_ORDER: readonly OutgoingBucketId[] = [
   "home",
   "around",
@@ -150,7 +150,7 @@ const TOP_COUNT = 5;
 
 /**
  * Biggest monthly expenses: each rough total as one entry plus each itemized
- * row, savings excluded, zero amounts skipped (Spec §8.2).
+ * row, savings excluded, zero amounts skipped.
  */
 export function topExpenses(budget: Budget): TopExpenses {
   const all: Expense[] = [];
@@ -184,7 +184,7 @@ export type NextStep =
 
 const MAX_NEXT_STEPS = 4;
 
-/** Tips for the results page, in priority order (Spec §8.4). */
+/** Tips for the results page, in priority order. */
 export function nextSteps(
   budget: Budget,
   totals: Totals,

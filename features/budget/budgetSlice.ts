@@ -18,7 +18,7 @@ import { customId } from "@/lib/customId";
 import { normalizeAmount } from "@/lib/parseAmount";
 import { hydrated } from "@/store/hydrated";
 
-/** Longest name a custom row can have (Spec §4.3.1). */
+/** Longest name a custom row can have. */
 export const MAX_LABEL_LENGTH = 80;
 
 const ESTIMATE_FREQUENCY: Frequency = "Monthly";

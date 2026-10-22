@@ -13,7 +13,7 @@ type FrequencySelectProps = Omit<
   onValueChange: (frequency: Frequency) => void;
 };
 
-/** The 8 frequencies (Spec §7.1), most to least frequent, with localised names. */
+/** The 8 frequencies, most to least frequent, with localised names. */
 export function FrequencySelect({
   value,
   onValueChange,

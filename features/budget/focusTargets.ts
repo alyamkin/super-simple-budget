@@ -1,7 +1,7 @@
 import type { RowId } from "@/domain/budget";
 
 /**
- * Ids of the elements focus moves to after a pick or a removal (Spec §12).
+ * Ids of the elements focus moves to after a pick or a removal.
  * Row ids are unique across the budget, so these are unique on the page.
  */
 export const focusTargets = {

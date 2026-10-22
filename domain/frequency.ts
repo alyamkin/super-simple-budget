@@ -9,7 +9,7 @@ export type Frequency =
   | "Every6Months"
   | "Annually";
 
-/** Occurrences per year, ported from the old `multipliers` (`SemiMonthly` → `TwiceMonthly`). */
+/** Occurrences per year. */
 export const TIMES_PER_YEAR: Record<Frequency, number> = {
   Daily: 365,
   Weekly: 52,

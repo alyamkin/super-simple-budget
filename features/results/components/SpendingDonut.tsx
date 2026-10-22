@@ -13,7 +13,7 @@ import { ResultCard } from "./ResultCard";
 
 const { selectView } = uiSlice.selectors;
 
-/** "Where your money goes": the donut and its legend table (Spec §8.3, §10.1). */
+/** "Where your money goes": the donut and its legend table. */
 export function SpendingDonut() {
   const { t, locale } = useTranslator();
   const { parts, total } = useAppSelector(selectSpendingSplit);

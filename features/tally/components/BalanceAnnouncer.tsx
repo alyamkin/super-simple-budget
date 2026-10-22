@@ -15,7 +15,7 @@ export const ANNOUNCE_DELAY_MS = 1000;
 
 /**
  * Reads the monthly balance to screen readers once edits pause for a second,
- * not on every keystroke (Spec §4.5). The balance loaded from storage is the
+ * not on every keystroke. The balance loaded from storage is the
  * starting point and is not announced.
  */
 export function BalanceAnnouncer() {

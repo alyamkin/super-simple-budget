@@ -31,7 +31,7 @@ import { LastSaved } from "./LastSaved";
 const { selectIsUnsaved } = uiSlice.selectors;
 
 /**
- * "File" in the header (Spec §4.1): a disclosure button whose panel saves,
+ * "File" in the header: a disclosure button whose panel saves,
  * opens, exports or clears the budget from any step. A dot on the button
  * marks unsaved changes. Opening and clearing ask first while unsaved.
  *

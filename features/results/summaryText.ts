@@ -7,7 +7,7 @@ import type { Translator } from "@/i18n/translate";
 import { formatMoney } from "@/lib/format";
 
 /**
- * The "Copy summary" text (Spec §4.9): a heading, income, one line per
+ * The "Copy summary" text: a heading, income, one line per
  * outgoing bucket (rough totals marked) and the balance, all monthly with
  * cents, one per line.
  */

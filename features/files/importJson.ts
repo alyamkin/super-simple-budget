@@ -17,7 +17,7 @@ type Migration = (file: Record<string, unknown>) => Record<string, unknown>;
 const MIGRATIONS: Readonly<Record<number, Migration>> = { 1: v1ToV2 };
 
 /**
- * Reads parsed JSON from a file or local storage (Spec §11.3): detect, migrate
+ * Reads parsed JSON from a file or local storage: detect, migrate
  * to the current version, sanitize. Only the app id and version can fail it.
  */
 export function readBudgetData(

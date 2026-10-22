@@ -4,16 +4,16 @@ import type { Frequency } from "@/domain/frequency";
 import type { View } from "@/features/wizard/uiSlice";
 import type { Locale } from "@/i18n/config";
 
-/** Every budget file says it comes from this app (Spec §11.3). */
+/** Every budget file says it comes from this app. */
 export const APP_ID = "super-simple-budget";
 
-/** The format version this app writes (Spec §11.1). */
+/** The format version this app writes. */
 export const CURRENT_VERSION = 2;
 
 /** The oldest reader that understands what this app writes. */
 export const MIN_READER_VERSION = 2;
 
-/** Files larger than this are refused before parsing (Spec §11.3). */
+/** Files larger than this are refused before parsing. */
 export const MAX_FILE_BYTES = 1024 * 1024;
 
 /**
@@ -30,7 +30,7 @@ export type FileRow = {
 
 export type FileBucket = { rows: FileRow[]; estimate?: Estimate };
 
-/** JSON backup format v2 (Spec §11.1). */
+/** JSON backup format v2. */
 export type BudgetFile = {
   app: typeof APP_ID;
   version: typeof CURRENT_VERSION;

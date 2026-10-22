@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { ResultsSkeleton } from "./ResultsSkeleton";
 
-/** `ResultsView`, fetched only when the results step opens (Spec §10.0). */
+/** `ResultsView`, fetched only when the results step opens. */
 export const LazyResultsView = dynamic(
   () => import("./ResultsView").then((module) => module.ResultsView),
   { ssr: false, loading: () => <ResultsSkeleton /> },
@@ -12,7 +12,7 @@ export const LazyResultsView = dynamic(
 
 /**
  * Fetches the results chunk when the browser is idle while `when` holds, so
- * it is ready by the time the user opens the results (Spec §14).
+ * it is ready by the time the user opens the results.
  */
 export function usePrefetchResults(when: boolean) {
   useEffect(() => {

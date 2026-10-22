@@ -14,7 +14,7 @@ const { selectIsUnsaved, selectIsNoticeShown } = uiSlice.selectors;
 const moveFocusOn = () => document.getElementById(STEP_HEADING_ID)?.focus();
 
 /**
- * "Changes not saved to a file" above the progress (Spec §4.8): save now or
+ * "Changes not saved to a file" above the progress: save now or
  * snooze for an hour.
  */
 export function UnsavedNotice() {
@@ -23,7 +23,7 @@ export function UnsavedNotice() {
   const { save } = useFileActions();
   const titleId = useId();
   // The clock is read with the store, never polled: a snooze that has run out
-  // shows the notice again on the next change (Spec §14.6). Only read with
+  // shows the notice again on the next change. Only read with
   // unsaved changes, which the prerendered state never has (Cache Components
   // rejects reading the time while prerendering).
   const shown = useAppSelector(

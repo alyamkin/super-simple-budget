@@ -35,7 +35,7 @@ function radius(index: number, count: number): [number, number, number, number] 
 
 /**
  * One stacked row: savings, spending, left over; past income, a hatched
- * overflow and a mark where income ends (Spec §10.2). Decorative: the key
+ * overflow and a mark where income ends. Decorative: the key
  * beside it carries the numbers.
  */
 export function IncomeFlowChart({

@@ -5,7 +5,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { contrastRatio } from "@/lib/contrast";
 
-/** Spec §12: text ≥ 4.5:1, UI boundaries and focus ≥ 3:1, in both themes. */
+// WCAG minimums, in both themes: text ≥ 4.5:1, UI boundaries and focus ≥ 3:1.
+
 const css = readFileSync(path.join(__dirname, "globals.css"), "utf8");
 
 function tokensIn(selector: string): Record<string, string> {

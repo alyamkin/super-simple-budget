@@ -12,7 +12,7 @@ import { renderWithI18n } from "@/test/renderWithI18n";
 import { BudgetApp } from "./BudgetApp";
 import { Header } from "./Header";
 
-/** Spec §12 / PLAN step 22: axe over every screen state in both locales. */
+/** Axe over every screen state in both locales. */
 const DICTIONARIES = { en, fr };
 
 const renderApp = (locale: Locale) =>

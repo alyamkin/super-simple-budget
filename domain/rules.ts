@@ -13,7 +13,7 @@ type Rule =
 
 /**
  * Usual Canadian ranges as a share of monthly income, cleaned from the
- * artifact's `D.rules` (Spec §7.4).
+ * artifact's `D.rules`.
  */
 export const RULES: Record<RuleCategory, Rule> = {
   savings: { kind: "target", green: 0.05 },

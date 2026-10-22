@@ -1,6 +1,6 @@
 const ID_LENGTH = 10;
 
-/** `"c_"` + 10 base-36 characters, the format of custom row ids (Spec §6.2). */
+/** `"c_"` + 10 base-36 characters, the format of custom row ids. */
 export const CUSTOM_ID_PATTERN = /^c_[0-9a-z]{10}$/;
 
 /** A new random custom row id from `crypto.getRandomValues`. */

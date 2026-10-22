@@ -9,7 +9,7 @@ import { estimateToggled } from "../budgetSlice";
 import { selectIsEstimated } from "../selectors";
 
 /**
- * "Give a rough total instead" (Spec §4.3.2). Turning it on swaps the rows
+ * "Give a rough total instead". Turning it on swaps the rows
  * for one rough total; the rows are kept and come back when it is turned off.
  */
 export function EstimateToggle({ bucket }: { bucket: EstimableBucketId }) {

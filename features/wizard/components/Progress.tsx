@@ -10,7 +10,7 @@ import { useGoToStep } from "../useGoToStep";
 const { selectStep } = uiSlice.selectors;
 
 /**
- * One button per step (Spec §4.2). Below the tablet breakpoint the labels are
+ * One button per step. Below the tablet breakpoint the labels are
  * hidden visually (`text-[0]`) but still name the buttons, and each bar keeps
  * a tall tap target.
  */

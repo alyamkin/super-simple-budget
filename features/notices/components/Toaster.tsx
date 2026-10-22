@@ -10,7 +10,7 @@ const { selectToast } = uiSlice.selectors;
 export const TOAST_MS = 2400;
 
 /**
- * The one toast live region (Spec §4.8). It stays in the DOM so screen readers
+ * The one toast live region. It stays in the DOM so screen readers
  * announce each message; a new toast replaces the old one and restarts the
  * timer.
  */

@@ -16,7 +16,7 @@ const SIZE = 210;
 const CENTER = SIZE / 2;
 
 /**
- * The spending donut (Spec §10.1), fixed at 210×210. Decorative: the legend
+ * The spending donut, fixed at 210×210. Decorative: the legend
  * table beside it carries the numbers.
  */
 export function DonutChart({ parts, caption, total, animate }: DonutChartProps) {

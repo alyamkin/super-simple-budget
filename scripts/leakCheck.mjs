@@ -1,6 +1,6 @@
-// Memory check (Spec §14, PLAN step 22): drives headless Chrome over the
-// DevTools protocol through every step, Save and Open, several times per
-// locale, and prints DOM/listener/heap counters after a forced GC per round.
+// Memory check: drives headless Chrome over the DevTools protocol through
+// every step, Save and Open, several times per locale, and prints
+// DOM/listener/heap counters after a forced GC per round.
 // They must stay flat from round to round.
 //
 //   pnpm build && pnpm start -p 3123

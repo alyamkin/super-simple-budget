@@ -10,10 +10,10 @@ import { stepName } from "./stepName";
 export const STEP_HEADING_ID = "step-heading";
 
 /**
- * Returns a handler that moves to a step the way a page change would
- * (Spec §12): scroll to the top, focus the new step's heading and update
- * `document.title`. Only user navigation goes through here, so hydrating a
- * saved step never steals focus or rewrites the server-rendered title.
+ * Returns a handler that moves to a step the way a page change would: scroll
+ * to the top, focus the new step's heading and update `document.title`. Only
+ * user navigation goes through here, so hydrating a saved step never steals
+ * focus or rewrites the server-rendered title.
  */
 export function useGoToStep() {
   const dispatch = useAppDispatch();

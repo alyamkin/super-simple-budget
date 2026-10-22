@@ -16,7 +16,7 @@ export function buildSearchIndex(t: Translator["t"]): SearchIndex {
 
 /**
  * Items whose label or help text contains the query, ignoring accents and
- * case; already-picked items are left out (Spec §4.3.5). Empty for a blank
+ * case; already-picked items are left out. Empty for a blank
  * query.
  */
 export function searchItems(

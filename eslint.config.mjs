@@ -6,7 +6,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Recharts is code-split with the results: import it only from the chart
-  // components (Spec §10.0).
+  // components.
   {
     files: ["**/*.{js,jsx,mjs,ts,tsx}"],
     ignores: ["features/results/components/charts/**"],
@@ -32,7 +32,6 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
