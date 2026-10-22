@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Early build-out following `docs/PLAN.md`, steps 1–6 done: Jest tooling, design tokens/fonts, locale routing + i18n core, money/frequency utilities (`domain/frequency.ts`, `lib/format.ts`, `lib/parse-amount.ts`), the item catalog (`domain/catalog/`; item/category/bucket text lives in the dictionaries) and the pure results logic (`domain/budget.ts` types, `totals.ts`, `rules.ts`, `results.ts`; locale-free — they return data and dictionary keys, the UI formats). `app/[lang]/page.tsx` is a placeholder rendering header/footer chrome. No store or UI yet.
+Early build-out following `docs/PLAN.md`, steps 1–7 done: Jest tooling, design tokens/fonts, locale routing + i18n core, money/frequency utilities (`domain/frequency.ts`, `lib/format.ts`, `lib/parseAmount.ts`), the item catalog (`domain/catalog/`; item/category/bucket text lives in the dictionaries) and the pure results logic (`domain/budget.ts` types, `totals.ts`, `rules.ts`, `results.ts`; locale-free — they return data and dictionary keys, the UI formats). The Redux store (step 7): `store/rootReducer.ts` (`combineSlices`, `RootState`, `createAppSelector`), `store/makeStore.ts`, typed hooks in `store/hooks.ts`, `StoreProvider` mounted in `app/[lang]/layout.tsx`; slices `features/budget/budgetSlice.ts` and `features/wizard/uiSlice.ts` keep simple lookups in their `selectors` field. Derived data lives in `features/budget/selectors.ts`: memoised `createAppSelector`s over the domain functions, `perBucket` for parametric selectors (one cache per bucket), and `resultEqualityCheck` so ids/chips/picks keep their reference while the user types amounts — follow that pattern for new derived data. `app/[lang]/page.tsx` is still a placeholder; no persistence or UI yet.
 
 ## Specification
 
@@ -20,7 +20,7 @@ Package manager is **pnpm** (pinned via `packageManager` in `package.json`).
 - `pnpm lint` — ESLint (flat config, `eslint-config-next` core-web-vitals + typescript)
 - `pnpm typecheck` — type-check (`tsc --noEmit`)
 - `pnpm test` / `pnpm test:watch` / `pnpm test:coverage` — Jest
-- Single test: `pnpm test lib/class-names.test.ts` or `pnpm test -t "test name"`
+- Single test: `pnpm test lib/classNames.test.ts` or `pnpm test -t "test name"`
 
 Tests use Jest via `next/jest` (`jest.config.ts`, jsdom by default; pure `domain/`/`lib/` tests opt into node with a `@jest-environment node` docblock), React Testing Library + user-event, and `jest-axe`. `jest.setup.ts` registers jest-dom matchers and `toHaveNoViolations`. Test files sit next to the code as `*.test.ts(x)`.
 

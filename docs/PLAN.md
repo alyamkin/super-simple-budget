@@ -20,7 +20,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `jest.config.ts` via `next/jest` (`dir: "./"`, `testEnvironment: "jsdom"`, `coverageProvider: "v8"`, `setupFilesAfterEnv`, `moduleNameMapper` for `@/*`).
 - `jest.setup.ts`: jest-dom + `toHaveNoViolations`.
 - Scripts: `test`, `test:watch`, `test:coverage`, `typecheck`.
-- One smoke test (`lib/class-names.ts` + test) to prove the pipeline.
+- One smoke test (`lib/classNames.ts` + test) to prove the pipeline.
 - Update `CLAUDE.md` commands section.
 - **Done when** `pnpm test` and `pnpm typecheck` pass.
 
@@ -35,7 +35,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 `feat(i18n): add [lang] routing, proxy redirect and dictionary loader` · Spec §3.1, §5
 - Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={regionalLocale(lang)}>`.
 - `proxy.ts`: `/` → `/en|/fr` (cookie `NEXT_LOCALE`, `Accept-Language`).
-- `i18n/config.ts`, `i18n/get-dictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
+- `i18n/config.ts`, `i18n/getDictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
 - Dictionaries with **chrome strings only** for now (app name, subtitle, lang button, footer, meta). Remaining strings arrive with the features that use them.
 - Tests: `translate` (interpolation, plural en/fr, missing var), `hasLocale`, en/fr key parity test (reused by later steps).
 - **Done when** `/` redirects, `/en` and `/fr` prerender (`next build` shows ● static), `/de` 404s.
@@ -43,7 +43,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 ### [x] 4. Money and frequency utilities
 `feat(domain): add frequency conversion, money formatting and parsing` · Spec §7.1, §7.6
 - `domain/frequency.ts` (`TIMES_PER_YEAR`, `toMonthly`, `FREQUENCIES`) — ported from old `src/utils/utils.ts`.
-- `lib/format.ts` (cached `Intl.NumberFormat`, `formatMoney`, `formatPercent`), `lib/parse-amount.ts` (ported from old `useInputAmount` as pure functions).
+- `lib/format.ts` (cached `Intl.NumberFormat`, `formatMoney`, `formatPercent`), `lib/parseAmount.ts` (ported from old `useInputAmount` as pure functions).
 - Dictionary: frequency labels.
 - Tests: every frequency; `parseAmount` cases `"1,234.50"` en, `"1 234,50"` fr (U+00A0 and U+202F), `"12,"`, `"abc"`, `""`, `"1e12"`, negative; format en/fr.
 
@@ -55,13 +55,13 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ### [x] 6. Totals and rules of thumb
 `feat(domain): add totals and rules of thumb` · Spec §7.3–7.5, §8
-- `domain/totals.ts`, `domain/rules.ts` (cleaned table), `domain/results.ts` (checks list, top expenses, next steps, headline data), test fixture `domain/__fixtures__/example-budget.ts`.
+- `domain/totals.ts`, `domain/rules.ts` (cleaned table), `domain/results.ts` (checks list, top expenses, next steps, headline data), test fixture `domain/__fixtures__/exampleBudget.ts`.
 - Dictionary: rule sentences, level names.
 - Tests: example vector from §7.5; every rule band edge (exactly 15%, 15.01%…); zero-is-red; no income; estimated bucket excluded from checks and categories; top-5 with estimate entry; next-steps conditions.
 
 ## Phase 1 — State
 
-### [ ] 7. Redux store and slices
+### [x] 7. Redux store and slices
 `feat(store): add budget and ui slices with typed hooks` · Spec §6.1–6.3
 - Deps: `@reduxjs/toolkit`, `react-redux`.
 - `store/makeStore.ts`, `store/hooks.ts`, `store/StoreProvider.tsx` (`useState(makeStore)`), mounted in `app/[lang]/layout.tsx`.
@@ -98,7 +98,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ### [ ] 12. Item search and toasts
 `feat(budget): add cross-bucket item search and toasts` · Spec §4.3 (5), §4.4, §4.8 (toasts)
-- `lib/normalize-search.ts`, `ItemSearch` (local state, polite result count), `Toaster` (always-mounted live region, 2.4 s, key-based messages).
+- `lib/normalizeSearch.ts`, `ItemSearch` (local state, polite result count), `Toaster` (always-mounted live region, 2.4 s, key-based messages).
 - Tests: accent-insensitive search in fr ("garderie", "epicerie"); max 10; already picked excluded; other-bucket add → toast "Added to …" and stays on step.
 
 ### [ ] 13. Rough-total estimates

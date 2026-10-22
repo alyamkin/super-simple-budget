@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/example-budget";
+import { EXAMPLE_BUDGET } from "@/domain/__fixtures__/exampleBudget";
 import { emptyBudget, type Budget } from "@/domain/budget";
 import { computeTotals, monthly } from "@/domain/totals";
 import { formatMoney } from "@/lib/format";

@@ -26,3 +26,14 @@ export function parseAmount(input: string, locale: Locale): number | null {
   const amount = Number(`${whole || "0"}.${decimals.slice(0, 2)}`);
   return Math.min(amount, MAX_AMOUNT - 0.01);
 }
+
+/**
+ * Brings an amount within the stored bounds (Spec §6.2): `0 ≤ amount <`
+ * {@link MAX_AMOUNT}, rounded to 2 decimals. Anything not a finite number is
+ * an empty field.
+ */
+export function normalizeAmount(amount: number | null): number | null {
+  if (amount === null || !Number.isFinite(amount)) return null;
+  const rounded = Math.round(amount * 100) / 100;
+  return Math.min(Math.max(rounded, 0), MAX_AMOUNT - 0.01);
+}

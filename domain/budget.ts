@@ -20,6 +20,9 @@ export type Row =
       frequency: Frequency;
     };
 
+/** Unique across the whole budget: an item can be picked only once. */
+export type RowId = Row["id"];
+
 /** One rough total that stands in for a bucket's rows while enabled. */
 export type Estimate = {
   enabled: boolean;
