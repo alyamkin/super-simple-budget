@@ -148,7 +148,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ## Phase 5 — Ship
 
-### [ ] 21. SEO
+### [x] 21. SEO
 `feat(seo): add metadata, sitemap, robots, manifest, icons and JSON-LD` · Spec §13
 - `generateMetadata` + `viewport`, `sitemap.ts`, `robots.ts`, `manifest.ts`, `icon.svg`, `apple-icon.png`, `[lang]/opengraph-image.tsx`, JSON-LD.
 - `.env.example` with `NEXT_PUBLIC_SITE_URL`.
