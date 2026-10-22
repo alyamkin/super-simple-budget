@@ -3,6 +3,8 @@
 import { STEPS } from "@/domain/catalog/buckets";
 import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Toaster } from "@/features/notices/components/Toaster";
+import { LazyResultsView } from "@/features/results/components/LazyResultsView";
+import { ResultsHeading } from "@/features/results/components/ResultsHeading";
 import { BalanceAnnouncer } from "@/features/tally/components/BalanceAnnouncer";
 import { MobileBar } from "@/features/tally/components/MobileBar";
 import { Tally } from "@/features/tally/components/Tally";
@@ -28,7 +30,10 @@ export function BudgetApp() {
       <div className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8 max-tablet:grid-cols-[minmax(0,1fr)]">
         <main id={MAIN_ID} className="min-w-0">
           {step === "results" ? (
-            <StepHeading eyebrow={t("results.eyebrow")} title={t("wizard.results")} />
+            <>
+              <ResultsHeading />
+              <LazyResultsView />
+            </>
           ) : (
             <>
               <StepHeading

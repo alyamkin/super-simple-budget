@@ -67,7 +67,42 @@ export function headline(totals: Totals): Headline {
     : { kind: "shortfall", amount: -totals.balance };
 }
 
-export type Expense = { bucket: OutgoingBucketId; amount: number } & (
+export type FlowSegmentKind = "savings" | "spending" | "leftOver" | "over";
+
+export type IncomeFlow = {
+  /** Non-zero stacked segments, left to right, summing to `max`. */
+  segments: { kind: FlowSegmentKind; amount: number }[];
+  /** The bar's full scale: income or what goes out, whichever is larger. */
+  max: number;
+  /** Where income ends on the bar when outgoing exceeds it, else `null`. */
+  incomeMark: number | null;
+};
+
+/**
+ * The "Where your income goes" bar (Spec §10.2): savings, spending and what
+ * is left over. When outgoing exceeds income, the part beyond income becomes
+ * one `over` segment. `null` when there is nothing to show.
+ */
+export function incomeFlow(totals: Totals): IncomeFlow | null {
+  const { income, outgoing, savings, spending, balance } = totals;
+  if (income <= 0 && outgoing <= 0) return null;
+  const short = income > 0 && balance < 0;
+  // Clip savings, then spending, to income so the overflow is drawn once.
+  const shownSavings = short ? Math.min(savings, income) : savings;
+  const segments: IncomeFlow["segments"] = [
+    { kind: "savings", amount: shownSavings },
+    { kind: "spending", amount: short ? income - shownSavings : spending },
+    { kind: "leftOver", amount: Math.max(balance, 0) },
+    { kind: "over", amount: short ? -balance : 0 },
+  ];
+  return {
+    segments: segments.filter((segment) => segment.amount > 0),
+    max: Math.max(income, outgoing),
+    incomeMark: short ? income : null,
+  };
+}
+
+export type Expense ={ bucket: OutgoingBucketId; amount: number } & (
   | { kind: "estimate" }
   | { kind: "row"; row: Row }
 );

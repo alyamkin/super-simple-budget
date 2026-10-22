@@ -43,6 +43,37 @@ export const en = {
   },
   results: {
     eyebrow: "Your plan",
+    headline: {
+      noIncome: "Add your income to see your plan",
+      leftOver: "You have {amount} left each month",
+      shortfall: "You're {amount} short each month",
+    },
+    lede: "Of the {income} that comes in each month, you plan to spend {spending} and save {savings}, which is {share} of your income.",
+    outside: {
+      one: "{n} category is outside the usual range for Canadians.",
+      other: "{n} categories are outside the usual range for Canadians.",
+    },
+    allWithin:
+      "Every category you itemized is within the usual range for Canadians.",
+    needIncome: "Your plan needs income to compare against.",
+    loading: "Loading your plan…",
+    flow: {
+      title: "Where your income goes",
+      income: "Income {amount}{per}",
+      savings: "Savings",
+      spending: "Spending",
+      leftOver: "Left over",
+      shortfall: "Shortfall",
+      incomeMark: "Income",
+    },
+    top: {
+      title: "Your biggest expenses",
+      count: { one: "{n} of {m} item", other: "{n} of {m} items" },
+      share:
+        "These {n} make up {p} of your spending. They're usually the best place to look for savings.",
+      largest: "Your largest costs, from highest to lowest.",
+      roughTotal: "{name} (rough total)",
+    },
   },
   budget: {
     nothingYet: "Nothing added yet",

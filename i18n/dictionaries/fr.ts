@@ -47,6 +47,38 @@ export const fr: Dictionary = {
   },
   results: {
     eyebrow: "Votre plan",
+    headline: {
+      noIncome: "Ajoutez votre revenu pour voir votre plan",
+      leftOver: "Il vous reste {amount} chaque mois",
+      shortfall: "Il vous manque {amount} chaque mois",
+    },
+    lede: "Sur les {income} que vous recevez chaque mois, vous prévoyez de dépenser {spending} et d’épargner {savings}, soit {share} de votre revenu.",
+    outside: {
+      one: "{n} catégorie est hors de la fourchette habituelle au Canada.",
+      other: "{n} catégories sont hors de la fourchette habituelle au Canada.",
+    },
+    allWithin:
+      "Toutes les catégories détaillées se situent dans la fourchette habituelle au Canada.",
+    needIncome: "Votre plan a besoin d’un revenu pour établir une comparaison.",
+    loading: "Chargement de votre plan…",
+    flow: {
+      title: "Où va votre revenu",
+      income: "Revenu {amount}{per}",
+      savings: "Épargne",
+      spending: "Dépenses",
+      leftOver: "Reste",
+      shortfall: "Manque",
+      incomeMark: "Revenu",
+    },
+    top: {
+      title: "Vos plus grosses dépenses",
+      count: { one: "{n} élément sur {m}", other: "{n} éléments sur {m}" },
+      share:
+        "Ces {n} postes représentent {p} de vos dépenses. C’est habituellement là qu’il est le plus facile d’économiser.",
+      largest:
+        "Vos dépenses les plus importantes, de la plus élevée à la plus basse.",
+      roughTotal: "{name} (total approximatif)",
+    },
   },
   budget: {
     nothingYet: "Rien n’a encore été ajouté",

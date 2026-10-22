@@ -8,6 +8,7 @@ import {
   computeChecks,
   flaggedChecks,
   headline,
+  incomeFlow,
   nextSteps,
   roughBuckets,
   topExpenses,
@@ -102,6 +103,65 @@ describe("headline", () => {
   it("asks for income when there is none", () => {
     const totals = computeTotals(budgetWith({ home: [row("rent", 1200)] }));
     expect(headline(totals)).toEqual({ kind: "noIncome" });
+  });
+});
+
+describe("incomeFlow", () => {
+  it("splits the example's income into savings, spending and left over", () => {
+    expect(incomeFlow(computeTotals(EXAMPLE_BUDGET))).toEqual({
+      segments: [
+        { kind: "savings", amount: 600 },
+        { kind: "spending", amount: expect.closeTo(6195.17) },
+        { kind: "leftOver", amount: expect.closeTo(1871.5) },
+      ],
+      max: expect.closeTo(8666.67),
+      incomeMark: null,
+    });
+  });
+
+  it("clips to income and marks the overflow when short", () => {
+    const totals = computeTotals(
+      budgetWith({
+        income: [row("myNetIncome", 1000)],
+        savings: [row("emergencyFund", 200)],
+        home: [row("rent", 1200)],
+      }),
+    );
+    expect(incomeFlow(totals)).toEqual({
+      segments: [
+        { kind: "savings", amount: 200 },
+        { kind: "spending", amount: 800 },
+        { kind: "over", amount: 400 },
+      ],
+      max: 1400,
+      incomeMark: 1000,
+    });
+  });
+
+  it("clips savings too when they alone exceed income", () => {
+    const totals = computeTotals(
+      budgetWith({
+        income: [row("myNetIncome", 100)],
+        savings: [row("emergencyFund", 300)],
+      }),
+    );
+    expect(incomeFlow(totals)?.segments).toEqual([
+      { kind: "savings", amount: 100 },
+      { kind: "over", amount: 200 },
+    ]);
+  });
+
+  it("shows what goes out unmarked without income", () => {
+    const totals = computeTotals(budgetWith({ home: [row("rent", 1200)] }));
+    expect(incomeFlow(totals)).toEqual({
+      segments: [{ kind: "spending", amount: 1200 }],
+      max: 1200,
+      incomeMark: null,
+    });
+  });
+
+  it("is null when nothing comes in or goes out", () => {
+    expect(incomeFlow(computeTotals(emptyBudget()))).toBeNull();
   });
 });
 

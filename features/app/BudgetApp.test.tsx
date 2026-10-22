@@ -89,11 +89,23 @@ describe("BudgetApp", () => {
       within(progress()).getByRole("button", { name: "Debt payments" }),
     );
     await userEvent.click(screen.getByRole("button", { name: "See my plan →" }));
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("Results");
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveTextContent("Add your income to see your plan");
+    expect(heading).toHaveFocus();
     expect(document.title).toBe("Results — Super Simple Budget");
 
     await userEvent.click(screen.getByRole("button", { name: "← Edit" }));
     expect(screen.getByText("Step 7 of 8 · Debt payments")).toBeInTheDocument();
+  });
+
+  it("loads the results charts on demand", async () => {
+    renderApp();
+    await userEvent.click(screen.getByRole("button", { name: "Add My net salary" }));
+    await userEvent.type(screen.getByLabelText("My net salary amount"), "3000");
+    await userEvent.click(within(progress()).getByRole("button", { name: "Results" }));
+    expect(
+      await screen.findByRole("figure", { name: "Where your income goes" }),
+    ).toBeInTheDocument();
   });
 
   it("uses French labels", async () => {
