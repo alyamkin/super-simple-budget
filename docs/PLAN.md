@@ -47,9 +47,9 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - Dictionary: frequency labels.
 - Tests: every frequency; `parseAmount` cases `"1,234.50"` en, `"1 234,50"` fr (U+00A0 and U+202F), `"12,"`, `"abc"`, `""`, `"1e12"`, negative; format en/fr.
 
-### [ ] 5. Item catalog and its translations
+### [x] 5. Item catalog and its translations
 `feat(domain): add item catalog, categories and buckets` · Spec §3.2, §7.2
-- `domain/catalog/items.ts`, `categories.ts`, `buckets.ts` (steps, popular ids, estimable flag, colour key), `retired.ts` (empty map).
+- `domain/catalog/items.ts`, `categories.ts`, `buckets.ts` (steps, popular ids, estimable buckets, colour key), `retired.ts` (empty map).
 - Dictionaries: `items.*`, `categories.*`, `fundTypes.*`, bucket titles/questions/ledes (EN from `D`/`T.en`, FR from `FR`/`T.fr`).
 - Tests: ids unique; every item maps to exactly one bucket; every popular id exists and belongs to that bucket; every id has en+fr label; counts (16/9/79/15).
 

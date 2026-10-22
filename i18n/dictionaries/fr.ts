@@ -23,6 +23,589 @@ export const fr: Dictionary = {
     Every6Months: "Aux 6 mois",
     Annually: "Chaque année",
   },
+  buckets: {
+    income: {
+      title: "Revenu",
+      question: "Quel argent recevez-vous?",
+      lede: "Sélectionnez chaque source de revenu que vous recevez, puis inscrivez le montant selon la fréquence à laquelle il arrive. Nous convertirons tout en montants mensuels.",
+    },
+    savings: {
+      title: "Épargne",
+      question: "Combien voulez-vous mettre de côté?",
+      lede: "Payez-vous en premier. Si vous décidez combien épargner avant de planifier vos dépenses, vous aurez beaucoup plus de chances d’y arriver. Au Canada, les gens épargnent habituellement 5 % ou plus de leur revenu.",
+    },
+    home: {
+      title: "Maison et factures",
+      question: "Que payez-vous pour la maison?",
+      lede: "Loyer ou hypothèque, services publics, téléphone et Internet, assurances et frais bancaires.",
+    },
+    around: {
+      title: "Déplacements",
+      question: "Comment vous déplacez-vous?",
+      lede: "Frais de voiture, transport en commun et trajets.",
+    },
+    everyday: {
+      title: "Vie quotidienne",
+      question: "Que dépensez-vous au quotidien?",
+      lede: "Alimentation, santé, vêtements et soins personnels.",
+    },
+    family: {
+      title: "Famille, loisirs et dons",
+      question: "Quelles sont vos autres dépenses?",
+      lede: "Enfants, études, loisirs, voyages, animaux et cadeaux.",
+    },
+    debt: {
+      title: "Paiements de dettes",
+      question: "Quelles dettes remboursez-vous?",
+      lede: "Inscrivez seulement les paiements réguliers sur les soldes que vous reportez d’un mois à l’autre. Les achats portés à votre carte font déjà partie de leur propre catégorie : ne les comptez pas deux fois.",
+    },
+  },
+  categories: {
+    debt: "Paiements de dettes",
+    housing: "Logement",
+    communications: "Téléphone, Internet et télé",
+    food: "Alimentation",
+    insurance: "Assurances personnelles",
+    transportation: "Déplacements",
+    childcare: "Enfants",
+    education: "Études et formation",
+    recreation: "Loisirs",
+    personalCare: "Soins personnels",
+    clothing: "Vêtements et accessoires",
+    medical: "Santé",
+    pets: "Animaux de compagnie",
+    fees: "Frais bancaires et autres frais",
+    giftsDonations: "Dons et cadeaux",
+    savings: "Épargne",
+  },
+  fundTypes: {
+    RRSP: "REER",
+    RESP: "REEE",
+    TFSA: "CELI",
+    FHSA: "CELIAPP",
+  },
+  items: {
+    myNetIncome: {
+      label: "Mon salaire net",
+      help: "Ce qui arrive réellement dans votre compte après les impôts et les autres retenues.",
+      tip: "",
+    },
+    spouseNetIncome: {
+      label: "Salaire net de mon ou ma partenaire",
+      help: "",
+      tip: "",
+    },
+    employmentInsurance: {
+      label: "Prestations d’assurance-emploi",
+      help: "Prestations temporaires versées pendant que vous êtes entre deux emplois ou en formation.",
+      tip: "",
+    },
+    rentalIncome: {
+      label: "Loyers perçus d’une propriété",
+      help: "Ce que des locataires vous paient pour un espace dans une propriété qui vous appartient.",
+      tip: "",
+    },
+    federalPension: {
+      label: "Pensions gouvernementales (SV, RPC, SRG)",
+      help: "Prestations de retraite du gouvernement, comme la Sécurité de la vieillesse (SV), le Régime de pensions du Canada (RPC) ou le Supplément de revenu garanti (SRG).",
+      tip: "",
+    },
+    employerPension: {
+      label: "Régime de retraite au travail",
+      help: "Prestations versées par le régime de retraite d’un employeur.",
+      tip: "",
+    },
+    personalRetirement: {
+      label: "Retraits de mon épargne-retraite",
+      help: "Ce que vous retirez de votre propre épargne-retraite, comme un REER ou un FERR.",
+      tip: "",
+    },
+    studentLoanIncome: {
+      label: "Aide financière aux études",
+      help: "Argent pour les études provenant de retraits d’un REEE, de bourses, de subventions ou de prêts étudiants.",
+      tip: "",
+    },
+    childSupportIncome: {
+      label: "Pension alimentaire pour enfants reçue",
+      help: "Montants qu’un ancien conjoint ou une ancienne conjointe vous verse pour aider à couvrir les dépenses de vos enfants.",
+      tip: "",
+    },
+    childBenefits: {
+      label: "Allocation canadienne pour enfants et autres allocations",
+      help: "Versements mensuels non imposables du gouvernement qui aident les familles ayant des enfants de moins de 18 ans.",
+      tip: "",
+    },
+    disabilityBenefit: {
+      label: "Prestations d’invalidité",
+      help: "Prestations pour les personnes qui ont cotisé au RPC et qui ne peuvent pas travailler régulièrement en raison d’une invalidité.",
+      tip: "",
+    },
+    socialAssistance: {
+      label: "Aide sociale",
+      help: "Soutien financier pour les personnes à faible revenu qui ont besoin d’aide pour couvrir leurs besoins essentiels.",
+      tip: "",
+    },
+    selfEmploymentIncome: {
+      label: "Revenu de travail autonome",
+      help: "Ce que vous gagnez grâce à votre entreprise ou à vos contrats, après les dépenses d’entreprise et l’impôt que vous mettez de côté.",
+      tip: "",
+    },
+    gigIncome: {
+      label: "Revenu d’appoint ou à la pige",
+      help: "Gains tirés du transport de passagers, de la livraison, du travail à la pige ou d’un autre travail d’appoint.",
+      tip: "",
+    },
+    spousalSupportIncome: {
+      label: "Pension alimentaire pour conjoint reçue",
+      help: "Montants qu’un ancien conjoint ou une ancienne conjointe vous verse pour votre propre soutien.",
+      tip: "",
+    },
+    investmentIncome: {
+      label: "Revenu de placements",
+      help: "Intérêts, dividendes ou autres revenus réguliers tirés de vos placements.",
+      tip: "",
+    },
+    emergencyFund: {
+      label: "Fonds d’urgence",
+      help: "Un coussin pour les dépenses imprévues. Visez de 3 à 6 mois de frais de subsistance.",
+      tip: "Mettez en place un petit virement automatique, puis augmentez-le peu à peu.",
+    },
+    retirement: {
+      label: "Épargne-retraite",
+      help: "",
+      tip: "",
+    },
+    education: {
+      label: "Études des enfants",
+      help: "",
+      tip: "Des subventions gouvernementales peuvent s’ajouter à ce que vous versez dans un REEE.",
+    },
+    homePurchase: {
+      label: "Mise de fonds pour une maison",
+      help: "",
+      tip: "Si vous achetez une première maison, vous pourriez utiliser votre épargne REER pour cet achat.",
+    },
+    homeRenovation: {
+      label: "Améliorations à la maison",
+      help: "",
+      tip: "",
+    },
+    carPurchase: {
+      label: "Prochaine voiture",
+      help: "",
+      tip: "Regardez au-delà du paiement mensuel et calculez ce que la voiture vous coûtera au total.",
+    },
+    incomeTax: {
+      label: "Impôt à payer lors de la déclaration",
+      help: "",
+      tip: "Si vous devez habituellement de l’impôt au moment de produire votre déclaration, mettez de l’argent de côté tout au long de l’année.",
+    },
+    tfsa: {
+      label: "CELI",
+      help: "Compte d’épargne libre d’impôt. Les revenus qu’il génère et les retraits ne sont pas imposés.",
+      tip: "Les droits de cotisation inutilisés à votre CELI sont reportés aux années suivantes.",
+    },
+    fhsa: {
+      label: "Première maison (CELIAPP)",
+      help: "Compte d’épargne libre d’impôt pour l’achat d’une première propriété. Les cotisations réduisent votre revenu imposable, et les retraits admissibles pour acheter une première maison ne sont pas imposés.",
+      tip: "",
+    },
+    creditCard: {
+      label: "Solde de carte de crédit",
+      help: "Ce que vous payez sur le solde que vous reportez d’un mois à l’autre. Ne comptez pas les achats déjà inscrits ailleurs.",
+      tip: "",
+    },
+    lineOfCredit: {
+      label: "Solde de marge de crédit",
+      help: "Ce que vous payez sur le solde de votre marge de crédit. Évitez de compter deux fois les mêmes dépenses.",
+      tip: "",
+    },
+    personalLoan: {
+      label: "Prêt personnel ou financement en magasin",
+      help: "Paiements réguliers sur un prêt personnel, y compris le financement en magasin et les plans « achetez maintenant, payez plus tard ». Évitez de compter deux fois les mêmes dépenses.",
+      tip: "",
+    },
+    studentLoan: {
+      label: "Paiements de prêt étudiant",
+      help: "Paiements réguliers sur des prêts étudiants ou une marge de crédit étudiante.",
+      tip: "",
+    },
+    overdraft: {
+      label: "Découvert",
+      help: "Paiements pour ramener votre compte au-dessus de zéro, plus les frais et les intérêts de découvert.",
+      tip: "",
+    },
+    paydayLoan: {
+      label: "Prêts sur salaire",
+      help: "Paiements sur des prêts à court terme et à coût élevé.",
+      tip: "Les prêts sur salaire sont l’une des façons les plus coûteuses d’emprunter. Un conseiller en crédit d’un organisme sans but lucratif peut vous aider à trouver d’autres solutions.",
+    },
+    craDebt: {
+      label: "Sommes dues à l’ARC",
+      help: "Paiements sur l’impôt ou les trop-payés de prestations que vous devez à l’Agence du revenu du Canada.",
+      tip: "",
+    },
+    rent: {
+      label: "Loyer",
+      help: "",
+      tip: "",
+    },
+    mortgage: {
+      label: "Hypothèque",
+      help: "",
+      tip: "",
+    },
+    heloc: {
+      label: "Marge de crédit hypothécaire",
+      help: "Ce que vous payez sur le solde d’une marge de crédit garantie par votre maison. Évitez de compter deux fois les mêmes dépenses.",
+      tip: "",
+    },
+    propertyTax: {
+      label: "Taxes foncières",
+      help: "",
+      tip: "",
+    },
+    condoFee: {
+      label: "Frais de copropriété",
+      help: "",
+      tip: "",
+    },
+    tenantInsurance: {
+      label: "Assurance locataire",
+      help: "",
+      tip: "Comparez les soumissions de quelques assureurs avant de renouveler.",
+    },
+    homeInsurance: {
+      label: "Assurance habitation",
+      help: "",
+      tip: "",
+    },
+    furniture: {
+      label: "Meubles et électroménagers",
+      help: "",
+      tip: "",
+    },
+    outdoorEquipment: {
+      label: "Entretien du terrain et déneigement",
+      help: "Entretien à l’extérieur de la maison, comme le déneigement, l’entretien de la pelouse ou le jardinage.",
+      tip: "",
+    },
+    homeSecurity: {
+      label: "Télésurveillance",
+      help: "",
+      tip: "",
+    },
+    electricity: {
+      label: "Électricité",
+      help: "",
+      tip: "",
+    },
+    waterSewage: {
+      label: "Facture d’eau",
+      help: "",
+      tip: "",
+    },
+    heating: {
+      label: "Chauffage et location d’équipement",
+      help: "Votre facture de chauffage, plus la location d’équipement comme une fournaise ou un chauffe-eau.",
+      tip: "",
+    },
+    homeMaintenance: {
+      label: "Réparations et entretien de la maison",
+      help: "Réparer et entretenir votre maison, par exemple la plomberie, la peinture ou le remplacement d’un chauffe-eau.",
+      tip: "",
+    },
+    telephone: {
+      label: "Forfaits de téléphone",
+      help: "",
+      tip: "",
+    },
+    cable: {
+      label: "Service de télé",
+      help: "",
+      tip: "",
+    },
+    internet: {
+      label: "Internet",
+      help: "",
+      tip: "",
+    },
+    combined: {
+      label: "Services groupés",
+      help: "Offres d’un même fournisseur qui regroupent le téléphone, Internet, la télé ou d’autres services pour un seul prix.",
+      tip: "",
+    },
+    subscriptions: {
+      label: "Diffusion en continu et abonnements en ligne",
+      help: "Services de diffusion en continu et autres abonnements en ligne.",
+      tip: "",
+    },
+    groceries: {
+      label: "Épicerie",
+      help: "Votre facture d’épicerie, y compris les livraisons de prêts-à-cuisiner.",
+      tip: "Planifiez vos repas et faites l’épicerie après avoir mangé : vous aurez moins envie d’extras.",
+    },
+    restaurants: {
+      label: "Restaurants et commandes à emporter",
+      help: "Repas au restaurant et mets à emporter, plus les petits achats comme le café, le thé et les collations.",
+      tip: "Un café ou un thé par jour peut coûter plus de 900 $ par année.",
+    },
+    life: {
+      label: "Assurance vie",
+      help: "",
+      tip: "",
+    },
+    medical: {
+      label: "Assurance maladie et dentaire",
+      help: "",
+      tip: "",
+    },
+    disability: {
+      label: "Assurance invalidité ou accident",
+      help: "",
+      tip: "",
+    },
+    carPayments: {
+      label: "Paiements de voiture",
+      help: "",
+      tip: "",
+    },
+    carInsurance: {
+      label: "Assurance auto",
+      help: "",
+      tip: "Comparez les soumissions de quelques assureurs avant de renouveler.",
+    },
+    gas: {
+      label: "Essence ou recharge",
+      help: "",
+      tip: "",
+    },
+    maintenance: {
+      label: "Entretien de la voiture",
+      help: "Entretien courant comme les mises au point saisonnières, le changement des pneus et la vidange d’huile.",
+      tip: "",
+    },
+    carRegistration: {
+      label: "Plaques et immatriculation",
+      help: "",
+      tip: "",
+    },
+    parking: {
+      label: "Stationnement",
+      help: "",
+      tip: "",
+    },
+    transitPass: {
+      label: "Transport en commun",
+      help: "",
+      tip: "",
+    },
+    rideServices: {
+      label: "Taxis et transport par application",
+      help: "Taxis, services de transport par application et services semblables.",
+      tip: "",
+    },
+    tolls: {
+      label: "Péages",
+      help: "Péages d’autoroutes et de ponts.",
+      tip: "",
+    },
+    carShare: {
+      label: "Autopartage et location",
+      help: "Abonnements d’autopartage, trajets et locations de courte durée.",
+      tip: "",
+    },
+    bike: {
+      label: "Vélo et trottinette",
+      help: "Achat, réparation ou location d’un vélo ou d’une trottinette électrique, y compris le vélopartage.",
+      tip: "",
+    },
+    daycare: {
+      label: "Garderie et services de garde",
+      help: "",
+      tip: "",
+    },
+    babysitting: {
+      label: "Gardiennage",
+      help: "",
+      tip: "",
+    },
+    childSupport: {
+      label: "Pension alimentaire pour enfants versée",
+      help: "Montants que vous versez pour aider à couvrir les dépenses de vos enfants après une séparation ou un divorce.",
+      tip: "",
+    },
+    childrensAllowance: {
+      label: "Argent de poche des enfants",
+      help: "Argent que vous donnez à vos enfants pour leurs petits achats ou pour épargner.",
+      tip: "",
+    },
+    summerCamps: {
+      label: "Camps d’été et de congés",
+      help: "Camps de jour et camps de vacances pendant les congés scolaires.",
+      tip: "Informez-vous sur les tarifs hâtifs et les rabais pour les frères et sœurs.",
+    },
+    schoolLunches: {
+      label: "Dîners et collations à l’école",
+      help: "Programmes de repas, argent pour la cafétéria et collations pour l’école.",
+      tip: "",
+    },
+    tuition: {
+      label: "Droits de scolarité",
+      help: "",
+      tip: "",
+    },
+    schoolSupplies: {
+      label: "Manuels et fournitures scolaires",
+      help: "",
+      tip: "",
+    },
+    schoolTrips: {
+      label: "Sorties scolaires",
+      help: "",
+      tip: "",
+    },
+    travel: {
+      label: "Voyages et vacances",
+      help: "Vols, hébergement et autres frais liés à un séjour à l’extérieur.",
+      tip: "Vous prévoyez un voyage? Commencez dès maintenant à mettre de l’argent de côté.",
+    },
+    memberships: {
+      label: "Gym et clubs",
+      help: "Frais pour un centre de conditionnement physique, une piscine, un centre sportif ou un lieu semblable.",
+      tip: "La marche, la course et l’entraînement à la maison ne coûtent rien.",
+    },
+    childrenToys: {
+      label: "Jouets et activités des enfants",
+      help: "",
+      tip: "Beaucoup de villes offrent des activités gratuites pour les enfants et les familles.",
+    },
+    tickets: {
+      label: "Concerts, spectacles et matchs",
+      help: "Concerts, spectacles, matchs sportifs et autres événements.",
+      tip: "",
+    },
+    sportsGear: {
+      label: "Équipement de sport et de loisirs",
+      help: "Équipement et frais pour des activités comme le ski, le camping, le hockey ou le tennis.",
+      tip: "",
+    },
+    entertainmentEquipment: {
+      label: "Appareils électroniques",
+      help: "Ordinateurs, téléviseurs, chaînes audio, consoles de jeux et autres appareils électroniques semblables.",
+      tip: "Acheter des appareils usagés ou remis à neuf peut vous faire économiser beaucoup.",
+    },
+    alcohol: {
+      label: "Alcool",
+      help: "",
+      tip: "",
+    },
+    smoking: {
+      label: "Produits du tabac et de vapotage",
+      help: "Cigarettes, produits de vapotage et fournitures connexes.",
+      tip: "",
+    },
+    hairdresser: {
+      label: "Coupes de cheveux",
+      help: "",
+      tip: "",
+    },
+    cosmetics: {
+      label: "Maquillage et soins de la peau",
+      help: "",
+      tip: "",
+    },
+    spa: {
+      label: "Spa et soins de beauté",
+      help: "",
+      tip: "",
+    },
+    clothes: {
+      label: "Vêtements",
+      help: "",
+      tip: "",
+    },
+    childrenClothes: {
+      label: "Vêtements des enfants",
+      help: "",
+      tip: "",
+    },
+    accessories: {
+      label: "Chaussures, sacs et accessoires",
+      help: "",
+      tip: "",
+    },
+    doctor: {
+      label: "Frais médicaux",
+      help: "",
+      tip: "",
+    },
+    dentist: {
+      label: "Soins dentaires",
+      help: "",
+      tip: "",
+    },
+    specialists: {
+      label: "Thérapeutes et spécialistes",
+      help: "Professionnels comme les physiothérapeutes, les chiropraticiens, les psychologues ou les optométristes.",
+      tip: "",
+    },
+    prescriptions: {
+      label: "Médicaments d’ordonnance",
+      help: "Médicaments que vous payez et qu’aucun régime ne couvre.",
+      tip: "",
+    },
+    eyewear: {
+      label: "Lunettes et lentilles cornéennes",
+      help: "Montures, verres et lentilles qu’aucun régime ne couvre.",
+      tip: "",
+    },
+    petFood: {
+      label: "Nourriture et fournitures pour animaux",
+      help: "",
+      tip: "",
+    },
+    veterinarian: {
+      label: "Frais de vétérinaire",
+      help: "",
+      tip: "Une assurance pour animaux peut aider à payer les grosses factures de vétérinaire.",
+    },
+    bankFees: {
+      label: "Frais bancaires",
+      help: "Frais mensuels de compte, frais de transaction, frais de courtage et autres frais semblables.",
+      tip: "Beaucoup de banques et de coopératives de crédit offrent des comptes à frais modiques ou sans frais.",
+    },
+    creditCardFees: {
+      label: "Frais de carte",
+      help: "Frais annuels, assurance solde et autres frais récurrents liés à votre carte.",
+      tip: "Vérifiez que les avantages de votre carte valent ce qu’elle vous coûte.",
+    },
+    professionalDues: {
+      label: "Cotisations syndicales et professionnelles",
+      help: "Cotisations liées au travail, comme les cotisations syndicales ou celles d’un ordre ou d’une association professionnelle.",
+      tip: "",
+    },
+    taxPrep: {
+      label: "Préparation de la déclaration de revenus",
+      help: "Frais pour faire préparer votre déclaration de revenus.",
+      tip: "Des comptoirs d’impôts gratuits peuvent vous aider si votre revenu est modeste et que votre situation fiscale est simple.",
+    },
+    legalFees: {
+      label: "Frais juridiques et professionnels",
+      help: "Avocats, notaires, comptables et services semblables.",
+      tip: "",
+    },
+    gifts: {
+      label: "Cadeaux",
+      help: "Cadeaux pour les fêtes, les anniversaires, les mariages et d’autres occasions.",
+      tip: "Essayez un échange de cadeaux ou un cadeau fait maison.",
+    },
+    donations: {
+      label: "Dons de bienfaisance",
+      help: "Argent que vous donnez à des organismes de bienfaisance et à d’autres causes.",
+      tip: "",
+    },
+  },
   footer: {
     about: "À propos de cet outil",
     privacy:
