@@ -35,7 +35,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 `feat(i18n): add [lang] routing, proxy redirect and dictionary loader` · Spec §3.1, §5
 - Move `app/layout.tsx` + `page.tsx` → `app/[lang]/`; `generateStaticParams` (`en`, `fr`), `hasLocale` guard → `notFound()` (`dynamicParams` is not allowed with Cache Components), `<html lang={regionalLocale(lang)}>`.
 - `proxy.ts`: `/` → `/en|/fr` (cookie `NEXT_LOCALE`, `Accept-Language`).
-- `i18n/config.ts`, `i18n/getDictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useT()` client hook.
+- `i18n/config.ts`, `i18n/getDictionary.ts` (`server-only`), `i18n/translate.ts` (`t` with `{var}` templates, `plural` with cached `Intl.PluralRules`), `I18nProvider` + `useTranslator()` client hook.
 - Dictionaries with **chrome strings only** for now (app name, subtitle, lang button, footer, meta). Remaining strings arrive with the features that use them.
 - Tests: `translate` (interpolation, plural en/fr, missing var), `hasLocale`, en/fr key parity test (reused by later steps).
 - **Done when** `/` redirects, `/en` and `/fr` prerender (`next build` shows ● static), `/de` 404s.

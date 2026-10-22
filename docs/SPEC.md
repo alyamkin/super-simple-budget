@@ -635,7 +635,7 @@ app/
   icon.svg  apple-icon.png  manifest.ts  robots.ts  sitemap.ts
 proxy.ts                  # "/" → "/en" | "/fr"
 i18n/
-  config.ts  getDictionary.ts  I18nProvider.tsx  translate.ts   # t(), plural(), useT()
+  config.ts  getDictionary.ts  I18nProvider.tsx  translate.ts   # t(), plural(), useTranslator()
   dictionaries/en.ts  dictionaries/fr.ts
 domain/                   # pure TS, 100% unit-tested, no React/Redux imports
   frequency.ts  catalog/{items.ts,categories.ts,buckets.ts,retired.ts}  totals.ts  rules.ts  results.ts  __fixtures__/exampleBudget.ts

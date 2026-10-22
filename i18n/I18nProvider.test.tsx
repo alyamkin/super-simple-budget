@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { en } from "@/i18n/dictionaries/en";
 import { fr } from "@/i18n/dictionaries/fr";
-import { I18nProvider, useT } from "@/i18n/I18nProvider";
+import { I18nProvider, useTranslator } from "@/i18n/I18nProvider";
 
 function AppName() {
-  const { t, locale } = useT();
+  const { t, locale } = useTranslator();
   return <p lang={locale}>{t("app.name")}</p>;
 }
 

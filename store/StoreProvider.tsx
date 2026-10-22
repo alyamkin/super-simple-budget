@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import type { ItemId } from "@/domain/catalog/items";
-import { useT } from "@/i18n/I18nProvider";
+import { useTranslator } from "@/i18n/I18nProvider";
 import { makeStore } from "./makeStore";
 import { startPersistence } from "./persistence";
 
@@ -13,7 +13,7 @@ import { startPersistence } from "./persistence";
  */
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState(makeStore);
-  const { locale, t } = useT();
+  const { locale, t } = useTranslator();
   const itemLabel = useEffectEvent((id: ItemId) => t(`items.${id}.label`));
 
   useEffect(
