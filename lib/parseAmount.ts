@@ -37,3 +37,14 @@ export function normalizeAmount(amount: number | null): number | null {
   const rounded = Math.round(amount * 100) / 100;
   return Math.min(Math.max(rounded, 0), MAX_AMOUNT - 0.01);
 }
+
+/**
+ * Shows a stored amount in an input the way the user would type it: no
+ * grouping, `,` as the decimal mark in French (`12.5` → `"12,5"`), empty for
+ * `null`. {@link parseAmount} reads it back to the same number.
+ */
+export function amountToInput(amount: number | null, locale: Locale): string {
+  if (amount === null) return "";
+  const text = String(amount);
+  return locale === "fr" ? text.replace(".", ",") : text;
+}

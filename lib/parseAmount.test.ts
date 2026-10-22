@@ -1,7 +1,11 @@
 /**
  * @jest-environment node
  */
-import { normalizeAmount, parseAmount } from "@/lib/parseAmount";
+import {
+  amountToInput,
+  normalizeAmount,
+  parseAmount,
+} from "@/lib/parseAmount";
 
 describe("parseAmount", () => {
   it.each([
@@ -59,4 +63,24 @@ describe("normalizeAmount", () => {
     expect(normalizeAmount(-5)).toBe(0);
     expect(normalizeAmount(5e9)).toBe(999_999_999.99);
   });
+});
+
+describe("amountToInput", () => {
+  it("is empty for no amount", () => {
+    expect(amountToInput(null, "en")).toBe("");
+  });
+
+  it("uses the locale's decimal mark and no grouping", () => {
+    expect(amountToInput(1234.5, "en")).toBe("1234.5");
+    expect(amountToInput(1234.5, "fr")).toBe("1234,5");
+    expect(amountToInput(0, "fr")).toBe("0");
+  });
+
+  it.each([0, 12, 12.5, 1234.56, 999_999_999.99])(
+    "reads back to %p",
+    (amount) => {
+      expect(parseAmount(amountToInput(amount, "en"), "en")).toBe(amount);
+      expect(parseAmount(amountToInput(amount, "fr"), "fr")).toBe(amount);
+    },
+  );
 });

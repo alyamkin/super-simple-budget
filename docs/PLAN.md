@@ -78,7 +78,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 
 ## Phase 2 — UI
 
-### [ ] 9. UI primitives
+### [x] 9. UI primitives
 `feat(ui): add accessible UI primitives` · Spec §9.2
 - `components/ui/*`: Button, IconButton, Chip, Switch, SegmentedControl, Pill, StatusBadge, MoneyInput (draft-while-focused), FrequencySelect, Dialog, VisuallyHidden, Icons.
 - Tests: roles/names/states; keyboard; MoneyInput fr comma typing; axe per component.
