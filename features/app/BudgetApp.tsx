@@ -1,6 +1,7 @@
 "use client";
 
 import { STEPS } from "@/domain/catalog/buckets";
+import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Progress } from "@/features/wizard/components/Progress";
 import { StepHeading } from "@/features/wizard/components/StepHeading";
 import { StepNav } from "@/features/wizard/components/StepNav";
@@ -25,15 +26,18 @@ export function BudgetApp() {
           {step === "results" ? (
             <StepHeading eyebrow={t("results.eyebrow")} title={t("wizard.results")} />
           ) : (
-            <StepHeading
-              eyebrow={t("wizard.stepOf", {
-                n: STEPS.indexOf(step) + 1,
-                total: STEPS.length,
-                name: t(`buckets.${step}.title`),
-              })}
-              title={t(`buckets.${step}.question`)}
-              lede={t(`buckets.${step}.lede`)}
-            />
+            <>
+              <StepHeading
+                eyebrow={t("wizard.stepOf", {
+                  n: STEPS.indexOf(step) + 1,
+                  total: STEPS.length,
+                  name: t(`buckets.${step}.title`),
+                })}
+                title={t(`buckets.${step}.question`)}
+                lede={t(`buckets.${step}.lede`)}
+              />
+              <BucketStep key={step} bucket={step} />
+            </>
           )}
           <StepNav />
         </main>
