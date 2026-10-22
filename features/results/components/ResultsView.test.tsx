@@ -222,6 +222,84 @@ describe("Where your money goes", () => {
   });
 });
 
+describe("How your plan compares", () => {
+  const compare = () =>
+    screen.getByRole("region", { name: "How your plan compares" });
+  const ruleRows = () =>
+    within(within(compare()).getByRole("list")).getAllByRole("listitem");
+
+  it("lists the example's insurance as needing attention first", () => {
+    renderResults(EXAMPLE_BUDGET);
+    const [first] = ruleRows();
+    expect(first).toHaveTextContent(/^Personal insurance 0\.0% · \$0\/mo/);
+    expect(within(first).getByText("Needs attention")).toBeInTheDocument();
+    expect(
+      within(first).getByText(
+        "You haven't planned anything here. Most households spend something, up to about 3% of income.",
+      ),
+    ).toBeInTheDocument();
+    expect(within(compare()).getByText("1 needs attention")).toBeInTheDocument();
+    expect(within(compare()).queryByText(/a bit off$/)).not.toBeInTheDocument();
+  });
+
+  it("rates savings against its target", () => {
+    renderResults(EXAMPLE_BUDGET);
+    const savings = ruleRows().find((item) =>
+      item.textContent?.startsWith("Savings"),
+    );
+    expect(savings).toHaveTextContent("Savings 6.9% · $600/mo");
+    expect(savings).toHaveTextContent("On track");
+    expect(savings).toHaveTextContent(
+      "You meet the usual target of at least 5% of income.",
+    );
+  });
+
+  it("lists the buckets given as a rough total", () => {
+    renderResults(EXAMPLE_BUDGET);
+    expect(
+      within(compare()).getByText(
+        "Not compared because you gave a rough total: Family, fun and giving.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      ruleRows().some((item) => item.textContent?.startsWith("Giving")),
+    ).toBe(false);
+  });
+
+  it("follows the yearly view", () => {
+    renderResults(EXAMPLE_BUDGET, { yearly: true });
+    expect(
+      ruleRows().find((item) => item.textContent?.startsWith("Savings")),
+    ).toHaveTextContent("Savings 6.9% · $7,200/yr");
+  });
+
+  it("asks for income when there is none", () => {
+    renderResults(budgetWith({ home: [row("rent", 1200)] }));
+    expect(
+      within(compare()).getByText(
+        "Add your income to compare your plan with the usual range.",
+      ),
+    ).toBeInTheDocument();
+    expect(within(compare()).queryByRole("list")).not.toBeInTheDocument();
+  });
+
+  it("speaks French", () => {
+    renderResults(EXAMPLE_BUDGET, { locale: "fr" });
+    const region = screen.getByRole("region", { name: "Comparaison de votre plan" });
+    expect(within(region).getByText("1 à revoir")).toBeInTheDocument();
+    expect(
+      within(region).getByText(/^Aucune comparaison .*: Famille, loisirs et dons\.$/),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the bars out of reach of assistive technology", () => {
+    renderResults(EXAMPLE_BUDGET);
+    for (const item of ruleRows()) {
+      expect(item.querySelector("i")?.closest('[aria-hidden="true"]')).not.toBeNull();
+    }
+  });
+});
+
 /** jsdom runs `requestAnimationFrame` callbacks on a 16 ms timer. */
 const FRAME_MS = 16;
 

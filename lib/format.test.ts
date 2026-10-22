@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { formatMoney, formatPercent } from "@/lib/format";
+import { formatList, formatMoney, formatPercent } from "@/lib/format";
 
 /** ICU versions differ on U+00A0 vs U+202F in fr-CA; compare with U+00A0 only. */
 const nbsp = (text: string) => text.replace(/ /g, " ");
@@ -49,5 +49,15 @@ describe("formatPercent", () => {
     formatMoney(2, "en", { decimals: 3 });
     expect(spy).toHaveBeenCalledTimes(1);
     spy.mockRestore();
+  });
+});
+
+describe("formatList", () => {
+  it("joins names with the locale's conjunction", () => {
+    expect(formatList(["Home and bills"], "en")).toBe("Home and bills");
+    expect(formatList(["Home", "Getting around", "Giving"], "en")).toBe(
+      "Home, Getting around and Giving",
+    );
+    expect(formatList(["Maison", "Transport"], "fr")).toBe("Maison et Transport");
   });
 });

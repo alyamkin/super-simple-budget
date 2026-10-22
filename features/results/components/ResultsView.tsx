@@ -1,5 +1,6 @@
 "use client";
 
+import { CompareSection } from "./CompareSection";
 import { IncomeFlowBar } from "./IncomeFlowBar";
 import { SpendingDonut } from "./SpendingDonut";
 import { TopExpenses } from "./TopExpenses";
@@ -14,6 +15,7 @@ export function ResultsView() {
       <IncomeFlowBar />
       <TopExpenses />
       <SpendingDonut />
+      <CompareSection />
     </>
   );
 }
