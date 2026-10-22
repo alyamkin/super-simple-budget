@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { STEPS } from "@/domain/catalog/buckets";
+import {
+  LAST_BUCKET_STEP,
+  RESULTS_STEP,
+  STEPS,
+} from "@/domain/catalog/buckets";
 import { CopySummary } from "@/features/results/components/CopySummary";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { useAppSelector } from "@/store/hooks";
@@ -10,9 +14,6 @@ import { uiSlice } from "../uiSlice";
 import { useGoToStep } from "../useGoToStep";
 
 const { selectStep } = uiSlice.selectors;
-
-const RESULTS = STEPS.length - 1;
-const LAST_BUCKET = RESULTS - 1;
 
 /**
  * "← Back" / "Next: {bucket} →" under a bucket step; on the
@@ -26,35 +27,35 @@ export function StepNav() {
 
   const button = "max-phone:flex-auto";
 
-  if (step === RESULTS) {
-    return (
-      <div className="mt-[26px] flex flex-wrap justify-between gap-2.5">
-        <Button className={button} onClick={() => goToStep(LAST_BUCKET)}>
-          {t("wizard.edit")}
-        </Button>
-        <CopySummary className={button} />
-      </div>
-    );
-  }
-
   return (
     <div className="mt-[26px] flex flex-wrap justify-between gap-2.5">
-      {step > 0 ? (
-        <Button className={button} onClick={() => goToStep(step - 1)}>
-          {t("wizard.back")}
-        </Button>
+      {step === RESULTS_STEP ? (
+        <>
+          <Button className={button} onClick={() => goToStep(LAST_BUCKET_STEP)}>
+            {t("wizard.edit")}
+          </Button>
+          <CopySummary className={button} />
+        </>
       ) : (
-        <span />
+        <>
+          {step > 0 ? (
+            <Button className={button} onClick={() => goToStep(step - 1)}>
+              {t("wizard.back")}
+            </Button>
+          ) : (
+            <span />
+          )}
+          <Button
+            variant="primary"
+            className={button}
+            onClick={() => goToStep(step + 1)}
+          >
+            {step === LAST_BUCKET_STEP
+              ? t("wizard.seePlan")
+              : t("wizard.next", { name: stepName(t, STEPS[step + 1]) })}
+          </Button>
+        </>
       )}
-      <Button
-        variant="primary"
-        className={button}
-        onClick={() => goToStep(step + 1)}
-      >
-        {step === LAST_BUCKET
-          ? t("wizard.seePlan")
-          : t("wizard.next", { name: stepName(t, STEPS[step + 1]) })}
-      </Button>
     </div>
   );
 }

@@ -199,15 +199,7 @@ describe("ui slice", () => {
 });
 
 describe("ui selectors", () => {
-  const { selectIsNoticeShown, selectIsUnsaved, selectStepId } =
-    uiSlice.selectors;
-
-  it("selectStepId names the current step", () => {
-    const store = makeStore();
-    expect(selectStepId(store.getState())).toBe("income");
-    store.dispatch(stepChanged(7));
-    expect(selectStepId(store.getState())).toBe("results");
-  });
+  const { selectIsNoticeShown, selectIsUnsaved } = uiSlice.selectors;
 
   it("the notice shows while unsaved and not snoozed", () => {
     const store = makeStore();

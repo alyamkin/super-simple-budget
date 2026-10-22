@@ -14,6 +14,12 @@ export const STEPS = [
 
 export type StepId = (typeof STEPS)[number];
 
+/** Index of the results step (the last one). */
+export const RESULTS_STEP = STEPS.length - 1;
+
+/** Index of the last bucket step, just before the results. */
+export const LAST_BUCKET_STEP = RESULTS_STEP - 1;
+
 export type BucketId = Exclude<StepId, "results">;
 
 export const BUCKET_IDS = STEPS.filter(
@@ -133,6 +139,10 @@ export const BUCKETS: Record<BucketId, Bucket> = {
     color: "--b-debt",
   },
 };
+
+/** A bucket's chart colour as a CSS value, e.g. `var(--b-home)`. */
+export const bucketColor = (bucket: OutgoingBucketId): string =>
+  `var(${BUCKETS[bucket].color})`;
 
 /** The bucket each item is added to, wherever it was picked from. */
 export const BUCKET_OF_ITEM = Object.fromEntries(

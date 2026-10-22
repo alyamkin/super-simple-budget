@@ -10,16 +10,6 @@ import { useTranslator } from "@/i18n/I18nProvider";
 /** The actions that replace the budget. */
 export type ConfirmAction = "clear" | "open";
 
-const TITLE = {
-  clear: "notices.confirm.clearTitle",
-  open: "notices.confirm.openTitle",
-} as const;
-
-const PROCEED = {
-  clear: "notices.confirm.clear",
-  open: "notices.confirm.open",
-} as const;
-
 type ConfirmDialogProps = {
   action: ConfirmAction;
   onConfirm: () => void;
@@ -57,7 +47,7 @@ export function ConfirmDialog({
       aria-describedby={bodyId}
     >
       <h3 id={titleId} className="mb-2 text-[1.25rem] font-bold">
-        {t(TITLE[action])}
+        {t(`notices.confirm.${action}Title`)}
       </h3>
       <p id={bodyId} className="mt-0 mb-[18px] text-muted">
         {t(saved ? "notices.confirm.saved" : "notices.confirm.body")}
@@ -65,7 +55,7 @@ export function ConfirmDialog({
       <div className="flex flex-col gap-2 [&>button]:w-full">
         {saved ? (
           <Button ref={primary} variant="primary" onClick={onConfirm}>
-            {t(PROCEED[action])}
+            {t(`notices.confirm.${action}`)}
           </Button>
         ) : (
           <>

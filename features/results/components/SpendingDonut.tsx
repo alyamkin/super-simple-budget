@@ -1,28 +1,22 @@
 "use client";
 
 import { VisuallyHidden } from "@/components/ui/VisuallyHidden";
-import { BUCKETS } from "@/domain/catalog/buckets";
+import { bucketColor } from "@/domain/catalog/buckets";
 import { selectSpendingSplit } from "@/features/budget/selectors";
-import { uiSlice, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
-import { formatMoney, formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/format";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useAppSelector } from "@/store/hooks";
 import { DonutChart } from "./charts/DonutChart";
 import { ResultCard } from "./ResultCard";
 
-const { selectView } = uiSlice.selectors;
-
 /** "Where your money goes": the donut and its legend table. */
 export function SpendingDonut() {
   const { t, locale } = useTranslator();
+  const { view, money } = useViewMoney();
   const { parts, total } = useAppSelector(selectSpendingSplit);
-  const view = useAppSelector(selectView);
   const animate = !usePrefersReducedMotion();
-  const money = (amount: number) =>
-    formatMoney(amount * VIEW_MULTIPLIER[view], locale);
-  const color = (bucket: (typeof parts)[number]["bucket"]) =>
-    `var(${BUCKETS[bucket].color})`;
 
   return (
     <ResultCard title={t("results.donut.title")}>
@@ -32,7 +26,7 @@ export function SpendingDonut() {
             parts={parts.map(({ bucket, amount }) => ({
               key: bucket,
               amount,
-              color: color(bucket),
+              color: bucketColor(bucket),
             }))}
             caption={t("results.donut.planned", { per: t(`per.${view}`) })}
             total={money(total)}
@@ -60,7 +54,7 @@ export function SpendingDonut() {
                       <span
                         aria-hidden="true"
                         className="size-2.5 flex-none rounded-[3px]"
-                        style={{ background: color(bucket) }}
+                        style={{ background: bucketColor(bucket) }}
                       />
                       {t(`buckets.${bucket}.title`)}
                     </span>

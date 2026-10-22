@@ -1,6 +1,7 @@
 import { emptyBudget } from "@/domain/budget";
-import { STEPS } from "@/domain/catalog/buckets";
-import { budgetReplaced, budgetSlice } from "@/features/budget/budgetSlice";
+import { RESULTS_STEP } from "@/domain/catalog/buckets";
+import { budgetReplaced } from "@/features/budget/budgetSlice";
+import { selectBudget } from "@/features/budget/selectors";
 import {
   budgetCleared,
   fileOpened,
@@ -17,10 +18,7 @@ import { serializeBudget } from "./exportJson";
 import { fileName } from "./fileName";
 import { readBudgetFile } from "./importJson";
 
-const { selectBudget } = budgetSlice.selectors;
 const { selectView } = uiSlice.selectors;
-
-const RESULTS = STEPS.length - 1;
 
 /**
  * Save, export, open and clear, each ending with a toast. They read the store
@@ -74,7 +72,7 @@ export function useFileActions() {
     }
     dispatch(budgetReplaced(result.budget));
     dispatch(fileOpened(result.view));
-    goToStep(RESULTS);
+    goToStep(RESULTS_STEP);
     dispatch(toastShown({ key: "opened" }));
   };
 

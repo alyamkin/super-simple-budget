@@ -1,22 +1,20 @@
 "use client";
 
-import { BUCKETS } from "@/domain/catalog/buckets";
+import { bucketColor } from "@/domain/catalog/buckets";
 import type { Expense } from "@/domain/results";
 import { rowLabel } from "@/features/budget/rowLabel";
 import {
   selectIncome,
   selectTopExpenses,
 } from "@/features/budget/selectors";
-import { uiSlice, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import type { Translator } from "@/i18n/translate";
-import { formatMoney, formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/format";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useAppSelector } from "@/store/hooks";
 import { ExpenseBar } from "./charts/ExpenseBar";
 import { ResultCard } from "./ResultCard";
-
-const { selectView } = uiSlice.selectors;
 
 function expenseLabel(t: Translator["t"], expense: Expense): string {
   if (expense.kind === "estimate") {
@@ -30,9 +28,9 @@ function expenseLabel(t: Translator["t"], expense: Expense): string {
 /** "Your biggest expenses": the top 5 as bars. */
 export function TopExpenses() {
   const { t, plural, locale } = useTranslator();
+  const { view, money } = useViewMoney();
   const { top, count, share } = useAppSelector(selectTopExpenses);
   const income = useAppSelector(selectIncome);
-  const view = useAppSelector(selectView);
   const animate = !usePrefersReducedMotion();
   if (!top.length) return null;
 
@@ -60,14 +58,14 @@ export function TopExpenses() {
             <div className="flex justify-between gap-2.5 text-[.92rem]">
               <span className="min-w-0 truncate">{expenseLabel(t, expense)}</span>
               <b className="font-mono font-medium whitespace-nowrap tabular-nums">
-                {formatMoney(expense.amount * VIEW_MULTIPLIER[view], locale)}
+                {money(expense.amount)}
                 {t(`per.${view}`)}
               </b>
             </div>
             <ExpenseBar
               amount={expense.amount}
               largest={largest}
-              color={`var(${BUCKETS[expense.bucket].color})`}
+              color={bucketColor(expense.bucket)}
               animate={animate}
             />
             {income > 0 && (

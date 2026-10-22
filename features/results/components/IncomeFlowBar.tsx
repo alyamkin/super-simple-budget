@@ -5,16 +5,14 @@ import {
   selectTotals,
 } from "@/features/budget/selectors";
 import { FLOW_COLORS } from "@/features/results/flowColors";
-import { uiSlice, VIEW_MULTIPLIER } from "@/features/wizard/uiSlice";
+import { useViewMoney } from "@/features/wizard/useViewMoney";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { classNames } from "@/lib/classNames";
-import { formatMoney, formatPercent } from "@/lib/format";
+import { formatPercent } from "@/lib/format";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useAppSelector } from "@/store/hooks";
 import { IncomeFlowChart } from "./charts/IncomeFlowChart";
 import { ResultCard } from "./ResultCard";
-
-const { selectView } = uiSlice.selectors;
 
 type KeyEntry = {
   kind: keyof typeof FLOW_COLORS | "shortfall";
@@ -24,14 +22,12 @@ type KeyEntry = {
 /** "Where your income goes": the flow bar and its key. */
 export function IncomeFlowBar() {
   const { t, locale } = useTranslator();
+  const { view, money } = useViewMoney();
   const flow = useAppSelector(selectIncomeFlow);
   const totals = useAppSelector(selectTotals);
-  const view = useAppSelector(selectView);
   const animate = !usePrefersReducedMotion();
   if (!flow) return null;
 
-  const money = (amount: number) =>
-    formatMoney(amount * VIEW_MULTIPLIER[view], locale);
   const { income, savings, spending, balance } = totals;
   const entries: KeyEntry[] = [
     { kind: "savings", amount: savings },
