@@ -14,7 +14,7 @@ import type { Locale } from "@/i18n/config";
 import { makeStore } from "@/store/makeStore";
 import { renderWithI18n } from "@/test/renderWithI18n";
 import { MAX_FILE_BYTES } from "../schema";
-import { FileBox } from "./FileBox";
+import { FileMenu } from "./FileMenu";
 
 const fixture = (name: string) =>
   readFileSync(join(__dirname, "..", "__fixtures__", name), "utf8");
@@ -22,7 +22,7 @@ const fixture = (name: string) =>
 const jsonFile = (content: string, name = "budget.json") =>
   new File([content], name, { type: "application/json" });
 
-function renderBox(locale: Locale = "en", { unsaved = true } = {}) {
+function renderMenu(locale: Locale = "en", { unsaved = true } = {}) {
   const store = makeStore();
   store.dispatch(budgetReplaced(EXAMPLE_BUDGET));
   // An edit, so there is something unsaved.
@@ -32,7 +32,8 @@ function renderBox(locale: Locale = "en", { unsaved = true } = {}) {
   const user = userEvent.setup();
   const view = renderWithI18n(
     <Provider store={store}>
-      <FileBox />
+      <FileMenu />
+      <button type="button">Elsewhere</button>
       <Toaster />
     </Provider>,
     { locale },
@@ -40,12 +41,18 @@ function renderBox(locale: Locale = "en", { unsaved = true } = {}) {
   const input = view.container.querySelector<HTMLInputElement>(
     'input[type="file"]',
   )!;
-  return { store, user, input, ...view };
+  const toggle = () => screen.getByRole("button", { name: /^(File|Fichier)/ });
+  /** Opens the panel and clicks the item named `name`. */
+  const choose = async (name: string) => {
+    await user.click(toggle());
+    await user.click(screen.getByRole("button", { name }));
+  };
+  return { store, user, input, toggle, choose, ...view };
 }
 
 const toast = () => screen.getByRole("status");
 
-describe("FileBox", () => {
+describe("FileMenu", () => {
   let createObjectURL: jest.Mock;
   let revokeObjectURL: jest.Mock;
   let click: jest.SpyInstance;
@@ -68,28 +75,76 @@ describe("FileBox", () => {
     return { blob, name: link.download };
   };
 
-  it("offers save, open and export, each named by its title", async () => {
-    const { container } = renderBox();
+  describe("panel", () => {
+    it("discloses save, open, export and clear, each named by its title", async () => {
+      const { user, toggle, container } = renderMenu();
+      expect(toggle()).toHaveAttribute("aria-expanded", "false");
+      expect(
+        screen.queryByRole("button", { name: "Save budget" }),
+      ).not.toBeInTheDocument();
 
-    expect(
-      screen.getByRole("region", { name: "Keep your budget" }),
-    ).toHaveTextContent("Not saved to a file yet");
-    expect(
-      screen.getByRole("button", { name: "Save budget" }),
-    ).toHaveAccessibleDescription(".json file you can open again later");
-    expect(screen.getByRole("button", { name: "Open budget" })).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "Export to spreadsheet" }),
-    ).toHaveAccessibleDescription(
-      ".csv file for Excel or Numbers, for viewing only",
-    );
-    expect(await axe(container)).toHaveNoViolations();
+      await user.click(toggle());
+
+      expect(toggle()).toHaveAttribute("aria-expanded", "true");
+      const panel = document.getElementById(toggle().getAttribute("aria-controls")!);
+      expect(panel).toBeVisible();
+      expect(panel).toHaveTextContent("Not saved to a file yet");
+      expect(
+        screen.getByRole("button", { name: "Save budget" }),
+      ).toHaveAccessibleDescription(".json file you can open again later");
+      expect(screen.getByRole("button", { name: "Open budget" })).toBeVisible();
+      expect(
+        screen.getByRole("button", { name: "Export to spreadsheet" }),
+      ).toHaveAccessibleDescription(
+        ".csv file for Excel or Numbers, for viewing only",
+      );
+      expect(screen.getByRole("button", { name: "Clear budget" })).toBeVisible();
+      expect(await axe(container)).toHaveNoViolations();
+    });
+
+    it("names unsaved changes on the button", () => {
+      const { toggle } = renderMenu("fr");
+      expect(toggle()).toHaveAccessibleName("Fichier, modifications non enregistrées");
+    });
+
+    it("has a plain name once everything is saved", () => {
+      const { toggle } = renderMenu("en", { unsaved: false });
+      expect(toggle()).toHaveAccessibleName("File");
+    });
+
+    it("closes on Esc and returns focus to the button", async () => {
+      const { user, toggle } = renderMenu();
+      await user.click(toggle());
+      await user.tab();
+      expect(screen.getByRole("button", { name: "Save budget" })).toHaveFocus();
+
+      await user.keyboard("{Escape}");
+
+      expect(toggle()).toHaveAttribute("aria-expanded", "false");
+      expect(toggle()).toHaveFocus();
+    });
+
+    it("closes on a click outside", async () => {
+      const { user, toggle } = renderMenu();
+      await user.click(toggle());
+      await user.click(screen.getByRole("button", { name: "Elsewhere" }));
+      expect(toggle()).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("closes when focus leaves it", async () => {
+      const { user, toggle } = renderMenu();
+      await user.click(toggle());
+      // Toggle, four items, then out.
+      for (let i = 0; i < 5; i++) await user.tab();
+      expect(screen.getByRole("button", { name: "Elsewhere" })).toHaveFocus();
+      expect(toggle()).toHaveAttribute("aria-expanded", "false");
+    });
   });
 
   it("saves the budget as a JSON backup", async () => {
-    const { store, user } = renderBox();
+    const { store, choose, toggle } = renderMenu();
 
-    await user.click(screen.getByRole("button", { name: "Save budget" }));
+    await choose("Save budget");
 
     const { blob, name } = downloaded();
     expect(name).toMatch(/^my-budget-\d{4}-\d{2}-\d{2}\.json$/);
@@ -106,18 +161,23 @@ describe("FileBox", () => {
     expect(toast()).toHaveTextContent("Budget saved");
     expect(store.getState().ui.changedAt).toBeNull();
     expect(store.getState().ui.lastFileSaveAt).not.toBeNull();
-    expect(
-      screen.getByText("Last saved to a file: today"),
-    ).toBeInTheDocument();
+    expect(toggle()).toHaveAttribute("aria-expanded", "false");
+    expect(toggle()).toHaveFocus();
+    expect(toggle()).toHaveAccessibleName("File");
     await waitFor(() => expect(revokeObjectURL).toHaveBeenCalledWith("blob:budget"));
   });
 
-  it("exports a spreadsheet without counting it as saved", async () => {
-    const { store, user } = renderBox("fr");
+  it("says when the budget was last saved", async () => {
+    const { user, choose, toggle } = renderMenu();
+    await choose("Save budget");
+    await user.click(toggle());
+    expect(screen.getByText("Last saved to a file: today")).toBeVisible();
+  });
 
-    await user.click(
-      screen.getByRole("button", { name: "Exporter vers un tableur" }),
-    );
+  it("exports a spreadsheet without counting it as saved", async () => {
+    const { store, choose } = renderMenu("fr");
+
+    await choose("Exporter vers un tableur");
 
     const { blob, name } = downloaded();
     expect(name).toMatch(/^mon-budget-\d{4}-\d{2}-\d{2}\.csv$/);
@@ -133,9 +193,9 @@ describe("FileBox", () => {
     createObjectURL.mockImplementation(() => {
       throw new Error("blocked");
     });
-    const { store, user } = renderBox();
+    const { store, choose } = renderMenu();
 
-    await user.click(screen.getByRole("button", { name: "Save budget" }));
+    await choose("Save budget");
 
     expect(toast()).toHaveTextContent("Downloads aren't available here.");
     expect(store.getState().ui.changedAt).not.toBeNull();
@@ -143,17 +203,17 @@ describe("FileBox", () => {
   });
 
   it("opens a file from a real button", async () => {
-    const { user, input } = renderBox("en", { unsaved: false });
-    const choose = jest.spyOn(input, "click");
+    const { input, choose } = renderMenu("en", { unsaved: false });
+    const pick = jest.spyOn(input, "click");
 
-    await user.click(screen.getByRole("button", { name: "Open budget" }));
+    await choose("Open budget");
 
-    expect(choose).toHaveBeenCalled();
+    expect(pick).toHaveBeenCalled();
     expect(input).toHaveAttribute("accept", ".json,application/json");
   });
 
   it("replaces the budget with an opened file and shows its results", async () => {
-    const { store, user, input } = renderBox();
+    const { store, user, input } = renderMenu();
 
     await user.upload(input, jsonFile(fixture("v2-full.json")));
 
@@ -185,7 +245,7 @@ describe("FileBox", () => {
       "This file is too large to be a Super Simple Budget file.",
     ],
   ])("keeps the budget when the file %s", async (_case, file, message) => {
-    const { store, user, input } = renderBox();
+    const { store, user, input } = renderMenu();
     const before = store.getState();
 
     await user.upload(input, file);
@@ -198,10 +258,10 @@ describe("FileBox", () => {
 
   describe("Clear budget", () => {
     it("starts a blank budget straight away when everything is saved", async () => {
-      const { store, user } = renderBox("en", { unsaved: false });
+      const { store, choose } = renderMenu("en", { unsaved: false });
       store.dispatch(stepChanged(STEPS.length - 1));
 
-      await user.click(screen.getByRole("button", { name: "Clear budget" }));
+      await choose("Clear budget");
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
       expect(store.getState().budget).toEqual(emptyBudget());
@@ -210,10 +270,10 @@ describe("FileBox", () => {
     });
 
     it("asks first while changes are unsaved", async () => {
-      const { store, user, container } = renderBox();
+      const { store, choose, container } = renderMenu();
       const before = store.getState().budget;
 
-      await user.click(screen.getByRole("button", { name: "Clear budget" }));
+      await choose("Clear budget");
 
       const dialog = screen.getByRole("dialog", { name: "Clear your budget?" });
       expect(dialog).toHaveAccessibleDescription(
@@ -227,9 +287,9 @@ describe("FileBox", () => {
     });
 
     it("clears without saving when asked to", async () => {
-      const { store, user } = renderBox();
+      const { store, user, choose } = renderMenu();
 
-      await user.click(screen.getByRole("button", { name: "Clear budget" }));
+      await choose("Clear budget");
       await user.click(
         screen.getByRole("button", { name: "Continue without saving" }),
       );
@@ -242,9 +302,9 @@ describe("FileBox", () => {
     });
 
     it("saves first, then offers to clear", async () => {
-      const { store, user } = renderBox("fr");
+      const { store, user, choose } = renderMenu("fr");
 
-      await user.click(screen.getByRole("button", { name: "Effacer le budget" }));
+      await choose("Effacer le budget");
       await user.click(
         screen.getByRole("button", { name: "Enregistrer d’abord le budget" }),
       );
@@ -272,9 +332,9 @@ describe("FileBox", () => {
       createObjectURL.mockImplementation(() => {
         throw new Error("blocked");
       });
-      const { user } = renderBox();
+      const { user, choose } = renderMenu();
 
-      await user.click(screen.getByRole("button", { name: "Clear budget" }));
+      await choose("Clear budget");
       await user.click(screen.getByRole("button", { name: "Save budget first" }));
 
       expect(screen.getByRole("dialog")).toHaveAccessibleDescription(
@@ -290,51 +350,51 @@ describe("FileBox", () => {
         user.click(screen.getByRole("button", { name: "Cancel" }))],
       ["Esc", (user: ReturnType<typeof userEvent.setup>) =>
         user.keyboard("{Escape}")],
-    ])("closes on %s and returns focus to the button", async (_how, close) => {
-      const { store, user } = renderBox();
+    ])("closes on %s and returns focus to the File button", async (_how, close) => {
+      const { store, user, choose, toggle } = renderMenu();
       const before = store.getState().budget;
 
-      await user.click(screen.getByRole("button", { name: "Clear budget" }));
+      await choose("Clear budget");
       await close(user);
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Clear budget" })).toHaveFocus();
+      expect(toggle()).toHaveFocus();
       expect(store.getState().budget).toBe(before);
     });
   });
 
   describe("Open budget while unsaved", () => {
     it("asks to replace the budget before choosing a file", async () => {
-      const { user, input } = renderBox();
-      const choose = jest.spyOn(input, "click");
+      const { user, input, choose, toggle } = renderMenu();
+      const pick = jest.spyOn(input, "click");
 
-      await user.click(screen.getByRole("button", { name: "Open budget" }));
+      await choose("Open budget");
 
       expect(
         screen.getByRole("dialog", { name: "Replace your current budget?" }),
       ).toBeInTheDocument();
-      expect(choose).not.toHaveBeenCalled();
+      expect(pick).not.toHaveBeenCalled();
 
       await user.click(
         screen.getByRole("button", { name: "Continue without saving" }),
       );
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-      expect(choose).toHaveBeenCalledTimes(1);
-      expect(screen.getByRole("button", { name: "Open budget" })).toHaveFocus();
+      expect(pick).toHaveBeenCalledTimes(1);
+      expect(toggle()).toHaveFocus();
     });
 
     it("saves first, then offers to choose a file", async () => {
-      const { user, input } = renderBox();
-      const choose = jest.spyOn(input, "click");
+      const { user, input, choose } = renderMenu();
+      const pick = jest.spyOn(input, "click");
 
-      await user.click(screen.getByRole("button", { name: "Open budget" }));
+      await choose("Open budget");
       await user.click(screen.getByRole("button", { name: "Save budget first" }));
       await user.click(
         screen.getByRole("button", { name: "Choose a file to open" }),
       );
 
-      expect(choose).toHaveBeenCalledTimes(1);
+      expect(pick).toHaveBeenCalledTimes(1);
     });
   });
 });

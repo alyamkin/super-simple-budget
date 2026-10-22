@@ -55,8 +55,9 @@ Start each run in a private window (empty storage). Record the date, versions an
 
 ## 6. Files, notices and dialogs
 
-- [ ] "Save budget" downloads a `.json` file and announces "Budget saved".
-- [ ] "Open budget" with unsaved changes opens the dialog: focus is on "Save budget first", Tab stays inside, and Esc closes it and returns focus to "Open budget". After "Continue without saving", the file picker opens.
+- [ ] The header's "File" button announces as collapsed/expanded ("File, unsaved changes" while unsaved). Tab from it reaches the panel's buttons, each read with its hint; Esc closes the panel and returns focus to "File"; tabbing past the last item closes it.
+- [ ] "Save budget" (File menu) downloads a `.json` file, announces "Budget saved", and focus is back on "File".
+- [ ] "Open budget" with unsaved changes opens the dialog: focus is on "Save budget first", Tab stays inside, and Esc closes it and returns focus to "File". After "Continue without saving", the file picker opens.
 - [ ] Opening a valid file moves to results and announces it. A broken file announces the error and changes nothing.
 - [ ] "Clear budget" goes through the same dialog, then lands on the Income step heading with "Started a blank budget".
 - [ ] The unsaved-changes notice ("Changes not saved to a file") is reachable. "Later" and "Save budget" move focus to the step heading.

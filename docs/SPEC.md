@@ -96,7 +96,7 @@ Visual reference: run the artifact or read its CSS. Layout: header → (unsaved 
 ### 4.1 Header
 
 - Brand mark (inline SVG from artifact line 277, `aria-hidden`), `h1` app name, subtitle (hidden ≤600px).
-- **No budget actions in the header.** Save / Open / Export / Clear live in the results file box (§4.6) and Save / Export also in the tally (§4.5).
+- **File menu** — the only place for budget actions, available on every step. A disclosure button "File"/"Fichier" (file icon + chevron; icon-only ≤600px) with `aria-expanded`/`aria-controls`; while unsaved it shows a warn-coloured dot and its name becomes "File, unsaved changes". The panel (below the header, right-aligned; full header width ≤600px) holds: the "Last saved to a file" line, then buttons named by their title and described by their hint — Save budget (.json), Open budget (.json), Export to spreadsheet (.csv) (§11) — then, set apart, "Clear budget" (§4.9), and the "kept in this browser only" explanation. Esc closes it and returns focus to the button; a click outside or tabbing out closes it. Choosing an item closes the panel and puts focus on the button before the action runs, so the confirm dialog (§4.8) returns focus there. Saving is otherwise offered only by the unsaved notice (§4.8).
 - **Language switch**: a `<Link>` to the other locale (`/fr` ↔ `/en`) with text "Français"/"English", `lang` attribute of the target language, `aria-label` "Afficher en français"/"Show in English", `hrefLang`. Switching language keeps the budget (it is in `localStorage`, §6.4).
 
 ### 4.2 Progress
@@ -138,7 +138,6 @@ Grid: label · money input · frequency select · tip button (if the item has a 
 - Income line; one line per outgoing bucket with colour dot, title, "rough" marker when estimated, amount.
 - Stacked bar (decorative, `aria-hidden`), base = max(income, outgoing).
 - Balance box: "Left over" (good) / "Shortfall" (bad) / zero (accent); threshold ±0.5.
-- File line: "Last saved to a file: today/yesterday/N days ago" or "Not saved to a file yet"; link buttons "Save budget", "Export to spreadsheet".
 
 **Mobile bar** (≤860px, fixed bottom, safe-area padding): Income · Planned · Left/Short (coloured) + a button toggling `/mo` ↔ `/yr`.
 
@@ -155,8 +154,7 @@ Order of sections (all amounts follow the Monthly/Yearly view unless noted):
 5. **Where your money goes** — donut + legend (§10.1).
 6. **How your plan compares** — rule-of-thumb list (§8).
 7. **Next steps** — tips (§8.4). *(Strings exist in the artifact but the section was not rendered there; we render it.)*
-8. **Keep your budget** — file box: Save budget (.json), Open budget (.json), Export to spreadsheet (.csv) (§11); below them a secondary "Clear budget" button (§4.9).
-9. Nav: "← Edit" (goes to the last bucket step) and primary "Copy summary" (§4.9).
+8. Nav: "← Edit" (goes to the last bucket step) and primary "Copy summary" (§4.9).
 
 ### 4.7 Footer
 
@@ -174,7 +172,7 @@ Order of sections (all amounts follow the Monthly/Yearly view unless noted):
 
 | Action | Result |
 | --- | --- |
-| Clear budget | Empty budget, step 1, `changedAt=null`, toast "Started a blank budget". Ghost/link button "Clear budget" under the file box actions (results only). |
+| Clear budget | Empty budget, step 1, `changedAt=null`, toast "Started a blank budget". "Clear budget" at the end of the File menu (§4.1). |
 | Copy summary | Clipboard text: "My budget plan (monthly)", "Income: $x.xx", one line per outgoing bucket (+" (rough)"), "Left over/Shortfall: $x.xx". Toast "Summary copied" / "Copy isn't available here." |
 | Save / Open / Export | §11. |
 
@@ -648,7 +646,7 @@ features/
   wizard/    uiSlice.ts  components/{Progress,StepNav,StepHeading}.tsx
   tally/     components/{Tally,MobileBar,BalanceAnnouncer}.tsx
   results/   components/{ResultsView,IncomeFlowBar,TopExpenses,SpendingDonut,CompareSection,NextSteps,CopySummary}.tsx
-  files/     schema.ts  migrations/  sanitize.ts  exportJson.ts  importJson.ts  exportCsv.ts  __fixtures__/  components/FileBox.tsx
+  files/     schema.ts  migrations/  sanitize.ts  exportJson.ts  importJson.ts  exportCsv.ts  __fixtures__/  components/FileMenu.tsx
   notices/   components/{UnsavedNotice,ConfirmDialog,Toaster}.tsx  useBeforeUnload.ts
   app/       BudgetApp.tsx  Header.tsx  LanguageLink.tsx  Footer.tsx
 components/ui/            # §9.2

@@ -10,6 +10,7 @@ import { STORAGE_KEY } from "@/store/persistence";
 import { StoreProvider } from "@/store/StoreProvider";
 import { renderWithI18n } from "@/test/renderWithI18n";
 import { BudgetApp } from "./BudgetApp";
+import { Header } from "./Header";
 
 /** Spec §12 / PLAN step 22: axe over every screen state in both locales. */
 const DICTIONARIES = { en, fr };
@@ -17,6 +18,7 @@ const DICTIONARIES = { en, fr };
 const renderApp = (locale: Locale) =>
   renderWithI18n(
     <StoreProvider>
+      <Header app={DICTIONARIES[locale].app} />
       <BudgetApp />
     </StoreProvider>,
     { locale },
@@ -50,7 +52,7 @@ describe.each(locales)("%s", (locale) => {
       if (STEPS[step] === "results") {
         await screen.findByRole("heading", {
           level: 3,
-          name: dict.files.title,
+          name: dict.results.next.title,
         });
       }
       expect(await axe(container)).toHaveNoViolations();
@@ -63,12 +65,16 @@ describe.each(locales)("%s", (locale) => {
     await visitEveryStep(container);
   });
 
-  it("has no violations on any step of a filled budget, or with a dialog open", async () => {
+  it("has no violations on any step of a filled budget, with the File menu or a dialog open", async () => {
     seedFilled();
     const { container } = renderApp(locale);
     expect(screen.getByDisplayValue("Tutorat")).toBeInTheDocument();
     const user = await visitEveryStep(container);
 
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(`^${dict.files.menu}`) }),
+    );
+    expect(await axe(container)).toHaveNoViolations();
     await user.click(screen.getByRole("button", { name: dict.files.clear }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(await axe(container)).toHaveNoViolations();

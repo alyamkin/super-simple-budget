@@ -191,7 +191,8 @@ export const fr: Dictionary = {
     cleared: "Nouveau budget vierge",
   },
   files: {
-    title: "Conserver votre budget",
+    menu: "Fichier",
+    menuUnsaved: "Fichier, modifications non enregistrées",
     explain:
       "Votre budget est conservé dans ce navigateur seulement. Rien n’est envoyé ailleurs. Enregistrez-le dans un fichier pour le protéger ou le transférer sur un autre appareil.",
     save: "Enregistrer le budget",

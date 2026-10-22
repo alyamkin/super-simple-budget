@@ -179,7 +179,8 @@ export const en = {
     cleared: "Started a blank budget",
   },
   files: {
-    title: "Keep your budget",
+    menu: "File",
+    menuUnsaved: "File, unsaved changes",
     explain:
       "Your budget is kept in this browser only. Nothing is sent anywhere. Save it to a file to keep it safe or to move it to another device.",
     save: "Save budget",

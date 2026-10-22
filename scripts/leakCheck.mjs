@@ -103,9 +103,12 @@ async function round() {
     }
     await until(() => document.querySelector("input[type=file]"));
   `);
-  // Save (the download is denied), then open the fixture through the hidden input.
+  // Save from the File menu (the download is denied), then open the fixture
+  // through the hidden input.
   await run(`${PAGE_HELPERS}
-    [...document.querySelectorAll("main button")].find((b) => /Save budget|Enregistrer le budget/.test(b.textContent))?.click();
+    document.querySelector("header button[aria-expanded]").click();
+    await wait(50);
+    [...document.querySelectorAll("header button")].find((b) => /Save budget|Enregistrer le budget/.test(b.textContent))?.click();
     await wait(100);
   `);
   const { root } = await send("DOM.getDocument", { depth: 0 });
