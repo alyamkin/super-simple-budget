@@ -129,7 +129,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `CompareSection` (counts by level, rule rows with sentence + decorative bar, "not compared" note, empty states).
 - Tests: example → insurance "Needs attention" first; rough buckets listed; no-income message.
 
-### [ ] 18. Results: next steps and copy summary
+### [x] 18. Results: next steps and copy summary
 `feat(results): add next steps and copy summary` · Spec §4.6 (7, 9), §4.9, §8.4
 - `NextSteps`, `CopySummary` (clipboard + toasts), "← Edit".
 - Tests: each tip condition; clipboard text en/fr (mock `navigator.clipboard`).

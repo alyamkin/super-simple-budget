@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { STEPS } from "@/domain/catalog/buckets";
+import { CopySummary } from "@/features/results/components/CopySummary";
 import { useTranslator } from "@/i18n/I18nProvider";
 import { useAppSelector } from "@/store/hooks";
 import { stepName } from "../stepName";
@@ -15,7 +16,8 @@ const LAST_BUCKET = RESULTS - 1;
 
 /**
  * "← Back" / "Next: {bucket} →" under a bucket step (Spec §4.3.6); on the
- * results, "← Edit" goes back to the last bucket (Spec §4.6.9).
+ * results, "← Edit" goes back to the last bucket and "Copy summary" copies
+ * the plan (Spec §4.6.9).
  */
 export function StepNav() {
   const { t } = useTranslator();
@@ -30,6 +32,7 @@ export function StepNav() {
         <Button className={button} onClick={() => goToStep(LAST_BUCKET)}>
           {t("wizard.edit")}
         </Button>
+        <CopySummary className={button} />
       </div>
     );
   }
