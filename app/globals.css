@@ -97,6 +97,29 @@
   --breakpoint-tablet: 860px;
 }
 
+/*
+ * Reusable component styles as utilities: they take variants (`hover:field`)
+ * and sort before single-purpose utilities, so `px-2` etc. can override them.
+ */
+
+/* The artifact's `.btn`; 44px tall below the tablet breakpoint. */
+@utility btn {
+  @apply rounded-[9px] border px-[18px] py-2.5 font-bold max-tablet:min-h-11;
+}
+
+/*
+ * Text inputs and selects. Set the desktop size with `[--field-text:.95rem]`
+ * (not `text-*`, which would beat the 16px below the tablet breakpoint that
+ * stops iOS zooming on focus).
+ */
+@utility field {
+  @apply w-full rounded-lg border border-line bg-bg py-[9px] text-ink focus:border-accent;
+  font-size: var(--field-text, 1rem);
+  @variant max-tablet {
+    font-size: 16px;
+  }
+}
+
 @layer base {
   html {
     scroll-padding-top: env(safe-area-inset-top, 0px);
