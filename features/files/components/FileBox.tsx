@@ -1,20 +1,50 @@
 "use client";
 
-import { useId, useRef, type ChangeEvent, type ReactNode } from "react";
+import { useId, useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { flushSync } from "react-dom";
+import { Button } from "@/components/ui/Button";
 import { DownloadIcon, SheetIcon, UploadIcon } from "@/components/ui/Icons";
+import {
+  ConfirmDialog,
+  type ConfirmAction,
+} from "@/features/notices/components/ConfirmDialog";
+import { uiSlice } from "@/features/wizard/uiSlice";
 import { useTranslator } from "@/i18n/I18nProvider";
+import { useAppSelector } from "@/store/hooks";
 import { useFileActions } from "../useFileActions";
 import { LastSaved } from "./LastSaved";
 
+const { selectIsUnsaved } = uiSlice.selectors;
+
 /**
  * "Keep your budget" on the results (Spec §4.6.8): save the JSON backup, open
- * one (a real button clicking a hidden file input) or export a spreadsheet.
+ * one (a real button clicking a hidden file input), export a spreadsheet or
+ * clear the budget. Opening and clearing ask first while changes are unsaved.
  */
 export function FileBox() {
   const { t } = useTranslator();
-  const { save, exportCsv, open } = useFileActions();
+  const { save, exportCsv, open, clear } = useFileActions();
+  const unsaved = useAppSelector(selectIsUnsaved);
+  const [asking, setAsking] = useState<ConfirmAction | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const titleId = useId();
+
+  const run = (action: ConfirmAction) => {
+    if (action === "open") input.current?.click();
+    else clear();
+  };
+
+  const request = (action: ConfirmAction) => {
+    if (unsaved) setAsking(action);
+    else run(action);
+  };
+
+  const confirmed = (action: ConfirmAction) => {
+    // Closed first: the modal makes the file input inert, and closing
+    // returns focus to the button that asked.
+    flushSync(() => setAsking(null));
+    run(action);
+  };
 
   const onFileChosen = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
@@ -48,7 +78,7 @@ export function FileBox() {
           icon={<UploadIcon />}
           title={t("files.open")}
           hint={t("files.openHint")}
-          onClick={() => input.current?.click()}
+          onClick={() => request("open")}
         />
         <FileAction
           icon={<SheetIcon />}
@@ -57,6 +87,20 @@ export function FileBox() {
           onClick={exportCsv}
         />
       </div>
+      <Button
+        variant="ghost"
+        className="mt-2.5 -ml-2"
+        onClick={() => request("clear")}
+      >
+        {t("files.clear")}
+      </Button>
+      {asking && (
+        <ConfirmDialog
+          action={asking}
+          onConfirm={() => confirmed(asking)}
+          onCancel={() => setAsking(null)}
+        />
+      )}
       <input
         ref={input}
         type="file"

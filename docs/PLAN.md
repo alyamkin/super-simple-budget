@@ -141,7 +141,7 @@ Commit message format: `feat|chore|test|docs(scope): summary` (Conventional Comm
 - `lib/csv.ts` (escaping), `features/files/exportCsv.ts`, `lib/download.ts`, `FileBox`, tally file links, hidden file input via button.
 - Tests: CSV exact output for example (en with `,`/`.`, fr with `;`/`,`), formula-injection escaping, BOM + CRLF; open valid/invalid/oversized file → state + toast; object URL revoked.
 
-### [ ] 20. Unsaved notice, confirmations and budget actions
+### [x] 20. Unsaved notice, confirmations and budget actions
 `feat(notices): add unsaved-changes notice, confirm dialog and budget actions` · Spec §4.8, §4.9
 - `UnsavedNotice` (snooze 1 h), `ConfirmDialog` (native dialog, save-first flow), `useBeforeUnload`, "Clear budget" button in the file box; wire Clear and Open through the confirm dialog.
 - Tests: dialog only when unsaved; save-first flow swaps body and primary action; Esc closes and restores focus; beforeunload registered only while unsaved and removed on unmount.

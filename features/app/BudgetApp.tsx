@@ -3,6 +3,8 @@
 import { STEPS } from "@/domain/catalog/buckets";
 import { BucketStep } from "@/features/budget/components/BucketStep";
 import { Toaster } from "@/features/notices/components/Toaster";
+import { UnsavedNotice } from "@/features/notices/components/UnsavedNotice";
+import { useBeforeUnload } from "@/features/notices/useBeforeUnload";
 import { LazyResultsView } from "@/features/results/components/LazyResultsView";
 import { ResultsHeading } from "@/features/results/components/ResultsHeading";
 import { BalanceAnnouncer } from "@/features/tally/components/BalanceAnnouncer";
@@ -16,16 +18,21 @@ import { useTranslator } from "@/i18n/I18nProvider";
 import { useAppSelector } from "@/store/hooks";
 import { MAIN_ID } from "./SkipLink";
 
-const { selectStepId, selectHydrated } = uiSlice.selectors;
+const { selectStepId, selectHydrated, selectIsUnsaved } = uiSlice.selectors;
 
-/** The interactive island: progress, the current step and the tally. */
+/**
+ * The interactive island: the unsaved-changes notice, progress, the current
+ * step and the tally.
+ */
 export function BudgetApp() {
   const { t } = useTranslator();
   const step = useAppSelector(selectStepId);
   const hydrated = useAppSelector(selectHydrated);
+  useBeforeUnload(useAppSelector(selectIsUnsaved));
 
   return (
     <div aria-busy={!hydrated}>
+      <UnsavedNotice />
       <Progress />
       <div className="grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8 max-tablet:grid-cols-[minmax(0,1fr)]">
         <main id={MAIN_ID} className="min-w-0">

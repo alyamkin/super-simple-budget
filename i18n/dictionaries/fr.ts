@@ -188,6 +188,7 @@ export const fr: Dictionary = {
       "Ce fichier a été créé par une version plus récente de Budget super simple.",
     tooLarge:
       "Ce fichier est trop volumineux pour être un fichier de Budget super simple.",
+    cleared: "Nouveau budget vierge",
   },
   files: {
     title: "Conserver votre budget",
@@ -199,6 +200,7 @@ export const fr: Dictionary = {
     openHint: "Reprendre à partir d’un fichier .json enregistré",
     exportCsv: "Exporter vers un tableur",
     exportCsvHint: "Fichier .csv pour Excel ou Numbers, en consultation seulement",
+    clear: "Effacer le budget",
     lastSaved: "Dernier enregistrement dans un fichier : {when}",
     notSaved: "Pas encore enregistré dans un fichier",
     today: "aujourd’hui",
@@ -214,6 +216,23 @@ export const fr: Dictionary = {
       yearly: "Annuel",
       totalIncome: "Revenu total",
       totalPlanned: "Total prévu",
+    },
+  },
+  notices: {
+    unsavedTitle: "Modifications non enregistrées dans un fichier",
+    unsavedBody:
+      "Votre budget est conservé dans ce navigateur, mais vos dernières modifications ne sont pas encore enregistrées dans un fichier.",
+    later: "Plus tard",
+    confirm: {
+      clearTitle: "Effacer votre budget?",
+      openTitle: "Remplacer votre budget actuel?",
+      body: "Les modifications faites depuis le dernier enregistrement de votre budget seront perdues. Enregistrez d’abord votre budget pour les conserver.",
+      saved: "Budget enregistré. Vous pouvez continuer sans risque.",
+      saveFirst: "Enregistrer d’abord le budget",
+      continue: "Continuer sans enregistrer",
+      cancel: "Annuler",
+      clear: "Effacer mon budget",
+      open: "Choisir un fichier à ouvrir",
     },
   },
   per: {

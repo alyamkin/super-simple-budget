@@ -1,6 +1,8 @@
+import { emptyBudget } from "@/domain/budget";
 import { STEPS } from "@/domain/catalog/buckets";
 import { budgetReplaced, budgetSlice } from "@/features/budget/budgetSlice";
 import {
+  budgetCleared,
   fileOpened,
   fileSaved,
   toastShown,
@@ -21,7 +23,8 @@ const { selectView } = uiSlice.selectors;
 const RESULTS = STEPS.length - 1;
 
 /**
- * Save, export and open (Spec §11), each ending with a toast. They read the
+ * Save, export, open (Spec §11) and clear (Spec §4.9), each ending with a
+ * toast. They read the
  * store when called, so components using them don't re-render on edits.
  */
 export function useFileActions() {
@@ -76,5 +79,13 @@ export function useFileActions() {
     dispatch(toastShown({ key: "opened" }));
   };
 
-  return { save, exportCsv, open };
+  /** Starts over with an empty budget on the first step. */
+  const clear = () => {
+    dispatch(budgetReplaced(emptyBudget()));
+    dispatch(budgetCleared());
+    goToStep(0);
+    dispatch(toastShown({ key: "cleared" }));
+  };
+
+  return { save, exportCsv, open, clear };
 }
