@@ -11,7 +11,7 @@ describe("Footer", () => {
       screen.getByRole("heading", { level: 2, name: "About this tool" }),
     ).toBeInTheDocument();
     const link = screen.getByRole("link", {
-      name: "Budget Planner by the Financial Consumer Agency of Canada (opens in a new tab)",
+      name: "FCAC Budget Planner (opens in a new tab)",
     });
     expect(link).toHaveAttribute(
       "href",

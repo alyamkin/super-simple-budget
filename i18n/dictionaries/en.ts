@@ -840,13 +840,13 @@ export const en = {
   footer: {
     about: "About this tool",
     privacy:
-      "Your budget never leaves your device. There's no account and nothing is sent to a server.",
-    advice: "This tool gives general information, not financial advice.",
-    credit: "Spending ranges are adapted from the",
-    creditLink: "Budget Planner by the Financial Consumer Agency of Canada",
+      "Your budget stays on your device: no account, nothing sent to a server.",
+    advice: "General information, not financial advice.",
+    credit: "Spending ranges adapted from the",
+    creditLink: "FCAC Budget Planner",
     creditUrl: "https://itools-ioutils.fcac-acfc.gc.ca/BP-PB/budget-planner",
     notAffiliated:
-      "Super Simple Budget is an independent project. It isn't affiliated with or endorsed by the Financial Consumer Agency of Canada or the Government of Canada.",
+      "Not affiliated with or endorsed by the FCAC or the Government of Canada.",
     newTab: "(opens in a new tab)",
   },
   meta: {
