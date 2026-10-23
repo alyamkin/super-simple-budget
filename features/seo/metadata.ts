@@ -4,6 +4,9 @@ import type { Dictionary } from "@/i18n/dictionaries/en";
 import { THEME_COLORS } from "@/features/theme/theme";
 import { siteUrl } from "@/lib/siteUrl";
 
+/** Search Console ownership token for the vercel.app URL-prefix property. */
+const GOOGLE_SITE_VERIFICATION = "EJEuBhj79ccyUfSJEkYwxKcPCfe1dAGVczY7nHCID9k";
+
 /** Path of a locale's page. */
 export function localePath(locale: Locale): string {
   return `/${locale}`;
@@ -53,6 +56,7 @@ export function localeMetadata(
       description: meta.description,
     },
     robots: { index: true, follow: true },
+    verification: { google: GOOGLE_SITE_VERIFICATION },
   };
 }
 

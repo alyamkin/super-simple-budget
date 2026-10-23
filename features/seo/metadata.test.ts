@@ -39,6 +39,9 @@ describe("localeMetadata", () => {
     });
     expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
     expect(metadata.robots).toEqual({ index: true, follow: true });
+    expect(metadata.verification).toEqual({
+      google: "EJEuBhj79ccyUfSJEkYwxKcPCfe1dAGVczY7nHCID9k",
+    });
   });
 
   it("builds the French page metadata", () => {
