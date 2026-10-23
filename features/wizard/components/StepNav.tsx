@@ -43,7 +43,7 @@ export function StepNav() {
               {t("wizard.back")}
             </Button>
           ) : (
-            <span />
+            <span className="max-phone:hidden" />
           )}
           <Button
             variant="primary"
