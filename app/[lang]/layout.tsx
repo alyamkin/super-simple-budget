@@ -7,6 +7,8 @@ import {
   IBM_Plex_Mono,
 } from "next/font/google";
 import { localeMetadata } from "@/features/seo/metadata";
+import { themeScript } from "@/features/theme/theme";
+import { ThemeSync } from "@/features/theme/ThemeSync";
 import { hasLocale, locales, regionalLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/getDictionary";
 import { I18nProvider } from "@/i18n/I18nProvider";
@@ -63,11 +65,17 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang);
 
   return (
+    // `themeScript` sets `data-theme` before React hydrates.
     <html
+      suppressHydrationWarning
       lang={regionalLocale(lang)}
       className={`${bricolage.variable} ${atkinson.variable} ${plexMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
+        <ThemeSync />
         <I18nProvider locale={lang} dictionary={dictionary}>
           <StoreProvider>{children}</StoreProvider>
         </I18nProvider>

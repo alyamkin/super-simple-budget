@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { locales, regionalLocale, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/en";
+import { THEME_COLORS } from "@/features/theme/theme";
 import { siteUrl } from "@/lib/siteUrl";
 
 /** Path of a locale's page. */
@@ -60,7 +61,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f6f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1a1d" },
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
   ],
 };
