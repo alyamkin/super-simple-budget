@@ -56,7 +56,7 @@ pnpm install
 pnpm dev            # http://localhost:3000
 ```
 
-Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the public origin. Canonical URLs, Open Graph, the sitemap and robots use it. It falls back to `http://localhost:3000`.
+Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the public origin. Canonical URLs, Open Graph, the sitemap and robots use it. On Vercel it falls back to the production domain (`VERCEL_PROJECT_PRODUCTION_URL`), elsewhere to `http://localhost:3000`.
 
 ### Scripts
 
