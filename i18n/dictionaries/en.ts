@@ -851,6 +851,8 @@ export const en = {
     notAffiliated:
       "Not affiliated with or endorsed by the FCAC or the Government of Canada.",
     newTab: "(opens in a new tab)",
+    madeBy: "Made by",
+    sourceLink: "Source on GitHub",
   },
   meta: {
     title: "Super Simple Budget — free monthly budget planner",

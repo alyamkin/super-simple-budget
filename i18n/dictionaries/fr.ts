@@ -864,6 +864,8 @@ export const fr: Dictionary = {
     notAffiliated:
       "Ni affilié à l’ACFC ou au gouvernement du Canada, ni approuvé par eux.",
     newTab: "(s’ouvre dans un nouvel onglet)",
+    madeBy: "Conçu par",
+    sourceLink: "Code source sur GitHub",
   },
   meta: {
     title: "Budget super simple — planificateur budgétaire mensuel gratuit",
