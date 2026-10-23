@@ -12,8 +12,8 @@ const { selectStep } = uiSlice.selectors;
 
 /**
  * One button per step. Below the tablet breakpoint the labels are
- * hidden visually (`text-[0]`) but still name the buttons, and each bar keeps
- * a tall tap target.
+ * visually hidden but still name the buttons, and each bar keeps a tall tap
+ * target.
  */
 export function Progress() {
   const { t } = useTranslator();
@@ -29,7 +29,7 @@ export function Progress() {
               type="button"
               aria-current={index === current ? "step" : undefined}
               onClick={() => goToStep(index)}
-              className="group block w-full truncate border-0 bg-transparent p-0 text-left text-[.74rem] text-muted aria-[current=step]:font-bold aria-[current=step]:text-ink tablet:pointer-coarse:-my-3 tablet:pointer-coarse:py-3 max-tablet:-my-3 max-tablet:py-4 max-tablet:text-[0]"
+              className="group block w-full truncate border-0 bg-transparent p-0 text-left text-[.74rem] text-muted aria-[current=step]:font-bold aria-[current=step]:text-ink tablet:pointer-coarse:-my-3 tablet:pointer-coarse:py-3 max-tablet:-my-3 max-tablet:py-4"
             >
               <span
                 aria-hidden="true"
@@ -40,7 +40,7 @@ export function Progress() {
                     : "bg-line group-aria-[current=step]:bg-accent",
                 )}
               />
-              {stepName(t, step)}
+              <span className="max-tablet:sr-only">{stepName(t, step)}</span>
             </button>
           </li>
         ))}
