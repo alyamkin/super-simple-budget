@@ -14,6 +14,9 @@ export const fr: Dictionary = {
     switchLabel: "English",
     switchAria: "Show in English",
   },
+  theme: {
+    dark: "Thème sombre",
+  },
   wizard: {
     progress: "Progression",
     results: "Résultats",

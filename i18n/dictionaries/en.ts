@@ -13,6 +13,9 @@ export const en = {
     switchLabel: "Français",
     switchAria: "Afficher en français",
   },
+  theme: {
+    dark: "Dark theme",
+  },
   wizard: {
     progress: "Progress",
     results: "Results",

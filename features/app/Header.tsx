@@ -1,5 +1,6 @@
 import { FileMenu } from "@/features/files/components/FileMenu";
 import type { Dictionary } from "@/i18n/dictionaries/en";
+import { ThemeToggle } from "@/features/theme/ThemeToggle";
 import { LanguageLink } from "./LanguageLink";
 
 /** The brand mark from the artifact; its colours are fixed, not theme tokens. */
@@ -19,8 +20,8 @@ function BrandMark() {
 }
 
 /**
- * App name, subtitle, the File menu and the language link.
- * Server-rendered around the two client controls.
+ * App name, subtitle, the File menu, the theme toggle and the language link.
+ * Server-rendered around the client controls.
  */
 export function Header({ app }: { app: Dictionary["app"] }) {
   return (
@@ -38,6 +39,7 @@ export function Header({ app }: { app: Dictionary["app"] }) {
       </div>
       <div className="flex flex-none items-center gap-2">
         <FileMenu />
+        <ThemeToggle className="btn inline-flex items-center border-line bg-transparent px-2.5 text-accent hover:border-accent max-phone:min-h-10 max-phone:px-2" />
         <LanguageLink className="btn inline-flex items-center border-line bg-transparent px-2 text-accent hover:border-accent max-phone:min-h-10 max-phone:px-3" />
       </div>
     </header>
