@@ -591,7 +591,7 @@ Testing
 - Static HTML per locale with real content: header, step 1 question, lede and the popular income chips, footer — readable without JS.
 - `generateMetadata` in `app/[lang]/layout.tsx` from the dictionary:
   - `title`: "Super Simple Budget — free monthly budget planner" / "Budget super simple — planificateur budgétaire mensuel gratuit"; `description` (≤160 chars, new `meta.*` dictionary keys).
-  - `metadataBase` from `NEXT_PUBLIC_SITE_URL` (fallback `http://localhost:3000`).
+  - `metadataBase` from `NEXT_PUBLIC_SITE_URL` (fallback `https://${VERCEL_PROJECT_PRODUCTION_URL}`, then `http://localhost:3000`).
   - `alternates`: `canonical: "/{lang}"`, `languages: { "en-CA": "/en", "fr-CA": "/fr", "x-default": "/en" }`.
   - `openGraph` (type `website`, `locale` `en_CA`/`fr_CA`, `alternateLocale`), `twitter` (`summary_large_image`).
   - `robots: { index: true, follow: true }`.
