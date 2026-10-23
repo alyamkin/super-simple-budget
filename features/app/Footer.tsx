@@ -20,9 +20,8 @@ export function Footer({ footer }: { footer: Dictionary["footer"] }) {
           {footer.creditLink}
           <VisuallyHidden> {footer.newTab}</VisuallyHidden>
         </a>
-        .
+        . {footer.notAffiliated}
       </p>
-      <p className="m-0">{footer.notAffiliated}</p>
     </footer>
   );
 }

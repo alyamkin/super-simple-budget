@@ -852,16 +852,14 @@ export const fr: Dictionary = {
   footer: {
     about: "À propos de cet outil",
     privacy:
-      "Votre budget ne quitte jamais votre appareil. Aucun compte n’est requis et rien n’est envoyé à un serveur.",
-    advice:
-      "Cet outil fournit de l’information générale et non des conseils financiers.",
-    credit: "Les fourchettes de dépenses sont adaptées du",
-    creditLink:
-      "Planificateur budgétaire de l’Agence de la consommation en matière financière du Canada",
+      "Votre budget reste sur votre appareil, sans compte et sans envoi à un serveur.",
+    advice: "Information générale, et non des conseils financiers.",
+    credit: "Fourchettes de dépenses adaptées du",
+    creditLink: "Planificateur budgétaire de l’ACFC",
     creditUrl:
       "https://itools-ioutils.fcac-acfc.gc.ca/BP-PB/planificateur-budgetaire",
     notAffiliated:
-      "Budget super simple est un projet indépendant. Il n’est ni affilié à l’Agence de la consommation en matière financière du Canada ni au gouvernement du Canada, et n’est pas approuvé par ceux-ci.",
+      "Ni affilié à l’ACFC ou au gouvernement du Canada, ni approuvé par eux.",
     newTab: "(s’ouvre dans un nouvel onglet)",
   },
   meta: {
